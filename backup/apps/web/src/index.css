@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@import 'tailwindcss';
+
+@theme {
+  --font-serif: 'Cormorant Garamond', 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Playfair Display', serif;
+  --font-handwriting: 'Dancing Script', cursive;
+  --font-poppins: 'Poppins', sans-serif;
+
+  --color-gold-50: #fbf8eb;
+  --color-gold-100: #f5eebd;
+  --color-gold-200: #ecc57e;
+  --color-gold-300: #dfa650;
+  --color-gold-400: #c9a84c;
+  --color-gold-500: #a9803b;
+  --color-gold-600: #885c2c;
+
+  --color-rustic-50: #fbf9f4;
+  --color-rustic-100: #f5ede3;
+  --color-rustic-200: #e2cca6;
+  --color-rustic-300: #d4956a;
+  --color-rustic-500: #8b6914;
+
+  --color-cream: #faf7f2;
+  --color-charcoal: #2c2c2c;
+  --color-sand: #f5ede3;
+
+  --animate-marquee: marquee 30s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-50% - 12px));
+    }
+  }
+}
+
+/* Custom global overrides */
+html,
+body {
+  font-family: var(--font-sans);
+  background-color: #fcfbfa;
+  color: var(--color-charcoal);
+  scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+}

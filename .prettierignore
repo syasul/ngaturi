@@ -1,0 +1,10 @@
+node_modules
+dist
+.bun
+bun.lockb
+postgres_data
+redis_data
+docker_data
+out
+drizzle
+.husky

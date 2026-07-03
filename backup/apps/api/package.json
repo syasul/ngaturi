@@ -1,0 +1,30 @@
+{
+  "name": "api",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "build": "bun build ./src/index.ts --outdir ./dist --target=bun",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push"
+  },
+  "dependencies": {
+    "@wedding/shared": "workspace:*",
+    "bcryptjs": "^2.4.3",
+    "drizzle-orm": "^0.30.10",
+    "hono": "^4.4.7",
+    "ioredis": "^5.4.1",
+    "jose": "^5.4.0",
+    "nodemailer": "^8.0.11",
+    "postgres": "^3.4.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.14.9",
+    "@types/nodemailer": "^8.0.1",
+    "drizzle-kit": "^0.21.4"
+  }
+}
