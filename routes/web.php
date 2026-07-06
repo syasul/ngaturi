@@ -224,11 +224,11 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::post('/api/admin/settings/test-email', [AdminController::class, 'testEmail']);
 });
 
+require __DIR__.'/auth.php';
+
 /*
 |--------------------------------------------------------------------------
 | Dynamic Fallback public wedding slug routing
 |--------------------------------------------------------------------------
 */
 Route::get('/{slug}', [WeddingController::class, 'renderPublicInvitation']);
-
-require __DIR__.'/auth.php';

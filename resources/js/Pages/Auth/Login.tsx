@@ -153,6 +153,47 @@ export const Login: React.FC = () => {
             </div>
           </form>
 
+          {/* Divider */}
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-sand"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white/80 backdrop-blur-md px-3 text-charcoal/50 font-poppins">atau</span>
+            </div>
+          </div>
+
+          {/* Google OAuth Login Button */}
+          <div className="mb-6">
+            <a href="/auth/google" className="w-full block">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2.5 py-3 border-sand hover:bg-gold-50/10 cursor-pointer"
+              >
+                <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                  <path
+                    fill="#EA4335"
+                    d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.23 2.73 1.258 6.708l3.992 3.057z"
+                  />
+                  <path
+                    fill="#4285F4"
+                    d="M16.04 15.345c-1.07.727-2.43 1.164-4.04 1.164a7.077 7.077 0 0 1-6.75-4.909l-3.99 3.064C3.23 21.27 7.27 24 12 24c3.09 0 5.82-1.023 7.82-2.782l-3.78-1.873z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.21 11.6c0-.527.09-1.036.25-1.527L1.47 7.01C.53 8.92 0 11.08 0 13.37c0 2.227.5 4.345 1.41 6.227l4.02-3.08c-.14-.52-.22-1.055-.22-1.617z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M23.49 12.27c0-.79-.07-1.545-.19-2.27H12v4.51h6.46c-.28 1.48-.11 2.94-.97 4.18l3.78 1.87c2.22-2.055 2.22-6.19 2.22-8.29z"
+                  />
+                </svg>
+                <span className="font-poppins font-medium text-charcoal">Masuk dengan Google</span>
+              </Button>
+            </a>
+          </div>
+
           <div className="mt-6 text-center">
             <p className="text-xs text-charcoal/60 font-poppins">
               Belum memiliki akun?{' '}
