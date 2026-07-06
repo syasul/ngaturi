@@ -1,71 +1,42 @@
-import React, { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useForm, Head } from '@inertiajs/react'
 import { motion } from 'framer-motion'
 import { Heart, Lock, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react'
-import { toast } from 'sonner'
-import { ResetPasswordInputSchema, type ResetPasswordInput } from '@wedding/shared'
-import api from '../../lib/api'
 import Button from '../../components/ui/Button'
 
-export const ResetPassword: React.FC = () => {
-  const [searchParams] = useSearchParams()
-  const token = searchParams.get('token') || ''
-  const navigate = useNavigate()
+interface ResetPasswordProps {
+  email: string
+  token: string
+}
 
+export const ResetPassword: React.FC<ResetPasswordProps> = ({ email, token }) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    if (!token) {
-      toast.error('Token tidak valid atau tidak ditemukan.')
-      navigate('/login')
-    }
-  }, [token, navigate])
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ResetPasswordInput>({
-    resolver: zodResolver(ResetPasswordInputSchema),
-    defaultValues: {
-      token,
-      password: '',
-      confirmPassword: '',
-    },
+  const { data, setData, post, processing, errors, reset } = useForm({
+    token: token || '',
+    email: email || '',
+    password: '',
+    password_confirmation: '',
   })
 
-  const onSubmit = async (data: ResetPasswordInput) => {
-    setIsLoading(true)
-    try {
-      const response = await api.post('/auth/reset-password', {
-        token: data.token,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-      })
-
-      toast.success(response.data.message || 'Kata sandi berhasil diperbarui! Silakan masuk kembali.')
-      navigate('/login')
-    } catch (error: any) {
-      console.error('Reset password error:', error)
-      const errorData = error.response?.data
-      toast.error(errorData?.message || 'Gagal memperbarui kata sandi. Tautan mungkin sudah kedaluwarsa.')
-    } finally {
-      setIsLoading(false)
-    }
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    post(route('password.store'), {
+      onFinish: () => reset('password', 'password_confirmation'),
+    })
   }
 
   return (
     <div className="min-h-screen bg-cream flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden font-sans">
+      <Head title="Atur Kata Sandi Baru" />
+      
       {/* Premium background abstract elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-gold-50 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 opacity-65" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-rustic-100 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 opacity-45" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md z-10">
-        <Link to="/" className="flex justify-center items-center gap-2 mb-6 cursor-pointer">
+        <Link href="/" className="flex justify-center items-center gap-2 mb-6 cursor-pointer">
           <Heart className="fill-gold-500 text-gold-500 animate-pulse" size={28} />
           <span className="font-serif text-3xl font-bold text-gold-600 tracking-wide">Ngaturi</span>
         </Link>
@@ -84,9 +55,26 @@ export const ResetPassword: React.FC = () => {
         className="mt-8 sm:mx-auto sm:w-full sm:max-w-md z-10"
       >
         <div className="bg-white/80 backdrop-blur-md py-8 px-6 shadow-xl border border-sand sm:rounded-3xl sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            {/* Hidden Token Field */}
-            <input type="hidden" {...register('token')} value={token} />
+          <form className="space-y-6" onSubmit={onSubmit}>
+            {/* Hidden Fields */}
+            <input type="hidden" value={data.email} />
+            <input type="hidden" value={data.token} />
+
+            {/* Email field info (static/disabled) */}
+            <div>
+              <label className="block text-sm font-medium text-charcoal/60 font-poppins">
+                Email Akun
+              </label>
+              <input
+                type="text"
+                disabled
+                className="block w-full mt-1 px-4 py-3 border border-sand rounded-full text-sm font-poppins bg-gray-100 text-charcoal/60"
+                value={data.email}
+              />
+              {errors.email && (
+                <p className="mt-1 text-xs text-red-500 font-poppins">{errors.email}</p>
+              )}
+            </div>
 
             {/* Password Field */}
             <div>
@@ -100,13 +88,14 @@ export const ResetPassword: React.FC = () => {
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  disabled={isLoading}
+                  disabled={processing}
                   autoComplete="new-password"
                   className={`block w-full pl-11 pr-12 py-3 border rounded-full text-sm font-poppins focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 transition-all ${
                     errors.password ? 'border-red-400 bg-red-50/10' : 'border-sand bg-white'
                   }`}
                   placeholder="Min. 8 karakter"
-                  {...register('password')}
+                  value={data.password}
+                  onChange={(e) => setData('password', e.target.value)}
                 />
                 <button
                   type="button"
@@ -117,13 +106,13 @@ export const ResetPassword: React.FC = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-xs text-red-500 font-poppins">{errors.password.message}</p>
+                <p className="mt-1 text-xs text-red-500 font-poppins">{errors.password}</p>
               )}
             </div>
 
             {/* Confirm Password Field */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-charcoal font-poppins">
+              <label htmlFor="password_confirmation" className="block text-sm font-medium text-charcoal font-poppins">
                 Konfirmasi Kata Sandi Baru
               </label>
               <div className="mt-1.5 relative rounded-full shadow-xs">
@@ -131,15 +120,16 @@ export const ResetPassword: React.FC = () => {
                   <Lock size={18} />
                 </div>
                 <input
-                  id="confirmPassword"
+                  id="password_confirmation"
                   type={showConfirmPassword ? 'text' : 'password'}
-                  disabled={isLoading}
+                  disabled={processing}
                   autoComplete="new-password"
                   className={`block w-full pl-11 pr-12 py-3 border rounded-full text-sm font-poppins focus:outline-none focus:ring-2 focus:ring-gold-500/20 focus:border-gold-500 transition-all ${
-                    errors.confirmPassword ? 'border-red-400 bg-red-50/10' : 'border-sand bg-white'
+                    errors.password_confirmation ? 'border-red-400 bg-red-50/10' : 'border-sand bg-white'
                   }`}
                   placeholder="Ulangi kata sandi baru"
-                  {...register('confirmPassword')}
+                  value={data.password_confirmation}
+                  onChange={(e) => setData('password_confirmation', e.target.value)}
                 />
                 <button
                   type="button"
@@ -149,8 +139,8 @@ export const ResetPassword: React.FC = () => {
                   {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              {errors.confirmPassword && (
-                <p className="mt-1 text-xs text-red-500 font-poppins">{errors.confirmPassword.message}</p>
+              {errors.password_confirmation && (
+                <p className="mt-1 text-xs text-red-500 font-poppins">{errors.password_confirmation}</p>
               )}
             </div>
 
@@ -158,11 +148,11 @@ export const ResetPassword: React.FC = () => {
             <div>
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={processing}
                 variant="primary"
                 className="w-full flex items-center justify-center gap-2 py-3"
               >
-                {isLoading ? (
+                {processing ? (
                   <>
                     <Loader2 className="animate-spin" size={18} />
                     <span>Menyimpan...</span>
@@ -176,7 +166,7 @@ export const ResetPassword: React.FC = () => {
 
           <div className="mt-6 border-t border-sand pt-4 text-center">
             <Link
-              to="/login"
+              href="/login"
               className="inline-flex items-center gap-2 text-xs font-semibold text-charcoal/60 hover:text-gold-500 font-poppins"
             >
               <ArrowLeft size={14} />

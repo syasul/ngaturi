@@ -14,8 +14,9 @@ import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import Badge from '../../components/ui/Badge'
 import { toast } from 'sonner'
+import DashboardLayout from '../DashboardLayout'
 
-export const Overview: React.FC = () => {
+export const Overview = () => {
   const navigate = useNavigate()
   const [wedding, setWedding] = useState<any>(null)
   const [stats, setStats] = useState<any>({ total: 0, attending: 0, declined: 0, tentative: 0, pending: 0 })
@@ -352,5 +353,7 @@ export const Overview: React.FC = () => {
     </div>
   )
 }
+
+Overview.layout = (page: React.ReactNode) => <DashboardLayout>{page}</DashboardLayout>
 
 export default Overview

@@ -102,7 +102,7 @@ export const TransactionSchema = z.object({
   id: z.string().uuid(),
   orderId: z.string().uuid(),
   gateway: z.string(),
-  payload: z.record(z.any()),
+  payload: z.record(z.string(), z.any()),
   status: z.string(),
   createdAt: z.date(),
 })

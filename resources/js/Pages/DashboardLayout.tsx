@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom'
+import { Link, usePage, router } from '@inertiajs/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -17,29 +17,23 @@ import {
   Bell,
   User as UserIcon,
 } from 'lucide-react'
-import { useAuthStore } from '../store/auth'
-import api from '../lib/api'
 import { toast } from 'sonner'
 
-export const DashboardLayout: React.FC = () => {
-  const { user, clearAuth } = useAuthStore()
-  const navigate = useNavigate()
-  const location = useLocation()
+export const DashboardLayout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  const { props, url } = usePage()
+  const user = (props.auth as any)?.user
+  const pathname = url.split('?')[0]
   
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
 
-  const handleLogout = async () => {
-    try {
-      await api.post('/auth/logout')
-      clearAuth()
-      toast.success('Berhasil keluar.')
-      navigate('/login')
-    } catch (err) {
-      clearAuth()
-      navigate('/login')
-    }
+  const handleLogout = () => {
+    router.post(route('logout'), {}, {
+      onSuccess: () => {
+        toast.success('Berhasil keluar.')
+      }
+    })
   }
 
   const menuItems = [
@@ -74,7 +68,7 @@ export const DashboardLayout: React.FC = () => {
         {/* Brand Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-sand/40">
           {!isSidebarCollapsed && (
-            <Link to="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <Heart className="fill-gold-500 text-gold-500 animate-pulse" size={20} />
               <span className="font-serif text-xl font-bold text-gold-600 tracking-wide">Ngaturi</span>
             </Link>
@@ -95,12 +89,12 @@ export const DashboardLayout: React.FC = () => {
         {/* Navigation Items */}
         <nav className="flex-1 py-4 space-y-1 px-3 overflow-y-auto">
           {menuItems.map((item) => {
-            const isActive = location.pathname === item.path
+            const isActive = pathname === item.path
             const Icon = item.icon
             return (
               <Link
                 key={item.path}
-                to={item.path}
+                href={item.path}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
                   isActive
                     ? 'bg-gold-500/10 text-gold-700 font-semibold border-l-4 border-gold-500'
@@ -147,7 +141,7 @@ export const DashboardLayout: React.FC = () => {
               className="fixed inset-y-0 left-0 w-64 bg-white z-40 md:hidden flex flex-col shadow-2xl"
             >
               <div className="h-16 flex items-center justify-between px-4 border-b border-sand/40">
-                <Link to="/" className="flex items-center gap-2">
+                <Link href="/" className="flex items-center gap-2">
                   <Heart className="fill-gold-500 text-gold-500" size={20} />
                   <span className="font-serif text-xl font-bold text-gold-600">Ngaturi</span>
                 </Link>
@@ -161,12 +155,12 @@ export const DashboardLayout: React.FC = () => {
 
               <nav className="flex-1 py-4 space-y-1 px-3 overflow-y-auto">
                 {menuItems.map((item) => {
-                  const isActive = location.pathname === item.path
+                  const isActive = pathname === item.path
                   const Icon = item.icon
                   return (
                     <Link
                       key={item.path}
-                      to={item.path}
+                      href={item.path}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
                         isActive
@@ -275,7 +269,7 @@ export const DashboardLayout: React.FC = () => {
 
         {/* Content Outlet */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-          <Outlet />
+          {children}
         </main>
       </div>
     </div>

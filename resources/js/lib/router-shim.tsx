@@ -31,7 +31,7 @@ export const useLocation = () => {
 }
 
 // useParams hook shim
-export const useParams = () => {
+export const useParams = <T extends Record<string, string> = any>(): T => {
   const path = window.location.pathname
   const params: any = {}
   
@@ -73,3 +73,14 @@ export const useSearchParams = () => {
   }
   return [searchParams, setSearchParams] as const
 }
+
+// Navigate component shim
+export const Navigate = ({ to, replace }: any) => {
+  React.useEffect(() => {
+    router.visit(to, { replace })
+  }, [to, replace])
+  return null
+}
+
+// Outlet component shim
+export const Outlet = () => null

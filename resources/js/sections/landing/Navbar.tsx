@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Heart, LogOut, LayoutDashboard } from 'lucide-react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { useAuthStore } from '../../store/auth'
+import { Link, usePage, router } from '@inertiajs/react'
 import Button from '../../components/ui/Button'
-import api from '../../lib/api'
 import { toast } from 'sonner'
 
 export const Navbar: React.FC = () => {
@@ -13,19 +11,15 @@ export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
-  const { user, clearAuth } = useAuthStore()
-  const navigate = useNavigate()
+  const { props, url } = usePage()
+  const user = (props.auth as any)?.user
 
-  const handleLogout = async () => {
-    try {
-      await api.post('/auth/logout')
-      clearAuth()
-      toast.success('Berhasil keluar.')
-      navigate('/login')
-    } catch (err) {
-      clearAuth()
-      navigate('/login')
-    }
+  const handleLogout = () => {
+    router.post(route('logout'), {}, {
+      onSuccess: () => {
+        toast.success('Berhasil keluar.')
+      }
+    })
   }
 
   useEffect(() => {
@@ -49,8 +43,7 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [lastScrollY])
 
-  const location = useLocation()
-  const isLanding = location.pathname === '/'
+  const isLanding = url === '/' || url === ''
 
   const navLinks = [
     { name: 'Home', href: isLanding ? '#home' : '/#home' },
@@ -76,7 +69,7 @@ export const Navbar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
           <Link
-            to="/"
+            href="/"
             className="flex items-center gap-2 font-serif text-xl sm:text-2xl font-bold text-gold-600 tracking-wide"
           >
             <Heart className="fill-gold-500 text-gold-500 animate-pulse" size={22} />
@@ -100,7 +93,7 @@ export const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
-                <Link to="/dashboard">
+                <Link href="/dashboard">
                   <Button size="sm" variant="ghost" className="flex items-center gap-1.5 text-charcoal/80 hover:text-gold-500 cursor-pointer">
                     <LayoutDashboard size={15} />
                     <span>Dasbor</span>
@@ -113,12 +106,12 @@ export const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link to="/login">
+                <Link href="/login">
                   <Button size="sm" variant="ghost" className="text-charcoal/80 hover:text-gold-500 cursor-pointer">
                     Masuk
                   </Button>
                 </Link>
-                <Link to="/register">
+                <Link href="/register">
                   <Button size="sm" variant="primary">
                     Mulai Sekarang
                   </Button>
@@ -157,7 +150,7 @@ export const Navbar: React.FC = () => {
               ))}
               {user ? (
                 <div className="flex flex-col gap-2">
-                  <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button size="md" variant="outline" className="w-full flex items-center justify-center gap-2">
                       <LayoutDashboard size={16} />
                       <span>Dasbor</span>
@@ -178,12 +171,12 @@ export const Navbar: React.FC = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button size="md" variant="ghost" className="w-full text-center">
                       Masuk
                     </Button>
                   </Link>
-                  <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button size="md" variant="primary" className="w-full mt-2">
                       Mulai Sekarang
                     </Button>

@@ -1,11 +1,11 @@
 import React from 'react'
 import { Heart, Mail, Phone } from 'lucide-react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, usePage } from '@inertiajs/react'
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear()
-  const location = useLocation()
-  const isLanding = location.pathname === '/'
+  const { url } = usePage()
+  const isLanding = url === '/' || url === ''
 
   const sitemap = [
     { name: 'Fitur Utama', href: isLanding ? '#features' : '/#features', isHash: true },
@@ -28,7 +28,7 @@ export const Footer: React.FC = () => {
         {/* Left Column: Brand description */}
         <div className="md:col-span-5">
           <Link
-            to="/"
+            href="/"
             className="flex items-center gap-2 font-serif text-xl sm:text-2xl font-bold text-gold-500 tracking-wide mb-6"
           >
             <Heart className="fill-gold-500 text-gold-500" size={20} />
@@ -69,7 +69,7 @@ export const Footer: React.FC = () => {
                     {link.name}
                   </a>
                 ) : (
-                  <Link to={link.href} className="hover:text-gold-500 transition-colors">
+                  <Link href={link.href} className="hover:text-gold-500 transition-colors">
                     {link.name}
                   </Link>
                 )}
@@ -91,7 +91,7 @@ export const Footer: React.FC = () => {
                     {link.name}
                   </a>
                 ) : (
-                  <Link to={link.href} className="hover:text-gold-500 transition-colors">
+                  <Link href={link.href} className="hover:text-gold-500 transition-colors">
                     {link.name}
                   </Link>
                 )}

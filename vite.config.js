@@ -15,6 +15,7 @@ export default defineConfig({
         alias: {
             '@': path.resolve(__dirname, 'resources/js'),
             '@wedding/shared': path.resolve(__dirname, 'resources/js/types/shared.ts'),
+            '@/Components': path.resolve(__dirname, 'resources/js/components'),
             'react-router-dom': path.resolve(__dirname, 'resources/js/lib/router-shim.tsx'),
         },
     },
