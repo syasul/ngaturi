@@ -13,7 +13,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter', 'Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Poppins', 'Inter', 'Figtree', ...defaultTheme.fontFamily.sans],
                 serif: ['"Playfair Display"', 'Georgia', ...defaultTheme.fontFamily.serif],
                 display: ['"Cormorant Garamond"', '"Playfair Display"', 'Georgia', ...defaultTheme.fontFamily.serif],
                 poppins: ['Poppins', ...defaultTheme.fontFamily.sans],

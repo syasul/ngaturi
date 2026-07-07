@@ -43,7 +43,7 @@ export const Overview: React.FC = () => {
         }
       } catch (err) {
         console.error('Error loading overview data:', err)
-        toast.error('Gagal memuat ringkasan dasbor.')
+        toast.error('Gagal memuat ringkasan Dasboard.')
       } finally {
         setLoading(false)
       }
@@ -86,18 +86,18 @@ export const Overview: React.FC = () => {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
         <div className="w-12 h-12 border-4 border-gold-500/30 border-t-gold-500 rounded-full animate-spin" />
-        <p className="text-sm text-charcoal/60 font-medium">Memuat data dasbor...</p>
+        <p className="text-sm text-charcoal/60 font-medium">Memuat data Dasboard...</p>
       </div>
     )
   }
 
   const weddingDateFormatted = wedding?.data?.schedule?.akad?.date
     ? new Date(wedding.data.schedule.akad.date).toLocaleDateString('id-ID', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
     : 'Belum diisi'
 
   const previewUrl = `${window.location.origin}/u/${wedding?.slug}`

@@ -67,11 +67,10 @@ export const Navbar: React.FC = () => {
         initial={{ y: 0 }}
         animate={{ y: isVisible ? 0 : -100 }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${isScrolled
             ? 'bg-cream/80 backdrop-blur-md border-b border-sand shadow-xs py-4'
             : 'bg-transparent py-6'
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
@@ -103,7 +102,7 @@ export const Navbar: React.FC = () => {
                 <Link to="/dashboard">
                   <Button size="sm" variant="ghost" className="flex items-center gap-1.5 text-charcoal/80 hover:text-gold-500 cursor-pointer">
                     <LayoutDashboard size={15} />
-                    <span>Dasbor</span>
+                    <span>Dasboard</span>
                   </Button>
                 </Link>
                 <Button size="sm" variant="outline" className="border-red-200 text-red-600 hover:bg-red-50 flex items-center gap-1 cursor-pointer" onClick={handleLogout}>
@@ -160,7 +159,7 @@ export const Navbar: React.FC = () => {
                   <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button size="md" variant="outline" className="w-full flex items-center justify-center gap-2">
                       <LayoutDashboard size={16} />
-                      <span>Dasbor</span>
+                      <span>Dasboard</span>
                     </Button>
                   </Link>
                   <Button

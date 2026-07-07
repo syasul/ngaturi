@@ -24,9 +24,9 @@ export const Onboarding: React.FC = () => {
   const [step, setStep] = useState(1)
   const [packages, setPackages] = useState<any[]>([])
   const [themes, setThemes] = useState<any[]>([])
-  
+
   const [selectedPkg, setSelectedPkg] = useState<any>(null)
-  
+
   // Basic metadata form state
   const [groomName, setGroomName] = useState('')
   const [groomNick, setGroomNick] = useState('')
@@ -125,7 +125,7 @@ export const Onboarding: React.FC = () => {
       const nameSlug = `${user?.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Math.floor(
         Math.random() * 900 + 100
       )}`
-      
+
       const res = await api.post('/weddings', {
         slug: nameSlug,
         themeId: theme.id,
@@ -253,20 +253,18 @@ export const Onboarding: React.FC = () => {
             return (
               <div key={s.number} className="relative z-10 flex flex-col items-center">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${
-                    isCompleted
+                  className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${isCompleted
                       ? 'bg-green-600 border-green-600 text-white'
                       : isActive
-                      ? 'bg-gold-500 border-gold-500 text-white'
-                      : 'bg-white border-sand text-charcoal/40'
-                  }`}
+                        ? 'bg-gold-500 border-gold-500 text-white'
+                        : 'bg-white border-sand text-charcoal/40'
+                    }`}
                 >
                   {isCompleted ? <Check size={18} /> : <Icon size={18} />}
                 </div>
                 <span
-                  className={`text-[10px] sm:text-xs font-semibold mt-2 tracking-wide uppercase ${
-                    isActive ? 'text-gold-600 font-bold' : 'text-charcoal/50'
-                  }`}
+                  className={`text-[10px] sm:text-xs font-semibold mt-2 tracking-wide uppercase ${isActive ? 'text-gold-600 font-bold' : 'text-charcoal/50'
+                    }`}
                 >
                   {s.name}
                 </span>
@@ -304,11 +302,10 @@ export const Onboarding: React.FC = () => {
                 {packages.map((pkg) => (
                   <Card
                     key={pkg.id}
-                    className={`p-6 border flex flex-col justify-between transition-all relative overflow-hidden ${
-                      selectedPkg?.id === pkg.id
+                    className={`p-6 border flex flex-col justify-between transition-all relative overflow-hidden ${selectedPkg?.id === pkg.id
                         ? 'border-gold-500 bg-gold-500/5 ring-1 ring-gold-500'
                         : 'border-sand hover:border-gold-500 bg-white'
-                    }`}
+                      }`}
                   >
                     <div>
                       <h4 className="text-lg font-serif font-bold text-charcoal">{pkg.name}</h4>
@@ -356,9 +353,8 @@ export const Onboarding: React.FC = () => {
                   return (
                     <div
                       key={theme.id}
-                      className={`border rounded-2xl overflow-hidden bg-white shadow-sm flex flex-col ${
-                        isLocked ? 'opacity-65' : 'hover:border-gold-500'
-                      }`}
+                      className={`border rounded-2xl overflow-hidden bg-white shadow-sm flex flex-col ${isLocked ? 'opacity-65' : 'hover:border-gold-500'
+                        }`}
                     >
                       <div className="h-28 bg-sand/30 flex items-center justify-center relative">
                         {isLocked ? (
@@ -519,7 +515,7 @@ export const Onboarding: React.FC = () => {
                   navigate('/dashboard')
                 }}
               >
-                Selesaikan & Buka Dasbor
+                Selesaikan & Buka Dasboard
               </Button>
             </div>
           )}
@@ -553,11 +549,10 @@ export const Onboarding: React.FC = () => {
                   key={method.id}
                   type="button"
                   onClick={() => setPaymentMethod(method.id)}
-                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
-                    paymentMethod === method.id
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${paymentMethod === method.id
                       ? 'border-amber-500 bg-amber-500/5 shadow-sm'
                       : 'border-sand hover:border-amber-500/40'
-                  }`}
+                    }`}
                 >
                   <span className="text-xs font-bold text-charcoal">{method.name}</span>
                   <span className="text-[9px] text-charcoal/50 mt-0.5">{method.desc}</span>

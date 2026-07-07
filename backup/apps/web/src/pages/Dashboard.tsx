@@ -90,7 +90,7 @@ export const Dashboard: React.FC = () => {
             </div>
             <div className="relative z-10 space-y-2">
               <span className="text-xs uppercase tracking-widest text-gold-100 font-semibold font-poppins">
-                Dasbor Pengguna
+                Dasboard Pengguna
               </span>
               <h1 className="text-3xl sm:text-4xl font-serif font-bold tracking-wide">
                 Selamat Datang, {user?.name}!

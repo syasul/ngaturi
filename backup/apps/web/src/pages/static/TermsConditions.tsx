@@ -60,7 +60,7 @@ export const TermsConditions: React.FC = () => {
               3. Paket Layanan & Masa Aktif
             </h2>
             <p>
-              Masa aktif undangan bervariasi bergantung pada jenis paket yang Anda pilih saat checkout. Setelah masa aktif habis (biasanya setelah acara pernikahan selesai), status undangan akan berubah menjadi draf/arsip non-aktif sehingga tidak dapat diakses publik. Anda dapat memperpanjang masa aktif tersebut dengan melakukan transaksi pembelian paket perpanjangan di halaman Billing dasbor Anda.
+              Masa aktif undangan bervariasi bergantung pada jenis paket yang Anda pilih saat checkout. Setelah masa aktif habis (biasanya setelah acara pernikahan selesai), status undangan akan berubah menjadi draf/arsip non-aktif sehingga tidak dapat diakses publik. Anda dapat memperpanjang masa aktif tersebut dengan melakukan transaksi pembelian paket perpanjangan di halaman Billing Dasboard Anda.
             </p>
           </section>
 

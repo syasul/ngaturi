@@ -1,218 +1,270 @@
-import React, { useState, useEffect } from 'react'
-import { AnimatePresence } from 'framer-motion'
-import { Heart, Clock } from 'lucide-react'
-import api from '../../lib/api'
-import { toast } from 'sonner'
-import ThemeRouter from '../../themes/ThemeRouter'
-import OpeningCover from '../../themes/reusable/OpeningCover'
-import MusicPlayer from '../../themes/reusable/MusicPlayer'
+import { AnimatePresence } from 'framer-motion';
+import { Clock, Heart } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import api from '../../lib/api';
+import ThemeRouter from '../../themes/ThemeRouter';
+import MusicPlayer from '../../themes/reusable/MusicPlayer';
+import OpeningCover from '../../themes/reusable/OpeningCover';
 
 interface InvitationPublicProps {
-  slug?: string
+    slug?: string;
 }
 
-export const InvitationPublic: React.FC<InvitationPublicProps> = ({ slug: propSlug }) => {
-  const slug = propSlug || (typeof window !== 'undefined' ? window.location.pathname.split('/').pop() ?? '' : '')
-  const guestToken = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('to') : null
+export const InvitationPublic: React.FC<InvitationPublicProps> = ({
+    slug: propSlug,
+}) => {
+    const slug =
+        propSlug ||
+        (typeof window !== 'undefined'
+            ? (window.location.pathname.split('/').pop() ?? '')
+            : '');
+    const guestToken =
+        typeof window !== 'undefined'
+            ? new URLSearchParams(window.location.search).get('to')
+            : null;
 
-  const [wedding, setWedding] = useState<any>(null)
-  const [guest, setGuest] = useState<any>(null)
-  const [wishes, setWishes] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+    const [wedding, setWedding] = useState<any>(null);
+    const [guest, setGuest] = useState<any>(null);
+    const [wishes, setWishes] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-  // Presentation States
-  const [isOpened, setIsOpened] = useState(false)
-  const [autoPlayMusic, setAutoPlayMusic] = useState(false)
+    // Presentation States
+    const [isOpened, setIsOpened] = useState(false);
+    const [autoPlayMusic, setAutoPlayMusic] = useState(false);
 
-  // 1. Dynamic Font Injection on Mount
-  useEffect(() => {
-    const link = document.createElement('link')
-    link.href =
-      'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Dancing+Script:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap'
-    link.rel = 'stylesheet'
-    document.head.appendChild(link)
+    // 1. Dynamic Font Injection on Mount
+    useEffect(() => {
+        const link = document.createElement('link');
+        link.href =
+            'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Dancing+Script:wght@400;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap';
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
 
-    return () => {
-      document.head.removeChild(link)
-    }
-  }, [])
+        return () => {
+            document.head.removeChild(link);
+        };
+    }, []);
 
-  // 2. Load Wedding Details and Wishes
-  useEffect(() => {
-    const loadPublicData = async () => {
-      try {
-        const res = await api.get(`/weddings/public/${slug}`)
-        if (res.data.status === 'success') {
-          const w = res.data.wedding
-          setWedding(w)
-
-          // Load wishes list
-          const wishesRes = await api.get(`/guests/public/wishes/${w.id}`)
-          if (wishesRes.data.status === 'success') {
-            setWishes(wishesRes.data.wishes)
-          }
-
-          // If guest token present, fetch guest name
-          if (guestToken) {
+    // 2. Load Wedding Details and Wishes
+    useEffect(() => {
+        const loadPublicData = async () => {
             try {
-              const guestRes = await api.get(`/guests/public/by-token/${guestToken}`)
-              if (guestRes.data.status === 'success') {
-                setGuest(guestRes.data.guest)
-              }
-            } catch (e) {
-              console.error('Guest token loading error:', e)
+                const res = await api.get(`/weddings/public/${slug}`);
+                if (res.data.status === 'success') {
+                    const w = res.data.wedding;
+                    setWedding(w);
+
+                    // Load wishes list
+                    const wishesRes = await api.get(
+                        `/guests/public/wishes/${w.id}`,
+                    );
+                    if (wishesRes.data.status === 'success') {
+                        setWishes(wishesRes.data.wishes);
+                    }
+
+                    // If guest token present, fetch guest name
+                    if (guestToken) {
+                        try {
+                            const guestRes = await api.get(
+                                `/guests/public/by-token/${guestToken}`,
+                            );
+                            if (guestRes.data.status === 'success') {
+                                setGuest(guestRes.data.guest);
+                            }
+                        } catch (e) {
+                            console.error('Guest token loading error:', e);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('Error loading wedding:', err);
+            } finally {
+                setLoading(false);
             }
-          }
+        };
+
+        if (slug) {
+            loadPublicData();
         }
-      } catch (err) {
-        console.error('Error loading wedding:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
+    }, [slug, guestToken]);
 
-    if (slug) {
-      loadPublicData()
-    }
-  }, [slug, guestToken])
+    // 3. Dynamic Open Graph Meta Tag Injector
+    useEffect(() => {
+        if (wedding) {
+            const groomNick =
+                wedding.data?.groom?.nickname ||
+                wedding.data?.groom?.name ||
+                'Groom';
+            const brideNick =
+                wedding.data?.bride?.nickname ||
+                wedding.data?.bride?.name ||
+                'Bride';
+            const title = `Pernikahan ${groomNick} & ${brideNick}`;
+            const desc = `Undangan pernikahan digital kami. Klik untuk info lokasi, detail acara, galeri foto, dan RSVP.`;
 
-  // 3. Dynamic Open Graph Meta Tag Injector
-  useEffect(() => {
-    if (wedding) {
-      const groomNick = wedding.data?.groom?.nickname || wedding.data?.groom?.name || 'Groom'
-      const brideNick = wedding.data?.bride?.nickname || wedding.data?.bride?.name || 'Bride'
-      const title = `Pernikahan ${groomNick} & ${brideNick}`
-      const desc = `Undangan pernikahan digital kami. Klik untuk info lokasi, detail acara, galeri foto, dan RSVP.`
+            document.title = title;
 
-      document.title = title
+            const updateMetaTag = (
+                property: string,
+                content: string,
+                attr: 'name' | 'property' = 'property',
+            ) => {
+                let element = document.querySelector(
+                    `meta[${attr}="${property}"]`,
+                );
+                if (!element) {
+                    element = document.createElement('meta');
+                    element.setAttribute(attr, property);
+                    document.head.appendChild(element);
+                }
+                element.setAttribute('content', content);
+            };
 
-      const updateMetaTag = (property: string, content: string, attr: 'name' | 'property' = 'property') => {
-        let element = document.querySelector(`meta[${attr}="${property}"]`)
-        if (!element) {
-          element = document.createElement('meta')
-          element.setAttribute(attr, property)
-          document.head.appendChild(element)
+            const coverImg =
+                wedding.photos?.find((p: any) => p.type === 'cover')?.url ||
+                wedding.thumbnailUrl ||
+                '';
+
+            updateMetaTag('og:title', title);
+            updateMetaTag('og:description', desc);
+            updateMetaTag('og:image', coverImg);
+            updateMetaTag('og:url', window.location.href);
+            updateMetaTag('og:type', 'website');
+            updateMetaTag('description', desc, 'name');
         }
-        element.setAttribute('content', content)
-      }
+    }, [wedding]);
 
-      const coverImg = wedding.photos?.find((p: any) => p.type === 'cover')?.url || wedding.thumbnailUrl || ''
+    // Handle RSVP Submit
+    const handleRsvpSubmit = async (rsvpStatus: string, message: string) => {
+        if (!guestToken) return;
 
-      updateMetaTag('og:title', title)
-      updateMetaTag('og:description', desc)
-      updateMetaTag('og:image', coverImg)
-      updateMetaTag('og:url', window.location.href)
-      updateMetaTag('og:type', 'website')
-      updateMetaTag('description', desc, 'name')
-    }
-  }, [wedding])
+        try {
+            const res = await api.post('/guests/public/rsvp', {
+                uniqueToken: guestToken,
+                rsvpStatus,
+                message,
+            });
 
-  // Handle RSVP Submit
-  const handleRsvpSubmit = async (rsvpStatus: string, message: string) => {
-    if (!guestToken) return
+            if (res.data.status === 'success') {
+                toast.success('Konfirmasi kehadiran berhasil dikirim!');
 
-    try {
-      const res = await api.post('/guests/public/rsvp', {
-        uniqueToken: guestToken,
-        rsvpStatus,
-        message,
-      })
-
-      if (res.data.status === 'success') {
-        toast.success('Konfirmasi kehadiran berhasil dikirim!')
-
-        // Reload wishes list
-        const wishesRes = await api.get(`/guests/public/wishes/${wedding.id}`)
-        if (wishesRes.data.status === 'success') {
-          setWishes(wishesRes.data.wishes)
+                // Reload wishes list
+                const wishesRes = await api.get(
+                    `/guests/public/wishes/${wedding.id}`,
+                );
+                if (wishesRes.data.status === 'success') {
+                    setWishes(wishesRes.data.wishes);
+                }
+            }
+        } catch (err) {
+            toast.error('Gagal mengirim konfirmasi kehadiran.');
         }
-      }
-    } catch (err) {
-      toast.error('Gagal mengirim konfirmasi kehadiran.')
+    };
+
+    const handleOpenInvitation = () => {
+        setIsOpened(true);
+        setAutoPlayMusic(true);
+    };
+
+    if (loading) {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#FAF7F2] font-sans">
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-amber-500/30 border-t-amber-500" />
+                <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/60">
+                    Membuka undangan digital...
+                </p>
+            </div>
+        );
     }
-  }
 
-  const handleOpenInvitation = () => {
-    setIsOpened(true)
-    setAutoPlayMusic(true)
-  }
+    // Handle 404: Not Found or Unpublished/Draft state
+    if (!wedding || wedding.status !== 'published') {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-center bg-[#FAF7F2] p-6 text-center font-sans">
+                <Heart className="mb-4 animate-pulse text-red-300" size={48} />
+                <h2 className="font-sans text-2xl font-bold text-[#2C2C2C]">
+                    Undangan Tidak Aktif
+                </h2>
+                <p className="mt-2 max-w-sm text-sm text-neutral-500">
+                    Maaf, undangan digital dengan tautan URL ini tidak ditemukan
+                    atau masih dalam status draf.
+                </p>
+            </div>
+        );
+    }
 
-  if (loading) {
+    // Handle Expired checks
+    const isExpired = wedding.expiredAt
+        ? new Date(wedding.expiredAt) < new Date()
+        : false;
+    if (isExpired) {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-center bg-[#FAF7F2] p-6 text-center font-sans">
+                <Clock
+                    className="mb-4 animate-bounce text-neutral-400"
+                    size={48}
+                />
+                <h2 className="font-sans text-2xl font-bold text-[#2C2C2C]">
+                    Undangan Telah Kedaluwarsa
+                </h2>
+                <p className="mt-2 max-w-sm text-sm text-neutral-500">
+                    Masa aktif undangan digital ini telah berakhir. Silakan
+                    hubungi pasangan pengantin untuk informasi lebih lanjut.
+                </p>
+            </div>
+        );
+    }
+
+    const data = wedding.data;
+    const themeId = wedding.themeId || 'elegant';
+
     return (
-      <div className="min-h-screen bg-[#FAF7F2] flex flex-col items-center justify-center gap-4 font-sans">
-        <div className="w-12 h-12 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin" />
-        <p className="text-xs text-charcoal/60 font-semibold tracking-wider uppercase">
-          Membuka undangan digital...
-        </p>
-      </div>
-    )
-  }
+        <div className="relative min-h-screen w-full overflow-x-hidden">
+            {/* Autoplay Music Player */}
+            {wedding.data?.musicUrl && (
+                <MusicPlayer
+                    musicUrl={wedding.data.musicUrl}
+                    autoPlay={autoPlayMusic}
+                />
+            )}
 
-  // Handle 404: Not Found or Unpublished/Draft state
-  if (!wedding || wedding.status !== 'published') {
-    return (
-      <div className="min-h-screen bg-[#FAF7F2] flex flex-col items-center justify-center p-6 text-center font-sans">
-        <Heart className="text-red-300 mb-4 animate-pulse" size={48} />
-        <h2 className="text-2xl font-serif font-bold text-[#2C2C2C]">Undangan Tidak Aktif</h2>
-        <p className="text-sm text-neutral-500 mt-2 max-w-sm">
-          Maaf, undangan digital dengan tautan URL ini tidak ditemukan atau masih dalam status draf.
-        </p>
-      </div>
-    )
-  }
+            {/* Opening Envelope Cover Screen */}
+            <AnimatePresence>
+                {!isOpened && (
+                    <OpeningCover
+                        groomName={
+                            data?.groom?.nickname ||
+                            data?.groom?.name ||
+                            'Groom'
+                        }
+                        brideName={
+                            data?.bride?.nickname ||
+                            data?.bride?.name ||
+                            'Bride'
+                        }
+                        guestName={guest?.name}
+                        themeId={themeId}
+                        onOpen={handleOpenInvitation}
+                    />
+                )}
+            </AnimatePresence>
 
-  // Handle Expired checks
-  const isExpired = wedding.expiredAt ? new Date(wedding.expiredAt) < new Date() : false
-  if (isExpired) {
-    return (
-      <div className="min-h-screen bg-[#FAF7F2] flex flex-col items-center justify-center p-6 text-center font-sans">
-        <Clock className="text-neutral-400 mb-4 animate-bounce" size={48} />
-        <h2 className="text-2xl font-serif font-bold text-[#2C2C2C]">Undangan Telah Kedaluwarsa</h2>
-        <p className="text-sm text-neutral-500 mt-2 max-w-sm">
-          Masa aktif undangan digital ini telah berakhir. Silakan hubungi pasangan pengantin untuk informasi lebih lanjut.
-        </p>
-      </div>
-    )
-  }
+            {/* Main Content (Theme Component Router) */}
+            {isOpened && (
+                <ThemeRouter
+                    themeId={themeId}
+                    data={data}
+                    weddingId={wedding.id}
+                    photos={wedding.photos}
+                    guestName={guest?.name}
+                    guestToken={guestToken || undefined}
+                    wishes={wishes}
+                    onRsvpSubmit={handleRsvpSubmit}
+                />
+            )}
+        </div>
+    );
+};
 
-  const data = wedding.data
-  const themeId = wedding.themeId || 'elegant'
-
-  return (
-    <div className="min-h-screen relative w-full overflow-x-hidden">
-      {/* Autoplay Music Player */}
-      {wedding.data?.musicUrl && (
-        <MusicPlayer musicUrl={wedding.data.musicUrl} autoPlay={autoPlayMusic} />
-      )}
-
-      {/* Opening Envelope Cover Screen */}
-      <AnimatePresence>
-        {!isOpened && (
-          <OpeningCover
-            groomName={data?.groom?.nickname || data?.groom?.name || 'Groom'}
-            brideName={data?.bride?.nickname || data?.bride?.name || 'Bride'}
-            guestName={guest?.name}
-            themeId={themeId}
-            onOpen={handleOpenInvitation}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Main Content (Theme Component Router) */}
-      {isOpened && (
-        <ThemeRouter
-          themeId={themeId}
-          data={data}
-          weddingId={wedding.id}
-          photos={wedding.photos}
-          guestName={guest?.name}
-          guestToken={guestToken || undefined}
-          wishes={wishes}
-          onRsvpSubmit={handleRsvpSubmit}
-        />
-      )}
-    </div>
-  )
-}
-
-export default InvitationPublic
+export default InvitationPublic;

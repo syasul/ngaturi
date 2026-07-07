@@ -25,7 +25,7 @@ export const DashboardLayout: React.FC = () => {
   const { user, clearAuth } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
-  
+
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
@@ -43,7 +43,7 @@ export const DashboardLayout: React.FC = () => {
   }
 
   const menuItems = [
-    { name: 'Dasbor', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Dasboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Data Pernikahan', path: '/dashboard/wedding-data', icon: Heart },
     { name: 'Pilih Tema', path: '/dashboard/themes', icon: Palette },
     { name: 'Galeri & Media', path: '/dashboard/gallery', icon: ImageIcon },
@@ -67,9 +67,8 @@ export const DashboardLayout: React.FC = () => {
     <div className="min-h-screen bg-cream/35 flex font-sans text-charcoal">
       {/* 1. Sidebar - Desktop */}
       <aside
-        className={`hidden md:flex flex-col bg-white border-r border-sand/65 transition-all duration-300 z-20 ${
-          isSidebarCollapsed ? 'w-20' : 'w-64'
-        }`}
+        className={`hidden md:flex flex-col bg-white border-r border-sand/65 transition-all duration-300 z-20 ${isSidebarCollapsed ? 'w-20' : 'w-64'
+          }`}
       >
         {/* Brand Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-sand/40">
@@ -101,11 +100,10 @@ export const DashboardLayout: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
-                  isActive
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${isActive
                     ? 'bg-gold-500/10 text-gold-700 font-semibold border-l-4 border-gold-500'
                     : 'text-charcoal/70 hover:bg-cream/30 hover:text-gold-600'
-                }`}
+                  }`}
               >
                 <Icon size={18} className={isActive ? 'text-gold-600' : 'text-charcoal/50'} />
                 {!isSidebarCollapsed && <span className="text-sm">{item.name}</span>}
@@ -118,9 +116,8 @@ export const DashboardLayout: React.FC = () => {
         <div className="p-4 border-t border-sand/40">
           <button
             onClick={handleLogout}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-600 hover:bg-red-50 transition-colors ${
-              isSidebarCollapsed ? 'justify-center' : ''
-            }`}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-600 hover:bg-red-50 transition-colors ${isSidebarCollapsed ? 'justify-center' : ''
+              }`}
           >
             <LogOut size={18} />
             {!isSidebarCollapsed && <span className="text-sm font-semibold">Keluar</span>}
@@ -168,11 +165,10 @@ export const DashboardLayout: React.FC = () => {
                       key={item.path}
                       to={item.path}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
-                        isActive
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${isActive
                           ? 'bg-gold-500/10 text-gold-700 font-semibold border-l-4 border-gold-500'
                           : 'text-charcoal/70 hover:bg-cream/30 hover:text-gold-600'
-                      }`}
+                        }`}
                     >
                       <Icon size={18} className={isActive ? 'text-gold-600' : 'text-charcoal/50'} />
                       <span className="text-sm">{item.name}</span>

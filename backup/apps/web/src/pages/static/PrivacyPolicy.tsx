@@ -64,7 +64,7 @@ export const PrivacyPolicy: React.FC = () => {
               <li>Menampilkan undangan digital secara publik sesuai dengan slug yang Anda buat.</li>
               <li>Memproses transaksi pembayaran paket layanan melalui gerbang pembayaran (Tripay/Midtrans).</li>
               <li>Mengirimkan email verifikasi, kwitansi, instruksi bayar, dan notifikasi kedaluwarsa masa aktif undangan.</li>
-              <li>Menyediakan statistik RSVP dan check-in tamu pada dasbor pengguna.</li>
+              <li>Menyediakan statistik RSVP dan check-in tamu pada Dasboard pengguna.</li>
             </ul>
           </section>
 
@@ -91,7 +91,7 @@ export const PrivacyPolicy: React.FC = () => {
               5. Hak dan Pilihan Anda
             </h2>
             <p>
-              Sebagai pengguna, Anda berhak untuk mengakses, mengubah, memperbarui, atau menghapus data pribadi dan data pernikahan Anda kapan saja langsung melalui dasbor akun Anda. Jika Anda ingin menutup akun secara permanen, Anda dapat menghubungi tim support kami melalui kontak resmi yang tersedia.
+              Sebagai pengguna, Anda berhak untuk mengakses, mengubah, memperbarui, atau menghapus data pribadi dan data pernikahan Anda kapan saja langsung melalui Dasboard akun Anda. Jika Anda ingin menutup akun secara permanen, Anda dapat menghubungi tim support kami melalui kontak resmi yang tersedia.
             </p>
           </section>
 
