@@ -59,7 +59,7 @@ export const ElegantTheme: React.FC<ThemeProps> = ({
 }) => {
     const groom = data?.groom || {};
     const bride = data?.bride || {};
-    const schedules = data?.schedules || {};
+    const schedules = data?.schedules || data?.schedule || {};
     const stories = data?.stories || [];
     const quotes = data?.quotes || {};
 

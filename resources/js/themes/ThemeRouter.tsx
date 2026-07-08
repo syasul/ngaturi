@@ -8,6 +8,7 @@ import {
     EditorialMonoTheme,
     RoyalYogyakartaTheme,
 } from './samples/SampleDesignTheme';
+import Theme1 from './theme-1/Theme1';
 
 interface ThemeRouterProps extends ThemeProps {
     themeId: string;
@@ -42,6 +43,10 @@ export const ThemeRouter: React.FC<ThemeRouterProps> = ({
 
     if (normalizedId.includes('burgundy-bloom')) {
         return <BurgundyBloomTheme {...props} />;
+    }
+
+    if (normalizedId.includes('theme-1') || normalizedId.includes('theme_1')) {
+        return <Theme1 {...props} />;
     }
 
     // Fallback to Elegant Gold

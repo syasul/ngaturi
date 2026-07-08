@@ -44,6 +44,7 @@ Route::get('/kontak', function () {
 // Public Wedding Invitation Pages
 Route::get('/u/{slug}', [WeddingController::class, 'renderPublicInvitation'])->name('wedding.public');
 Route::get('/u/{slug}/preview', [WeddingController::class, 'renderPublicPreview'])->name('wedding.preview');
+Route::get('/api/weddings/public/{slug}', [WeddingController::class, 'getPublic']);
 
 // Public Guest API Routes
 Route::get('/api/guests/public/wishes/{weddingId}', [GuestController::class, 'getPublicWishes']);
@@ -119,8 +120,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // API: Weddings
-    Route::get('/api/weddings/my', [WeddingController::class, 'getMyWedding']);
-    Route::post('/api/weddings/my', [WeddingController::class, 'updateMyWedding']);
+    Route::get('/api/weddings/me', [WeddingController::class, 'getMe']);
+    Route::post('/api/weddings', [WeddingController::class, 'store']);
+    Route::put('/api/weddings/me', [WeddingController::class, 'update']);
+    Route::put('/api/weddings/me/slug', [WeddingController::class, 'changeSlug']);
+    Route::put('/api/weddings/me/theme', [WeddingController::class, 'changeTheme']);
+    Route::put('/api/weddings/me/status', [WeddingController::class, 'toggleStatus']);
+    Route::delete('/api/weddings/me', [WeddingController::class, 'destroy']);
 
     // API: Guests
     Route::get('/api/guests', [GuestController::class, 'index']);

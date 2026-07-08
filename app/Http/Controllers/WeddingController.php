@@ -47,6 +47,7 @@ class WeddingController extends Controller
                 'status' => 'success',
                 'wedding' => array_merge($wedding->toArray(), [
                     'themeName' => $wedding->theme ? $wedding->theme->name : null,
+                    'themeId' => $wedding->theme_id,
                     'photos' => $photos
                 ])
             ]);
@@ -110,6 +111,7 @@ class WeddingController extends Controller
                 'wedding' => array_merge($wedding->toArray(), [
                     'photos' => $photos,
                     'package' => $userPackage,
+                    'themeId' => $wedding->theme_id,
                 ])
             ]);
         } catch (\Exception $e) {
@@ -190,7 +192,9 @@ class WeddingController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Undangan berhasil disimpan.',
-                'wedding' => $wedding
+                'wedding' => array_merge($wedding->toArray(), [
+                    'themeId' => $wedding->theme_id,
+                ])
             ]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Gagal menyimpan detail undangan.'], 500);
@@ -267,7 +271,9 @@ class WeddingController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Tema berhasil diubah.',
-                'wedding' => $wedding
+                'wedding' => array_merge($wedding->toArray(), [
+                    'themeId' => $wedding->theme_id,
+                ])
             ]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Gagal mengubah tema.'], 500);
