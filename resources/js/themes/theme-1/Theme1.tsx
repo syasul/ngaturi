@@ -432,7 +432,6 @@ export const Theme1: React.FC<ThemeProps> = ({
     // Force default photos for now to match the requested design exactly
     const displayPhotos = defaultPhotos;
 
-
     const weddingDate =
         schedules.akad?.date || schedules.resepsi?.date || '2026-09-21';
 
