@@ -119,11 +119,11 @@ class DatabaseSeeder extends Seeder
                 'photo' => '/assets/theme_1/1781458096155-8jwgyh-Desaintanpajudul78.webp',
             ],
             'bride' => [
-                'name' => 'Berrly Beauty, S.Kom',
-                'nickname' => 'Berrly',
+                'name' => 'Iftitah Beauty, S.Kom',
+                'nickname' => 'Iftitah',
                 'parents' => 'Putri dari Bapak Lord Capulet & Ibu Lady Capulet',
                 'bio' => 'Pencinta seni dan keindahan yang menemukan harmoni dan kebahagiaan sejati dalam langkah kebersamaan bersama Ilyas.',
-                'ig' => '@berrly_beauty',
+                'ig' => '@Iftitah_beauty',
                 'photo' => '/assets/theme_1/1781458099113-j8vvhy-Desaintanpajudul77.webp',
             ],
             'schedule' => [
