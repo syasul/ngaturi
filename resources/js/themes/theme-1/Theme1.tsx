@@ -705,7 +705,7 @@ export const Theme1: React.FC<ThemeProps> = ({
                         {/* SCALLOPED CARD */}
                         {/* SCALLOPED CARD */}
                         <motion.div
-                            className="relative z-10 -mx-[11%] mx-auto -mt-14 mb-6 flex w-[122%] max-w-[490px] flex-col items-center justify-center @container"
+                            className="relative z-10 -mt-14 mb-6 flex w-[122%] max-w-[490px] flex-col items-center justify-center @container"
                             style={{ aspectRatio: '550 / 660' }}
                             initial="hidden"
                             whileInView="visible"
@@ -2815,7 +2815,7 @@ export const Theme1: React.FC<ThemeProps> = ({
                 {/* MUSIC BUTTON */}
                 <button
                     onClick={() => setIsPlayingMusic(!isPlayingMusic)}
-                    className="absolute bottom-6 left-6 z-[99] flex h-12 w-12 items-center justify-center rounded-full border-[1.5px] border-[#C9A84C]/40 bg-[#3A0511] shadow-[0_4px_20px_-5px_rgba(58,5,17,0.5)] transition-all duration-300 hover:scale-105 active:scale-95"
+                    className="absolute bottom-20 left-6 z-[99] flex h-12 w-12 items-center justify-center rounded-full border-[1.5px] border-[#C9A84C]/40 bg-[#3A0511] shadow-[0_4px_20px_-5px_rgba(58,5,17,0.5)] transition-all duration-300 hover:scale-105 active:scale-95"
                     title="Toggle Music"
                 >
                     <div
@@ -2862,7 +2862,7 @@ export const Theme1: React.FC<ThemeProps> = ({
                 {/* QRIS BUTTON */}
                 <button
                     onClick={() => setIsQrisModalOpen(true)}
-                    className="absolute bottom-20 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                    className="absolute bottom-36 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
                     title="QRIS"
                 >
                     <QrCode size={20} />
@@ -2872,7 +2872,7 @@ export const Theme1: React.FC<ThemeProps> = ({
                 {guestName && (
                     <button
                         onClick={() => setIsQrModalOpen(true)}
-                        className="absolute bottom-20 right-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-[#6B1D2F] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                        className="absolute bottom-36 right-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-[#6B1D2F] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
                         title="Akses Masuk QR"
                     >
                         <QrCode size={20} />
