@@ -11,11 +11,60 @@ import {
     Video,
     X,
 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ThemeProps } from '../elegant/ElegantTheme';
 import CountdownTimer from '../reusable/CountdownTimer';
 import GuestWishes from '../reusable/GuestWishes';
 import RSVPForm from '../reusable/RSVPForm';
+
+const Theme1Countdown = ({ targetDate }: { targetDate: string }) => {
+    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+    useEffect(() => {
+        const calculateTime = () => {
+            const difference = +new Date(targetDate) - +new Date();
+            if (difference <= 0) return setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            setTimeLeft({
+                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                minutes: Math.floor((difference / 1000 / 60) % 60),
+                seconds: Math.floor((difference / 1000) % 60),
+            });
+        };
+        calculateTime();
+        const timer = setInterval(calculateTime, 1000);
+        return () => clearInterval(timer);
+    }, [targetDate]);
+
+    const blocks = [
+        { l: 'HARI', v: timeLeft.days },
+        { l: 'JAM', v: timeLeft.hours },
+        { l: 'MENIT', v: timeLeft.minutes },
+        { l: 'DETIK', v: timeLeft.seconds },
+    ];
+
+    return (
+        <div className="flex items-center justify-center gap-2 sm:gap-4 text-[#8C1B2F] pt-2 scale-90 sm:scale-100">
+            {blocks.map((b, i) => (
+                <React.Fragment key={i}>
+                    <div className="flex flex-col items-center">
+                        <span className="text-4xl sm:text-5xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                            {String(b.v).padStart(2, '0')}
+                        </span>
+                        <span className="text-[9px] sm:text-[10px] font-bold tracking-widest mt-1 text-[#8C1B2F]/80">
+                            {b.l}
+                        </span>
+                    </div>
+                    {i < 3 && (
+                        <span className="text-3xl sm:text-4xl font-bold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                            :
+                        </span>
+                    )}
+                </React.Fragment>
+            ))}
+        </div>
+    );
+};
 
 // Container staggered animation variants
 const containerVariants: Variants = {
@@ -393,7 +442,7 @@ export const Theme1: React.FC<ThemeProps> = ({
                 {/* B. BRIDE & GROOM PROFILE SECTION */}
                 <section
                     id="couple"
-                    className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-hidden bg-[#FAF3EC] pb-32 pt-12"
+                    className="relative z-10 flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-[#FAF3EC] pb-32 pt-12"
                 >
                     {/* The Groom & The Bride Heading */}
                     <motion.div
@@ -406,9 +455,12 @@ export const Theme1: React.FC<ThemeProps> = ({
                         <div className="relative mx-auto mb-6 mt-4 h-[1px] w-[80%] bg-[#5C061C]/30">
                             <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#5C061C]/60" />
                         </div>
-                        <div className="relative space-y-1 pt-2 text-center">
+
+                        {/* Title Wrapper */}
+                        <div className="relative w-full max-w-[320px] px-6 pt-2 pb-6 flex flex-col justify-center select-none">
+                            {/* Background Ampersand */}
                             <span
-                                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none text-7xl font-black opacity-[0.04]"
+                                className="pointer-events-none absolute left-[55%] top-[40%] -translate-x-1/2 -translate-y-1/2 select-none text-[100px] italic font-light opacity-[0.08]"
                                 style={{
                                     fontFamily: "'Cormorant Garamond', serif",
                                     color: '#5C061C',
@@ -416,20 +468,26 @@ export const Theme1: React.FC<ThemeProps> = ({
                             >
                                 &
                             </span>
+
+                            {/* The Groom */}
                             <h2
-                                className="text-4xl font-black leading-tight"
+                                className="text-4xl font-bold leading-tight text-[#5C061C]"
                                 style={{
                                     fontFamily: "'Cormorant Garamond', serif",
-                                    color: '#5C061C',
+                                    marginRight: 'auto',
+                                    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
                                 }}
                             >
                                 The Groom
                             </h2>
+
+                            {/* The Bride */}
                             <h2
-                                className="-mt-0.5 pl-16 text-4xl leading-tight"
+                                className="text-4xl leading-tight text-[#5C061C] mt-2"
                                 style={{
                                     fontFamily: "'Dancing Script', cursive",
-                                    color: '#5C061C',
+                                    marginLeft: 'auto',
+                                    textShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
                                 }}
                             >
                                 The Bride
@@ -438,8 +496,10 @@ export const Theme1: React.FC<ThemeProps> = ({
                     </motion.div>
 
                     {/* SCALLOPED CARD */}
+                    {/* SCALLOPED CARD */}
                     <motion.div
-                        className="relative z-10 mx-auto flex w-[100%] max-w-[500px] flex-col items-center justify-center p-4 @container"
+                        className="relative z-10 mx-auto flex w-[122%] max-w-[490px] -mx-[11%] flex-col items-center justify-center @container -mt-14 mb-6"
+                        style={{ aspectRatio: '550 / 660' }}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, amount: 0.1 }}
@@ -452,26 +512,26 @@ export const Theme1: React.FC<ThemeProps> = ({
                             alt="Card Background"
                         />
 
-                        {/* Ribbon Ornament */}
+                        {/* Ribbon Ornament (Responsive) */}
                         <img
                             src="/assets/theme_1/pita.webp"
-                            className="absolute -left-6 -top-4 z-20 h-28 w-28 object-contain drop-shadow-md"
+                            className="absolute left-[13%] top-[4%] z-20 w-[18%] h-auto object-contain drop-shadow-md"
                             alt="Ribbon"
                         />
 
-                        {/* Content inside the card */}
-                        <div className="relative z-10 flex flex-col items-center space-y-5 px-6 py-14 text-center">
+                        {/* Content inside the card (Absolutely positioned to fit aspect-ratio) */}
+                        <div className="absolute left-[22%] right-[22%] top-[14%] bottom-[18%] z-10 flex flex-col items-center justify-between text-center select-none">
                             <img
                                 src="/assets/theme_1/bismillah.webp"
-                                className="h-12 w-auto object-contain opacity-90 brightness-[3]"
+                                className="h-[7%] w-auto object-contain opacity-95 brightness-[3]"
                                 alt="Basmalah"
                             />
 
-                            <div className="space-y-3">
-                                <p className="text-[3.8cqw] font-medium tracking-wide text-[#FAF3EC] opacity-90">
+                            <div className="flex flex-col items-center space-y-[0.5%]">
+                                <p className="text-[3.6cqw] font-semibold tracking-wide text-[#FAF3EC] opacity-90">
                                     Assalamualaikum wbt
                                 </p>
-                                <p className="px-2 text-[3cqw] leading-relaxed text-[#FAF3EC] opacity-85">
+                                <p className="px-[1%] text-[2.6cqw] leading-relaxed text-[#FAF3EC] opacity-80">
                                     Dengan penuh rasa syukur, kami mengundang
                                     Anda untuk menghadiri acara pernikahan putra
                                     & putri kami.
@@ -479,9 +539,9 @@ export const Theme1: React.FC<ThemeProps> = ({
                             </div>
 
                             {/* Groom */}
-                            <div className="space-y-1 pt-2">
+                            <div className="flex flex-col items-center">
                                 <h3
-                                    className="text-[7cqw] leading-tight"
+                                    className="text-[6.0cqw] leading-tight font-semibold"
                                     style={{
                                         fontFamily: "'Dancing Script', cursive",
                                         color: '#FAF3EC',
@@ -489,33 +549,31 @@ export const Theme1: React.FC<ThemeProps> = ({
                                 >
                                     {groom.name || 'Virga A. Handsome, S.Kom'}
                                 </h3>
-                                <p className="mt-2 text-[3cqw] italic text-[#C9A84C]">
+                                <p className="text-[2.6cqw] italic text-[#C9A84C]">
                                     The Son of
                                 </p>
-                                <p className="text-[3cqw] leading-relaxed text-[#FAF3EC] opacity-85">
+                                <p className="text-[2.6cqw] leading-relaxed text-[#FAF3EC] opacity-80 max-w-[85%] mx-auto">
                                     {groom.parents ||
                                         'Mr. Aghala Gola & Mrs. Egela Egle'}
                                 </p>
                             </div>
 
                             {/* Ampersand */}
-                            <div className="py-2">
-                                <span
-                                    className="text-[8cqw]"
-                                    style={{
-                                        fontFamily:
-                                            "'Cormorant Garamond', serif",
-                                        color: '#FAF3EC',
-                                    }}
-                                >
-                                    &
-                                </span>
-                            </div>
+                            <span
+                                className="text-[6.0cqw] leading-none"
+                                style={{
+                                    fontFamily:
+                                        "'Cormorant Garamond', serif",
+                                    color: '#FAF3EC',
+                                }}
+                            >
+                                &
+                            </span>
 
                             {/* Bride */}
-                            <div className="space-y-1 pb-4">
+                            <div className="flex flex-col items-center">
                                 <h3
-                                    className="text-[7cqw] leading-tight"
+                                    className="text-[6.0cqw] leading-tight font-semibold"
                                     style={{
                                         fontFamily: "'Dancing Script', cursive",
                                         color: '#FAF3EC',
@@ -523,10 +581,10 @@ export const Theme1: React.FC<ThemeProps> = ({
                                 >
                                     {bride.name || 'Berrly C. Beauty, S.Kom'}
                                 </h3>
-                                <p className="mt-2 text-[3cqw] italic text-[#C9A84C]">
+                                <p className="text-[2.6cqw] italic text-[#C9A84C]">
                                     The Daughter of
                                 </p>
-                                <p className="text-[3cqw] leading-relaxed text-[#FAF3EC] opacity-85">
+                                <p className="text-[2.6cqw] leading-relaxed text-[#FAF3EC] opacity-80 max-w-[85%] mx-auto">
                                     {bride.parents ||
                                         'Bapak Lord Capulet & Ibu Lady Capulet'}
                                 </p>
@@ -535,27 +593,17 @@ export const Theme1: React.FC<ThemeProps> = ({
                     </motion.div>
 
                     {/* Bottom Elements: Horse Carriage, Flowers, Love text */}
-                    <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-0 flex h-64 flex-col items-center justify-end overflow-hidden">
+                    <div className="pointer-events-none absolute -bottom-10 left-0 right-0 z-0 flex h-64 flex-col items-center justify-end">
                         <img
                             src="/assets/theme_1/kuda-outline.webp"
-                            className="absolute bottom-8 h-auto w-[95%] max-w-[600px] object-contain opacity-25"
+                            className="absolute -bottom-8 -left-10 h-auto w-[85%] max-w-[500px] object-contain opacity-25"
                             alt="Horse Carriage Bottom"
                         />
                         <img
-                            src="/assets/theme_1/kumpulanbunga2.webp"
-                            className="absolute bottom-6 right-6 z-10 h-24 w-24 object-contain drop-shadow-md"
+                            src="/assets/theme_1/kumpulanbunga1.webp"
+                            className="absolute -bottom-16 right-0 z-10 h-32 w-auto object-contain drop-shadow-md"
                             alt="Flowers"
                         />
-                        <div className="absolute -bottom-8 flex w-full justify-center">
-                            <span
-                                className="text-[110px] font-black tracking-widest text-[#5C061C] opacity-90"
-                                style={{
-                                    fontFamily: "'Cormorant Garamond', serif",
-                                }}
-                            >
-                                Love
-                            </span>
-                        </div>
                     </div>
                 </section>
 
@@ -575,243 +623,204 @@ export const Theme1: React.FC<ThemeProps> = ({
                             {/* Mixed typography heading */}
                             <motion.div
                                 variants={fadeUpVariants}
-                                className="relative px-6 pb-6"
+                                className="relative px-6 pb-12 pt-8 flex flex-col items-center"
                             >
                                 {/* Floral top-right decoration */}
                                 <div
-                                    className="absolute right-2 top-0 h-20 w-20 bg-contain bg-no-repeat opacity-80"
+                                    className="absolute right-0 -top-8 h-32 w-32 bg-contain bg-no-repeat opacity-90 z-10"
                                     style={{
                                         backgroundImage:
-                                            "url('/assets/theme_1/1779365549376-nqtsz1-719543e1113ce29e7052be17c6f9ab60.webp')",
+                                            "url('/assets/theme_1/kumpulanbunga2.webp')",
+                                        backgroundPosition: 'top right'
                                     }}
                                 />
-                                <h2
-                                    className="text-5xl font-black"
-                                    style={{
-                                        color: primaryColor,
-                                        fontFamily:
-                                            "'Cormorant Garamond', serif",
-                                    }}
-                                >
-                                    Love
-                                </h2>
-                                <h2
-                                    className="-mt-2 text-5xl"
-                                    style={{
-                                        fontFamily: "'Dancing Script', cursive",
-                                        color: primaryColor,
-                                    }}
-                                >
-                                    Story
-                                </h2>
+                                <div className="relative flex flex-col items-center mt-4">
+                                    <h2
+                                        className="text-[3.5rem] font-black relative z-20 leading-none"
+                                        style={{
+                                            color: '#5C061C',
+                                            fontFamily:
+                                                "'Cormorant Garamond', serif",
+                                        }}
+                                    >
+                                        Love
+                                        <img src="/assets/theme_1/tali.webp" className="absolute left-[65%] top-[80%] -translate-x-1/2 w-4 object-contain" alt="tassel" />
+                                    </h2>
+                                    <h2
+                                        className="-mt-4 ml-24 text-[4rem] relative z-20 leading-none"
+                                        style={{
+                                            fontFamily: "'Dancing Script', cursive",
+                                            color: '#5C061C',
+                                        }}
+                                    >
+                                        Story
+                                    </h2>
+                                </div>
                             </motion.div>
-
                             {/* Stories with photo frames */}
-                            <div className="relative">
+                            <div className="relative w-full">
                                 {/* Winding thread line */}
-                                <div className="pointer-events-none absolute bottom-0 left-[50%] top-0 w-[2px] -translate-x-[50%] bg-[#C9A84C]/20" />
+                                <div className="pointer-events-none absolute inset-0 z-0 flex justify-center opacity-90">
+                                    <div
+                                        className="w-[20%] max-w-[200px] h-full"
+                                        style={{
+                                            backgroundImage: "url('/assets/theme_1/line.webp')",
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize: '100% 100%',
+                                            backgroundPosition: 'top center'
+                                        }}
+                                    />
+                                </div>
 
-                                <div className="space-y-0">
+                                <div className="space-y-10 relative z-10 py-12">
                                     {stories.map((story: any, idx: number) => {
                                         const isEven = idx % 2 === 0;
-                                        const isLast =
-                                            idx === stories.length - 1;
+                                        const resolveImageUrl = (url: string | null | undefined, fallback: string) => {
+                                            if (!url) return fallback;
+                                            if (url.startsWith('http') || url.startsWith('/')) return url;
+                                            return `/${url}`;
+                                        };
                                         const storyPhotos = [
-                                            groom.photo ||
-                                            '/assets/theme_1/1781458096155-8jwgyh-Desaintanpajudul78.webp',
-                                            bride.photo ||
-                                            '/assets/theme_1/1781458099113-j8vvhy-Desaintanpajudul77.webp',
+                                            resolveImageUrl(groom.photo, '/assets/theme_1/foto-mempelai-pria.webp'),
+                                            resolveImageUrl(bride.photo, '/assets/theme_1/foto-mempelai-cewe.webp'),
                                         ];
                                         const photo = storyPhotos[idx % 2];
 
                                         return (
-                                            <motion.div
+                                            <div
                                                 key={idx}
-                                                variants={fadeUpVariants}
-                                                className="relative flex items-center gap-0 py-8"
+                                                className="relative flex w-full items-start justify-between px-2 sm:px-4"
                                             >
-                                                {isLast ? (
-                                                    /* Last story: dark burgundy card full width */
-                                                    <div
-                                                        className="mx-4 w-full overflow-hidden rounded-2xl shadow-xl"
-                                                        style={{
-                                                            backgroundColor:
-                                                                '#3A0511',
-                                                            border: '1px solid #C9A84C',
-                                                        }}
-                                                    >
-                                                        {/* Photo strip at top */}
-                                                        <div
-                                                            className="relative h-40 bg-cover bg-center"
-                                                            style={{
-                                                                backgroundImage: `url(${photo})`,
-                                                            }}
-                                                        >
-                                                            <div className="absolute inset-0 bg-black/30" />
-                                                            <div className="absolute right-3 top-3">
-                                                                <span
-                                                                    className="text-5xl font-black opacity-30"
-                                                                    style={{
-                                                                        fontFamily:
-                                                                            "'Cormorant Garamond', serif",
-                                                                        color: '#FAF3EC',
-                                                                    }}
-                                                                >
-                                                                    {story.year ||
-                                                                        story.date}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div className="relative space-y-2 p-5 text-center">
-                                                            {/* Paper clip */}
-                                                            <div className="absolute -top-3 left-1/2 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-[#C9A84C]/70" />
-                                                            <h4
-                                                                className="font-serif text-sm font-bold italic"
-                                                                style={{
-                                                                    color: '#FAF3EC',
-                                                                }}
-                                                            >
-                                                                {story.title}
-                                                            </h4>
-                                                            <p
-                                                                className="text-[11px] leading-relaxed"
-                                                                style={{
-                                                                    color: 'rgba(250,243,236,0.7)',
-                                                                }}
-                                                            >
-                                                                "
-                                                                {story.content ||
-                                                                    story.story}
-                                                                "
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                ) : isEven ? (
-                                                    /* Even: photo left, text right */
+                                                {isEven ? (
+                                                    /* Even (e.g. 2019): photo left, text right */
                                                     <>
-                                                        {/* Photo arch frame */}
-                                                        <div className="w-[45%] flex-shrink-0 pl-4">
-                                                            <div
-                                                                className="aspect-[3/4] overflow-hidden border-[3px]"
-                                                                style={{
-                                                                    borderColor:
-                                                                        secondaryColor,
-                                                                }}
-                                                            >
-                                                                <img
-                                                                    src={photo}
-                                                                    className="h-full w-full object-cover"
-                                                                    alt={
-                                                                        story.title
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        {/* Text right */}
-                                                        <div className="flex-1 space-y-2 pr-4 text-right">
+                                                        <motion.div
+                                                            className="w-[45%] relative z-10 flex justify-start pt-12"
+                                                            initial={{ opacity: 0, x: -40 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            viewport={{ once: true, amount: 0.3 }}
+                                                            transition={{ duration: 0.8, type: 'spring', bounce: 0.3 }}
+                                                        >
+                                                            <img src={photo} className="w-full max-w-[115px] rounded-[2rem] object-cover aspect-[4/5] shadow-xl" alt={story.title} />
+                                                        </motion.div>
+                                                        <motion.div
+                                                            className="w-[45%] flex flex-col items-end"
+                                                            initial={{ opacity: 0, x: 40 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            viewport={{ once: true, amount: 0.3 }}
+                                                            transition={{ duration: 0.8, type: 'spring', bounce: 0.3 }}
+                                                        >
                                                             <span
-                                                                className="block text-5xl font-black leading-none opacity-20"
-                                                                style={{
-                                                                    fontFamily:
-                                                                        "'Cormorant Garamond', serif",
-                                                                    color: primaryColor,
-                                                                }}
+                                                                className="block text-[4.5rem] italic text-[#E5B5B5] mb-2 leading-none font-thin text-right w-full"
+                                                                style={{ fontFamily: "'Cormorant Garamond', serif" }}
                                                             >
-                                                                {story.year ||
-                                                                    story.date}
+                                                                {story.year || story.date}
                                                             </span>
-                                                            <h4
-                                                                className="font-serif text-sm font-bold italic"
-                                                                style={{
-                                                                    color: textColor,
-                                                                }}
-                                                            >
-                                                                {story.title}
-                                                            </h4>
-                                                            <p
-                                                                className="text-[2.4cqw] leading-relaxed"
-                                                                style={{
-                                                                    color: mutedText,
-                                                                }}
-                                                            >
-                                                                "
-                                                                {story.content ||
-                                                                    story.story}
-                                                                "
+                                                            <p className="text-[11.5px] sm:text-[12.5px] text-[#5C061C] font-bold leading-relaxed text-right w-full">
+                                                                "{story.content || story.story}"
                                                             </p>
-                                                        </div>
+                                                        </motion.div>
                                                     </>
                                                 ) : (
-                                                    /* Odd: text left, photo right */
+                                                    /* Odd (e.g. 2022): text left, photo right */
                                                     <>
-                                                        {/* Text left */}
-                                                        <div className="flex-1 space-y-2 pl-4 text-left">
+                                                        <motion.div
+                                                            className="w-[45%] flex flex-col items-start"
+                                                            initial={{ opacity: 0, x: -40 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            viewport={{ once: true, amount: 0.3 }}
+                                                            transition={{ duration: 0.8, type: 'spring', bounce: 0.3 }}
+                                                        >
                                                             <span
-                                                                className="block text-5xl font-black leading-none opacity-20"
-                                                                style={{
-                                                                    fontFamily:
-                                                                        "'Cormorant Garamond', serif",
-                                                                    color: primaryColor,
-                                                                }}
+                                                                className="block text-[4.5rem] italic text-[#E5B5B5] mb-2 leading-none font-thin text-left w-full"
+                                                                style={{ fontFamily: "'Cormorant Garamond', serif" }}
                                                             >
-                                                                {story.year ||
-                                                                    story.date}
+                                                                {story.year || story.date}
                                                             </span>
-                                                            <h4
-                                                                className="font-serif text-sm font-bold italic"
-                                                                style={{
-                                                                    color: textColor,
-                                                                }}
-                                                            >
-                                                                {story.title}
-                                                            </h4>
-                                                            <p
-                                                                className="text-[2.4cqw] leading-relaxed"
-                                                                style={{
-                                                                    color: mutedText,
-                                                                }}
-                                                            >
-                                                                "
-                                                                {story.content ||
-                                                                    story.story}
-                                                                "
+                                                            <p className="text-[11.5px] sm:text-[12.5px] text-[#5C061C] font-bold leading-relaxed text-left w-full">
+                                                                "{story.content || story.story}"
                                                             </p>
-                                                        </div>
-                                                        {/* Photo arch frame */}
-                                                        <div className="w-[45%] flex-shrink-0 pr-4">
-                                                            <div
-                                                                className="aspect-[3/4] overflow-hidden rounded-t-full border-[3px] shadow-lg"
-                                                                style={{
-                                                                    borderColor:
-                                                                        secondaryColor,
-                                                                }}
-                                                            >
-                                                                <img
-                                                                    src={photo}
-                                                                    className="h-full w-full object-cover"
-                                                                    alt={
-                                                                        story.title
-                                                                    }
-                                                                />
-                                                            </div>
-                                                        </div>
+                                                        </motion.div>
+                                                        <motion.div
+                                                            className="w-[45%] relative z-10 flex justify-end pt-12"
+                                                            initial={{ opacity: 0, x: 40 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            viewport={{ once: true, amount: 0.3 }}
+                                                            transition={{ duration: 0.8, type: 'spring', bounce: 0.3 }}
+                                                        >
+                                                            <img src={photo} className="w-full max-w-[115px] rounded-[2rem] object-cover aspect-[4/5] shadow-xl" alt={story.title} />
+                                                        </motion.div>
                                                     </>
                                                 )}
-                                                {/* Floral divider between items */}
-                                                {idx < stories.length - 1 && (
-                                                    <div className="absolute -bottom-4 left-1/2 z-10 -translate-x-1/2">
-                                                        <img
-                                                            src="/assets/theme_1/1779365451407-c39140-88f89bb01e0efa7776ac39e59d772a53.webp"
-                                                            className="h-8 w-8 object-contain"
-                                                            alt="floral divider"
-                                                        />
+
+                                                {/* Decorators */}
+                                                {idx === 0 && (
+                                                    <div className="absolute bottom-30 left-1/2 z-20 -translate-x-1/2">
+                                                        <img src="/assets/theme_1/bunga.webp" className="w-24 h-24 object-contain drop-shadow-md" alt="flower" />
                                                     </div>
                                                 )}
-                                            </motion.div>
+                                                {idx === 1 && (
+                                                    <div className="absolute -bottom-10 left-[48%] z-20 -translate-x-1/2">
+                                                        <img src="/assets/theme_1/kupu1.webp" className="w-14 h-14 object-contain drop-shadow-md transform -rotate-12" alt="butterfly" />
+                                                    </div>
+                                                )}
+                                            </div>
                                         );
                                     })}
                                 </div>
                             </div>
+
+                            {/* Sticky Note for the Last Story (Rendered AFTER the line wrapper) */}
+                            {stories.length > 0 && (() => {
+                                const lastStory = stories[stories.length - 1];
+                                const resolveImageUrl = (url: string | null | undefined, fallback: string) => {
+                                    if (!url) return fallback;
+                                    if (url.startsWith('http') || url.startsWith('/')) return url;
+                                    return `/${url}`;
+                                };
+                                return (
+                                    <div className="relative w-full flex flex-col items-center mt-12 px-4 z-20">
+                                        <div className="relative w-full max-w-[550px]">
+                                            {/* Last Year Header */}
+                                            <span
+                                                className="block text-[4.5rem] italic text-[#E5B5B5] mb-2 leading-none font-thin text-left w-full"
+                                                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                                            >
+                                                {lastStory.year || lastStory.date}
+                                            </span>
+
+                                            <div className="relative flex items-center justify-start w-full mt-4">
+                                                {/* Sliding Photo (Behind) */}
+                                                <motion.div
+                                                    className="absolute right-0 top-1/2 -translate-y-1/2 w-[35%] z-10"
+                                                    initial={{ opacity: 0, x: -100 }}
+                                                    whileInView={{ opacity: 1, x: 0 }}
+                                                    viewport={{ once: true, amount: 0.3 }}
+                                                    transition={{ duration: 0.8, delay: 0.3, type: 'spring', bounce: 0.3 }}
+                                                >
+                                                    <img src={resolveImageUrl(bride.photo, '/assets/theme_1/foto-mempelai-cewe.webp')} className="w-full rounded-[2rem] shadow-xl object-cover aspect-[4/5]" alt="bride" />
+                                                </motion.div>
+
+                                                {/* Sticky Note (Front) */}
+                                                <motion.div
+                                                    className="relative z-20 w-[75%]"
+                                                    initial={{ opacity: 0, y: 50 }}
+                                                    whileInView={{ opacity: 1, y: 0 }}
+                                                    viewport={{ once: true, amount: 0.3 }}
+                                                    transition={{ duration: 0.8, type: 'spring', bounce: 0.3 }}
+                                                >
+                                                    <img src="/assets/theme_1/sticky-notes.webp" className="w-full h-auto drop-shadow-2xl" alt="sticky note" />
+                                                    <div className="absolute inset-0 flex items-center justify-center p-8 sm:p-10 pt-12 sm:pt-16 pr-12 sm:pr-14">
+                                                        <p className="text-[13px] sm:text-[15px] text-[#FAF3EC] font-bold leading-relaxed text-center" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                                            "{lastStory.content || lastStory.story}"
+                                                        </p>
+                                                    </div>
+                                                </motion.div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
                         </motion.div>
                     </section>
                 )}
@@ -823,21 +832,19 @@ export const Theme1: React.FC<ThemeProps> = ({
                 >
                     {/* Floral corner decorations */}
                     <div
-                        className="absolute bottom-4 left-0 h-28 w-28 bg-contain bg-no-repeat opacity-70"
+                        className="absolute -left-10 top-[50%] w-24 h-40 sm:w-32 sm:h-48 bg-contain bg-left bg-no-repeat z-0 -translate-y-1/2"
                         style={{
-                            backgroundImage:
-                                "url('/assets/theme_1/1779365549376-nqtsz1-719543e1113ce29e7052be17c6f9ab60.webp')",
+                            backgroundImage: "url('/assets/theme_1/bunga.webp')",
                         }}
                     />
                     <div
-                        className="absolute right-0 top-4 h-24 w-24 bg-contain bg-no-repeat opacity-60"
+                        className="absolute -right-12 top-0 w-40 h-56 sm:w-48 sm:h-64 bg-contain bg-top bg-no-repeat z-0"
                         style={{
-                            backgroundImage:
-                                "url('/assets/theme_1/1779523772253-6qdh29-e23e3773e2c20d4e802d9a053cca916f.webp')",
+                            backgroundImage: "url('/assets/theme_1/kumpulanbunga.webp')",
                         }}
                     />
                     <motion.div
-                        className="mx-auto w-full max-w-sm space-y-6 text-center"
+                        className="mx-auto w-full max-w-sm text-center relative z-10"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, amount: 0.1 }}
@@ -871,14 +878,23 @@ export const Theme1: React.FC<ThemeProps> = ({
                         {/* Countdown frame */}
                         <motion.div
                             variants={scaleInVariants}
-                            className="relative mx-auto flex min-h-[200px] w-full flex-col items-center justify-center bg-contain bg-center bg-no-repeat p-8"
+                            className="relative mx-auto flex min-h-[400px] sm:min-h-[320px] w-full max-w-[450px] flex-col items-center justify-center bg-contain bg-center bg-no-repeat -mt-10 sm:-mt-6"
                             style={{
-                                backgroundImage:
-                                    "url('/assets/theme_1/1779514146982-1l2m0j-Desaintanpajudul32.webp')",
+                                backgroundImage: "url('/assets/theme_1/border-counting.webp')",
                             }}
                         >
-                            <div className="relative z-10 scale-95">
-                                <CountdownTimer targetDate={weddingDate} />
+                            <div className="relative z-10 w-full flex flex-col items-center justify-center space-y-4 sm:space-y-4 mt-2">
+                                <Theme1Countdown targetDate={weddingDate} />
+
+                                <a
+                                    href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Ilyas+%26+Berrly&dates=20260921T090000/20260921T130000&details=Mohon+doa+restu+kehadiran+Anda+di+pernikahan+kami.&location=Masjid+Raya+Al-Jihad`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#FAF3EC] px-4 py-2 text-[11px] font-bold shadow-sm transition-all hover:bg-white active:scale-95 text-[#8C1B2F]"
+                                >
+                                    <CalendarIcon size={14} />
+                                    <span>Add to Calendar</span>
+                                </a>
                             </div>
                         </motion.div>
 
@@ -951,21 +967,6 @@ export const Theme1: React.FC<ThemeProps> = ({
                                 })}
                             </div>
 
-                            <div className="flex justify-center pt-2">
-                                <a
-                                    href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Ilyas+%26+Berrly&dates=20260921T090000/20260921T130000&details=Mohon+doa+restu+kehadiran+Anda+di+pernikahan+kami.&location=Masjid+Raya+Al-Jihad`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-[2.4cqw] font-bold transition-all hover:bg-neutral-50 active:scale-95"
-                                    style={{
-                                        borderColor: secondaryColor,
-                                        color: primaryColor,
-                                    }}
-                                >
-                                    <CalendarIcon size={12} />
-                                    <span>Google Calendar</span>
-                                </a>
-                            </div>
                         </motion.div>
                     </motion.div>
                 </section>
@@ -996,13 +997,12 @@ export const Theme1: React.FC<ThemeProps> = ({
                                     style={{ borderColor: secondaryColor }}
                                 >
                                     <div
-                                        className="absolute inset-0 -z-10 bg-cover bg-no-repeat opacity-[0.93]"
+                                        className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-20"
                                         style={{
                                             backgroundImage:
-                                                "url('/assets/theme_1/1779926454379-filwqr-dfasdfasdfa4.webp')",
+                                                "url('/assets/theme_1/background-acara.webp')",
                                         }}
                                     />
-                                    <div className="absolute inset-0 -z-10 bg-black/35" />
 
                                     <div className="z-10 space-y-6 pt-10 text-white">
                                         <div className="space-y-1">
@@ -1020,22 +1020,22 @@ export const Theme1: React.FC<ThemeProps> = ({
                                             />
                                         </div>
                                         <div className="space-y-1.5 text-xs">
-                                            <p className="font-semibold tracking-wide text-[#FAF3EC]">
+                                            <p className="font-semibold tracking-wide" style={{ color: primaryColor }}>
                                                 {formatDate(
                                                     schedules.akad.date,
                                                 )}
                                             </p>
-                                            <p className="text-white/80">
+                                            <p className="text-charcoal/70">
                                                 {schedules.akad.time ||
                                                     '09:00 - 11:00 WIB'}
                                             </p>
                                         </div>
                                         <div className="space-y-1.5 px-2 text-xs">
-                                            <p className="font-bold text-white/95">
+                                            <p className="font-bold" style={{ color: primaryColor }}>
                                                 {schedules.akad.venue ||
                                                     'Masjid Raya Al-Jihad'}
                                             </p>
-                                            <p className="text-[11px] leading-relaxed text-white/70">
+                                            <p className="text-[11px] leading-relaxed text-charcoal/60">
                                                 {schedules.akad.address}
                                             </p>
                                         </div>
@@ -1066,9 +1066,9 @@ export const Theme1: React.FC<ThemeProps> = ({
                                 className="my-4 flex justify-center"
                             >
                                 <img
-                                    src="/assets/theme_1/1780085668625-rfalui-dfasdfasdfa4.webp"
+                                    src="/assets/theme_1/outlinecincin.webp"
                                     alt="Wedding rings sketch"
-                                    className="h-16 w-auto object-contain opacity-65"
+                                    className="h-20 w-auto object-contain opacity-80"
                                 />
                             </motion.div>
 
@@ -1080,19 +1080,18 @@ export const Theme1: React.FC<ThemeProps> = ({
                                     style={{ borderColor: secondaryColor }}
                                 >
                                     <div
-                                        className="absolute inset-0 -z-10 scale-y-[-1] transform bg-cover bg-no-repeat opacity-[0.93]"
+                                        className="absolute inset-0 -z-10 scale-y-[-1] transform bg-cover bg-center bg-no-repeat opacity-20"
                                         style={{
                                             backgroundImage:
-                                                "url('/assets/theme_1/1779926454379-filwqr-dfasdfasdfa4.webp')",
+                                                "url('/assets/theme_1/background-acara.webp')",
                                         }}
                                     />
-                                    <div className="absolute inset-0 -z-10 bg-black/35" />
 
                                     <div className="z-10 space-y-6 pt-6 text-white">
                                         <div className="space-y-1">
                                             <h3
                                                 className="font-serif text-2xl font-bold italic"
-                                                style={{ color: '#FAF3EC' }}
+                                                style={{ color: primaryColor }}
                                             >
                                                 Resepsi
                                             </h3>
@@ -1104,22 +1103,22 @@ export const Theme1: React.FC<ThemeProps> = ({
                                             />
                                         </div>
                                         <div className="space-y-1.5 text-xs">
-                                            <p className="font-semibold tracking-wide text-[#FAF3EC]">
+                                            <p className="font-semibold tracking-wide" style={{ color: primaryColor }}>
                                                 {formatDate(
                                                     schedules.resepsi.date,
                                                 )}
                                             </p>
-                                            <p className="text-white/80">
+                                            <p className="text-charcoal/70">
                                                 {schedules.resepsi.time ||
                                                     '11:00 - 13:00 WIB'}
                                             </p>
                                         </div>
                                         <div className="space-y-1.5 px-2 text-xs">
-                                            <p className="font-bold text-white/95">
+                                            <p className="font-bold" style={{ color: primaryColor }}>
                                                 {schedules.resepsi.venue ||
                                                     'Gedung Golden Ballroom'}
                                             </p>
-                                            <p className="text-[11px] leading-relaxed text-white/70">
+                                            <p className="text-[11px] leading-relaxed text-charcoal/60">
                                                 {schedules.resepsi.address}
                                             </p>
                                         </div>
@@ -1861,15 +1860,17 @@ export const Theme1: React.FC<ThemeProps> = ({
             {/* 3. FLOATING BUTTON CONTROL INTERFACES                          */}
             {/* ============================================================== */}
             {/* A. QR CHECK-IN SCROLLER ACCESS BUTTON */}
-            {guestName && (
-                <button
-                    onClick={() => setIsQrModalOpen(true)}
-                    className="z-35 fixed bottom-20 right-6 rounded-full border border-[#C9A84C]/35 bg-[#6B1D2F] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                    title="Akses Masuk QR"
-                >
-                    <QrCode size={20} />
-                </button>
-            )}
+            {
+                guestName && (
+                    <button
+                        onClick={() => setIsQrModalOpen(true)}
+                        className="z-35 fixed bottom-20 right-6 rounded-full border border-[#C9A84C]/35 bg-[#6B1D2F] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                        title="Akses Masuk QR"
+                    >
+                        <QrCode size={20} />
+                    </button>
+                )
+            }
 
             {/* B. NAVIGATION MENU OVERLAY BURGER TOGGLE BUTTON */}
             <button
@@ -2250,7 +2251,7 @@ export const Theme1: React.FC<ThemeProps> = ({
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 };
 
