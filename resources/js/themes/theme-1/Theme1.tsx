@@ -524,7 +524,7 @@ export const Theme1: React.FC<ThemeProps> = ({
             {/* ============================================================== */}
             <div className="relative h-screen w-full overflow-hidden bg-[#FAF3EC] lg:w-[30%]">
                 <div
-                    className="h-full w-full overflow-y-auto scroll-smooth"
+                    className="h-full w-full overflow-y-auto overflow-x-hidden scroll-smooth"
                     id="invitation-scroll-container"
                 >
                     <section
