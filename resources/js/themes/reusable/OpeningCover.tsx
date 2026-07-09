@@ -128,7 +128,7 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
                         <img
                             src={'/assets/wedding/burgundy-envelope-closed.png'}
                             alt="Envelope"
-                            className="pointer-events-auto h-auto w-[110%] max-w-[28rem] object-contain drop-shadow-2xl"
+                            className="pointer-events-auto mt-20 h-auto w-[110%] max-w-[28rem] object-contain drop-shadow-2xl"
                         />
                     </motion.div>
 

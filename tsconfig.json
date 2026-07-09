@@ -13,7 +13,7 @@
         "noEmit": true,
         "paths": {
             "@/*": ["./resources/js/*"],
-            "@/Components/*": ["./resources/js/components/*"],
+            "@/Components/*": ["./resources/js/Components/*"],
             "@wedding/shared": ["./resources/js/types/shared.ts"],
             "ziggy-js": ["./vendor/tightenco/ziggy"],
             "react-router-dom": ["./resources/js/lib/router-shim.tsx"]

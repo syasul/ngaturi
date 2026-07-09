@@ -8,8 +8,8 @@
   html {
     scroll-behavior: smooth;
   }
-  body {
-    @apply font-sans antialiased;
+  html, body {
+    @apply font-sans antialiased overflow-x-hidden w-full max-w-full;
   }
   /* Hide scrollbars globally */
   iframe::-webkit-scrollbar,
