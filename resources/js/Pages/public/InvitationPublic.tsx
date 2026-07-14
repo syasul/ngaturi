@@ -1,11 +1,9 @@
-import { AnimatePresence } from 'framer-motion';
 import { Clock, Heart } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import api from '../../lib/api';
 import ThemeRouter from '../../themes/ThemeRouter';
 import MusicPlayer from '../../themes/reusable/MusicPlayer';
-import OpeningCover from '../../themes/reusable/OpeningCover';
 
 interface InvitationPublicProps {
     slug?: string;
@@ -17,7 +15,8 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     const slug =
         propSlug ||
         (typeof window !== 'undefined'
-            ? (window.location.pathname.split('/').pop() ?? '')
+            ? (window.location.pathname.replace(/\/$/, '').split('/').pop() ??
+              '')
             : '');
     const guestToken =
         typeof window !== 'undefined'
@@ -229,40 +228,19 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
                 />
             )}
 
-            {/* Opening Envelope Cover Screen */}
-            <AnimatePresence>
-                {!isOpened && (
-                    <OpeningCover
-                        groomName={
-                            data?.groom?.nickname ||
-                            data?.groom?.name ||
-                            'Groom'
-                        }
-                        brideName={
-                            data?.bride?.nickname ||
-                            data?.bride?.name ||
-                            'Bride'
-                        }
-                        guestName={guest?.name}
-                        themeId={themeId}
-                        onOpen={handleOpenInvitation}
-                    />
-                )}
-            </AnimatePresence>
-
-            {/* Main Content (Theme Component Router) */}
-            {isOpened && (
-                <ThemeRouter
-                    themeId={themeId}
-                    data={data}
-                    weddingId={wedding.id}
-                    photos={wedding.photos}
-                    guestName={guest?.name}
-                    guestToken={guestToken || undefined}
-                    wishes={wishes}
-                    onRsvpSubmit={handleRsvpSubmit}
-                />
-            )}
+            {/* Main Content & Opening Cover Screen managed by ThemeRouter */}
+            <ThemeRouter
+                themeId={themeId}
+                isOpened={isOpened}
+                onOpen={handleOpenInvitation}
+                data={data}
+                weddingId={wedding.id}
+                photos={wedding.photos}
+                guestName={guest?.name}
+                guestToken={guestToken || undefined}
+                wishes={wishes}
+                onRsvpSubmit={handleRsvpSubmit}
+            />
         </div>
     );
 };

@@ -60,6 +60,7 @@ class DatabaseSeeder extends Seeder
             ['id' => 'botanical-minimal', 'name' => 'Botanical Minimal', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'BASIC'],
             ['id' => 'editorial-mono', 'name' => 'Editorial Mono', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
             ['id' => 'theme-1', 'name' => 'Burgundy Bloom', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM'],
+            ['id' => 'theme-2', 'name' => 'Premium 10 Animasi', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
         ], ['id'], ['name', 'thumbnail_url', 'is_active', 'package_level']);
 
         // 3. Seed Users
@@ -103,6 +104,41 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'gateway_ref' => 'MANUAL-SEEDER',
+                'status' => 'success',
+                'payload' => ['status' => 'success', 'seeded' => true],
+            ]
+        );
+
+        // 4b. Seed User & Premium Order & Transaction for Ilyas 2 (Theme 2)
+        $ilyas2 = User::updateOrCreate(
+            ['email' => 'ilyas2@example.com'],
+            [
+                'name' => 'Ilyas Theme 2',
+                'password' => bcrypt('password'),
+                'role' => 'USER',
+                'status' => 'ACTIVE',
+            ]
+        );
+
+        $order2 = Order::updateOrCreate(
+            [
+                'user_id' => $ilyas2->id,
+                'package_id' => $premiumPkg->id,
+            ],
+            [
+                'status' => 'PAID',
+                'amount' => $premiumPkg->price,
+                'payment_method' => 'MANUAL',
+                'paid_at' => now(),
+            ]
+        );
+
+        Transaction::updateOrCreate(
+            [
+                'order_id' => $order2->id,
+            ],
+            [
+                'gateway_ref' => 'MANUAL-SEEDER-2',
                 'status' => 'success',
                 'payload' => ['status' => 'success', 'seeded' => true],
             ]
@@ -160,8 +196,8 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             'quotes' => [
-                'text' => 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang.',
-                'source' => 'QS. Ar-Rum: 21',
+                'text' => 'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir.',
+                'source' => '(Qs. Ar-Rum : 21)',
             ],
             'customStyle' => [
                 'primaryColor' => '#6B1D2F',
@@ -174,11 +210,24 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
+        // Theme 1 Wedding for Ilyas
         Wedding::updateOrCreate(
             ['user_id' => $ilyas->id],
             [
                 'theme_id' => 'theme-1',
                 'slug' => 'ilyas',
+                'status' => 'published',
+                'expired_at' => now()->addDays(365),
+                'data' => $weddingData,
+            ]
+        );
+
+        // Theme 2 Wedding for Ilyas 2
+        Wedding::updateOrCreate(
+            ['user_id' => $ilyas2->id],
+            [
+                'theme_id' => 'theme-2',
+                'slug' => 'ilyas2',
                 'status' => 'published',
                 'expired_at' => now()->addDays(365),
                 'data' => $weddingData,

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import type { ThemeProps } from '../elegant/ElegantTheme';
+import OpeningCover from '../reusable/OpeningCover';
 
 const CustomRSVPForm = ({
     onRsvpSubmit,
@@ -371,11 +372,18 @@ const formatDate = (dateStr?: string) => {
 
 // Falling Rose Petals Canvas Animation Component (Removed)
 
-export const Theme1: React.FC<ThemeProps> = ({
+interface Theme1Props extends ThemeProps {
+    isOpened?: boolean;
+    onOpen?: () => void;
+}
+
+export const Theme1: React.FC<Theme1Props> = ({
     data,
     guestName,
     wishes,
     onRsvpSubmit,
+    isOpened = true,
+    onOpen,
 }) => {
     const groom = data?.groom || {};
     const bride = data?.bride || {};
@@ -387,7 +395,7 @@ export const Theme1: React.FC<ThemeProps> = ({
     const primaryColor = '#6B1D2F'; // Burgundy
     const secondaryColor = '#C9A84C'; // Gold
     // const baseBg = '#FAF3EC'; // Soft ivory cream
-    const textColor = '#2D1A1E'; // Dark maroon/charcoal
+    // const textColor = '#2D1A1E'; // Dark maroon/charcoal
 
     // States for interaction
     const [copiedGroomBank, setCopiedGroomBank] = useState(false);
@@ -466,7 +474,7 @@ export const Theme1: React.FC<ThemeProps> = ({
     return (
         <div className="flex min-h-screen w-full overflow-hidden bg-[#FDF5F6] text-[#2D1A1E]">
             {/* ============================================================== */}
-            {/* 1. DESKTOP LEFT PANEL (STATIC COVER)                           */}
+            {/* 1. DESKTOP LEFT PANEL (STATIC COVER) - Always visible            */}
             {/* ============================================================== */}
             <div className="relative sticky left-0 top-0 hidden h-screen w-[70%] select-none flex-col justify-between overflow-hidden bg-[#3A0511] p-16 text-white lg:flex">
                 <div className="absolute left-8 top-8 h-16 w-16 border-l-2 border-t-2 border-[#C9A84C]" />
@@ -523,6 +531,192 @@ export const Theme1: React.FC<ThemeProps> = ({
             {/* 2. RIGHT PANEL (SCROLLABLE MOBILE INVITATION)                  */}
             {/* ============================================================== */}
             <div className="relative h-screen w-full overflow-hidden bg-[#FAF3EC] lg:w-[30%]">
+                {/* Opening Cover - positioned inside right panel so left panel stays visible on desktop */}
+                <AnimatePresence>
+                    {!isOpened && onOpen && (
+                        <OpeningCover
+                            onOpen={onOpen}
+                            containerBgClassName="bg-[#FAF3EC] text-[#2D1A1E]"
+                            positionClass="absolute inset-0 z-40"
+                        >
+                            {(isOpening, handleOpen) => (
+                                <>
+                                    {/* Pink 3D embossed floral backdrop */}
+                                    <div
+                                        className="absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-700"
+                                        style={{
+                                            backgroundImage:
+                                                "url('/assets/theme_1/1780080644951-nj4yyf-Gemini_Generated_Image_avw4y4avw4y4avw4.webp')",
+                                            opacity: isOpening ? 0.3 : 0.85,
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 z-[1] bg-black/5" />
+
+                                    <div className="relative z-10 flex h-full w-full flex-1 flex-col items-center justify-between">
+                                        {/* 1. AMPLOP DI LAYER BELAKANG (z-10 absolute) */}
+                                        <motion.div
+                                            className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center"
+                                            animate={
+                                                isOpening
+                                                    ? {
+                                                          scale: 1.35,
+                                                          y: 40,
+                                                          opacity: 0,
+                                                      }
+                                                    : { scale: 1.22 }
+                                            }
+                                            transition={{
+                                                duration: 0.8,
+                                                ease: 'easeInOut',
+                                            }}
+                                        >
+                                            <img
+                                                src={
+                                                    '/assets/wedding/burgundy-envelope-closed.png'
+                                                }
+                                                alt="Envelope"
+                                                className="pointer-events-auto mt-20 h-auto w-[110%] max-w-[28rem] object-contain drop-shadow-2xl"
+                                            />
+                                        </motion.div>
+
+                                        {/* 2. TEKS DI LAYER DEPAN (z-20 relative) */}
+                                        <div className="relative z-20 mt-1 flex flex-col items-center">
+                                            <motion.div
+                                                className="flex flex-col items-center"
+                                                animate={
+                                                    isOpening
+                                                        ? { y: -60, opacity: 0 }
+                                                        : { y: 0, opacity: 1 }
+                                                }
+                                                transition={{ duration: 0.5 }}
+                                            >
+                                                <h1
+                                                    className="mr-10 text-8xl leading-[0.7]"
+                                                    style={{
+                                                        fontFamily:
+                                                            "'Dancing Script', cursive",
+                                                        color: 'rgba(107,29,47,0.22)',
+                                                    }}
+                                                >
+                                                    {(groom.nickname || 'I')[0]}
+                                                </h1>
+                                                <h1
+                                                    className="-mt-2 ml-10 text-8xl leading-[0.7]"
+                                                    style={{
+                                                        fontFamily:
+                                                            "'Dancing Script', cursive",
+                                                        color: 'rgba(107,29,47,0.22)',
+                                                    }}
+                                                >
+                                                    {(bride.nickname || 'B')[0]}
+                                                </h1>
+                                            </motion.div>
+
+                                            <motion.div
+                                                className="mt-6 flex flex-col items-center"
+                                                animate={
+                                                    isOpening
+                                                        ? { y: -30, opacity: 0 }
+                                                        : { y: 0, opacity: 1 }
+                                                }
+                                                transition={{
+                                                    duration: 0.5,
+                                                    delay: 0.05,
+                                                }}
+                                            >
+                                                <p
+                                                    className="mb-1 text-2xl italic"
+                                                    style={{
+                                                        fontFamily:
+                                                            "'Dancing Script', cursive",
+                                                        color: '#6B1D2F',
+                                                    }}
+                                                >
+                                                    You&apos;re
+                                                </p>
+                                                <h2
+                                                    className="text-3xl font-black uppercase tracking-[0.15em]"
+                                                    style={{
+                                                        fontFamily:
+                                                            "'Cormorant Garamond', serif",
+                                                        color: '#6B1D2F',
+                                                    }}
+                                                >
+                                                    INVITED
+                                                </h2>
+                                            </motion.div>
+                                        </div>
+
+                                        {/* Grup Bawah: Nama Tamu & Tombol */}
+                                        <div className="relative z-20 mb-2 flex w-full flex-col items-center space-y-6">
+                                            <motion.div
+                                                className="flex flex-col items-center"
+                                                animate={
+                                                    isOpening
+                                                        ? {
+                                                              scale: 0.9,
+                                                              opacity: 0,
+                                                          }
+                                                        : {
+                                                              scale: 1,
+                                                              opacity: 1,
+                                                          }
+                                                }
+                                                transition={{ duration: 0.5 }}
+                                            >
+                                                <p
+                                                    className="mb-1 text-sm font-medium"
+                                                    style={{
+                                                        color: 'rgba(107,29,47,0.7)',
+                                                    }}
+                                                >
+                                                    Dear,
+                                                </p>
+                                                <h3
+                                                    className="mb-1 text-center text-2xl font-bold italic"
+                                                    style={{
+                                                        fontFamily:
+                                                            "'Dancing Script', cursive",
+                                                        color: '#6B1D2F',
+                                                    }}
+                                                >
+                                                    {guestName ||
+                                                        'Tamu Undangan'}
+                                                </h3>
+                                                <p
+                                                    className="px-6 text-center text-[10px] italic leading-relaxed"
+                                                    style={{
+                                                        color: 'rgba(107,29,47,0.6)',
+                                                    }}
+                                                >
+                                                    We apologize if there is any
+                                                    misspelling of name or title
+                                                </p>
+                                            </motion.div>
+
+                                            <motion.div
+                                                animate={
+                                                    isOpening
+                                                        ? { y: 50, opacity: 0 }
+                                                        : { y: 0, opacity: 1 }
+                                                }
+                                                transition={{ duration: 0.5 }}
+                                            >
+                                                <button
+                                                    onClick={handleOpen}
+                                                    className="flex transform items-center justify-center rounded-full border border-[#D4AF37]/40 bg-[#6B1D2F] px-12 py-3.5 text-xs font-bold uppercase tracking-[0.25em] text-[#FCF9F6] shadow-xl transition-all duration-300 hover:bg-[#5E0F20] active:scale-95"
+                                                >
+                                                    <span>LET&apos;S OPEN</span>
+                                                </button>
+                                            </motion.div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </OpeningCover>
+                    )}
+                </AnimatePresence>
+
                 <div
                     className="h-full w-full overflow-y-auto overflow-x-hidden scroll-smooth"
                     id="invitation-scroll-container"
@@ -2811,82 +3005,85 @@ export const Theme1: React.FC<ThemeProps> = ({
                 {/* ============================================================== */}
                 {/* 3. FLOATING BUTTON CONTROL INTERFACES                          */}
                 {/* ============================================================== */}
-
-                {/* MUSIC BUTTON */}
-                <button
-                    onClick={() => setIsPlayingMusic(!isPlayingMusic)}
-                    className="absolute bottom-20 left-6 z-[99] flex h-12 w-12 items-center justify-center rounded-full border-[1.5px] border-[#C9A84C]/40 bg-[#3A0511] shadow-[0_4px_20px_-5px_rgba(58,5,17,0.5)] transition-all duration-300 hover:scale-105 active:scale-95"
-                    title="Toggle Music"
-                >
-                    <div
-                        className={`flex h-full w-full items-center justify-center ${isPlayingMusic ? 'animate-[spin_4s_linear_infinite]' : ''}`}
-                    >
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            className="h-[22px] w-[22px] text-[#C9A84C] opacity-90"
+                {isOpened && (
+                    <>
+                        {/* MUSIC BUTTON */}
+                        <button
+                            onClick={() => setIsPlayingMusic(!isPlayingMusic)}
+                            className="absolute bottom-20 left-6 z-[99] flex h-12 w-12 items-center justify-center rounded-full border-[1.5px] border-[#C9A84C]/40 bg-[#3A0511] shadow-[0_4px_20px_-5px_rgba(58,5,17,0.5)] transition-all duration-300 hover:scale-105 active:scale-95"
+                            title="Toggle Music"
                         >
-                            <circle
-                                cx="12"
-                                cy="12"
-                                r="11"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                            />
-                            <circle
-                                cx="12"
-                                cy="12"
-                                r="3"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                            />
-                            <path
-                                d="M12 9a3 3 0 0 0 0 6"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                            />
-                        </svg>
-                    </div>
-                    {/* Pause/Stop indicator overlay */}
-                    {!isPlayingMusic && (
-                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-[0.5px]">
-                            <Play
-                                size={16}
-                                className="ml-0.5 text-white"
-                                fill="white"
-                            />
-                        </div>
-                    )}
-                </button>
+                            <div
+                                className={`flex h-full w-full items-center justify-center ${isPlayingMusic ? 'animate-[spin_4s_linear_infinite]' : ''}`}
+                            >
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    className="h-[22px] w-[22px] text-[#C9A84C] opacity-90"
+                                >
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="11"
+                                        stroke="currentColor"
+                                        strokeWidth="1.5"
+                                    />
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="3"
+                                        stroke="currentColor"
+                                        strokeWidth="1.5"
+                                    />
+                                    <path
+                                        d="M12 9a3 3 0 0 0 0 6"
+                                        stroke="currentColor"
+                                        strokeWidth="1.5"
+                                    />
+                                </svg>
+                            </div>
+                            {/* Pause/Stop indicator overlay */}
+                            {!isPlayingMusic && (
+                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-[0.5px]">
+                                    <Play
+                                        size={16}
+                                        className="ml-0.5 text-white"
+                                        fill="white"
+                                    />
+                                </div>
+                            )}
+                        </button>
 
-                {/* QRIS BUTTON */}
-                <button
-                    onClick={() => setIsQrisModalOpen(true)}
-                    className="absolute bottom-36 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                    title="QRIS"
-                >
-                    <QrCode size={20} />
-                </button>
+                        {/* QRIS BUTTON */}
+                        <button
+                            onClick={() => setIsQrisModalOpen(true)}
+                            className="absolute bottom-36 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                            title="QRIS"
+                        >
+                            <QrCode size={20} />
+                        </button>
 
-                {/* A. QR CHECK-IN SCROLLER ACCESS BUTTON */}
-                {guestName && (
-                    <button
-                        onClick={() => setIsQrModalOpen(true)}
-                        className="absolute bottom-36 right-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-[#6B1D2F] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                        title="Akses Masuk QR"
-                    >
-                        <QrCode size={20} />
-                    </button>
+                        {/* A. QR CHECK-IN SCROLLER ACCESS BUTTON */}
+                        {guestName && (
+                            <button
+                                onClick={() => setIsQrModalOpen(true)}
+                                className="absolute bottom-36 right-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-[#6B1D2F] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                                title="Akses Masuk QR"
+                            >
+                                <QrCode size={20} />
+                            </button>
+                        )}
+
+                        {/* B. NAVIGATION MENU OVERLAY BURGER TOGGLE BUTTON */}
+                        <button
+                            onClick={() => setIsMenuOpen(true)}
+                            className="absolute bottom-20 right-6 z-[99] rounded-full border border-sand/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                            title="Menu"
+                        >
+                            <Menu size={20} />
+                        </button>
+                    </>
                 )}
-
-                {/* B. NAVIGATION MENU OVERLAY BURGER TOGGLE BUTTON */}
-                <button
-                    onClick={() => setIsMenuOpen(true)}
-                    className="absolute bottom-6 right-6 z-[99] rounded-full border border-sand/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                    title="Menu"
-                >
-                    <Menu size={20} />
-                </button>
 
                 {/* C. FULL-SCREEN NAVIGATION OVERLAY MODAL */}
                 <AnimatePresence>
