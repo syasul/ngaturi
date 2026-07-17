@@ -2913,13 +2913,13 @@ export const Theme1: React.FC<Theme1Props> = ({
                                         className="pr-5 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
                                         style={{ color: primaryColor }}
                                     >
-                                        V
+                                        I
                                     </span>
                                     <span
                                         className="pt-12 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
                                         style={{ color: primaryColor }}
                                     >
-                                        B
+                                        I
                                     </span>
                                 </div>
                             </div>

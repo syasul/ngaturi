@@ -2212,8 +2212,26 @@ export const Theme2: React.FC<Theme2Props> = ({
                         id="footer"
                         className="relative mt-[-1px] overflow-hidden bg-transparent px-0 pb-0 pt-16 text-center"
                     >
+                        <div
+                            className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-[100%] bg-contain bg-repeat-x"
+                            style={{
+                                backgroundImage:
+                                    "url('/assets/theme_2/batas2.webp')",
+                            }}
+                        />
+
+                        {/* Flower Garland */}
+                        <div
+                            className="top-10 pointer-events-none absolute left-0 right-0 z-0 h-[140px] w-full bg-top bg-no-repeat"
+                            style={{
+                                backgroundImage:
+                                    "url('/assets/theme_2/VINTAGE-06-bunga3-2048x648.webp')",
+                                backgroundSize: '110% 100%',
+                            }}
+                        />
+
                         <motion.div
-                            className="relative z-10 mx-auto flex w-full max-w-sm flex-col items-center px-6 text-center"
+                            className="relative z-10 mx-auto mt-20 flex w-full max-w-sm flex-col items-center px-6 text-center"
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true, amount: 0.1 }}
@@ -2240,6 +2258,10 @@ export const Theme2: React.FC<Theme2Props> = ({
                                 TERIMAKASIH
                             </p>
                             <div className="relative mb-6 flex h-44 w-44 items-center justify-center">
+                                <img
+                                    src="/assets/theme_1/outlinecincin.webp"
+                                    className="absolute w-[125%] max-w-none opacity-80"
+                                />
                                 <div className="relative z-10 -ml-4 flex items-center justify-center">
                                     <span
                                         className="pr-5 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
@@ -2251,7 +2273,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                         className="pt-12 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
                                         style={{ color: primaryColor }}
                                     >
-                                        B
+                                        I
                                     </span>
                                 </div>
                             </div>
@@ -2319,488 +2341,489 @@ export const Theme2: React.FC<Theme2Props> = ({
                         </div>
                     </footer>
                 </div>
-            </div>
 
-            {/* FLOATING BUTTONS */}
-            {isOpened && (
-                <>
-                    <button
-                        onClick={() => setIsPlayingMusic(!isPlayingMusic)}
-                        className="absolute bottom-20 left-6 z-[99] flex h-12 w-12 items-center justify-center rounded-full border-[1.5px] border-[#C9A84C]/40 bg-[#3A322C] shadow-[0_4px_20px_-5px_rgba(58,5,17,0.5)] transition-all duration-300 hover:scale-105 active:scale-95"
-                        title="Toggle Music"
-                    >
-                        <div
-                            className={`flex h-full w-full items-center justify-center ${isPlayingMusic ? 'animate-[spin_4s_linear_infinite]' : ''}`}
-                        >
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                className="h-[22px] w-[22px] text-[#C9A84C] opacity-90"
-                            >
-                                <circle
-                                    cx="12"
-                                    cy="12"
-                                    r="11"
-                                    stroke="currentColor"
-                                    strokeWidth="1.5"
-                                />
-                                <circle
-                                    cx="12"
-                                    cy="12"
-                                    r="3"
-                                    stroke="currentColor"
-                                    strokeWidth="1.5"
-                                />
-                                <path
-                                    d="M12 9a3 3 0 0 0 0 6"
-                                    stroke="currentColor"
-                                    strokeWidth="1.5"
-                                />
-                            </svg>
-                        </div>
-                        {!isPlayingMusic && (
-                            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-[0.5px]">
-                                <Play
-                                    size={16}
-                                    className="ml-0.5 text-white"
-                                    fill="white"
-                                />
-                            </div>
-                        )}
-                    </button>
 
-                    <button
-                        onClick={() => setIsQrisModalOpen(true)}
-                        className="absolute bottom-36 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#4A3B32] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                        title="QRIS"
-                    >
-                        <QrCode size={20} />
-                    </button>
-
-                    {guestName && (
+                {/* FLOATING BUTTONS */}
+                {isOpened && (
+                    <>
                         <button
-                            onClick={() => setIsQrModalOpen(true)}
-                            className="absolute bottom-36 right-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-[#4A3B32] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                            title="Akses Masuk QR"
+                            onClick={() => setIsPlayingMusic(!isPlayingMusic)}
+                            className="absolute bottom-20 left-6 z-[99] flex h-12 w-12 items-center justify-center rounded-full border-[1.5px] border-[#C9A84C]/40 bg-[#3A322C] shadow-[0_4px_20px_-5px_rgba(58,5,17,0.5)] transition-all duration-300 hover:scale-105 active:scale-95"
+                            title="Toggle Music"
                         >
-                            <QrCode size={20} />
-                        </button>
-                    )}
-
-                    <button
-                        onClick={() => setIsMenuOpen(true)}
-                        className="absolute bottom-20 right-6 z-[99] rounded-full border border-sand/35 bg-white p-3.5 text-[#4A3B32] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                        title="Menu"
-                    >
-                        <Menu size={20} />
-                    </button>
-                </>
-            )}
-
-            {/* NAVIGATION MENU */}
-            <AnimatePresence>
-                {isMenuOpen && (
-                    <motion.div
-                        className="absolute inset-0 z-[100] flex select-none flex-col items-center justify-center bg-[#2D1A1E]/95 p-8 text-center backdrop-blur-md"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <button
-                            onClick={() => setIsMenuOpen(false)}
-                            className="absolute right-8 top-8 p-2 text-[#FAF3EC] transition-opacity hover:opacity-75"
-                        >
-                            <X size={28} />
-                        </button>
-                        <div className="space-y-6">
-                            <span className="font-sans text-[2.4cqw] font-bold uppercase tracking-[0.4em] text-[#C9A84C]">
-                                MENU INVITATION
-                            </span>
-                            <div className="mx-auto mb-8 h-[1px] w-8 bg-[#C9A84C]/40" />
-                            <div className="flex flex-col gap-6 font-serif text-2xl italic text-[#FAF3EC]">
-                                <button
-                                    onClick={() => scrollToSection('home')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    Home
-                                </button>
-                                <button
-                                    onClick={() => scrollToSection('couple')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    Mempelai
-                                </button>
-                                <button
-                                    onClick={() => scrollToSection('story')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    Kisah Cinta
-                                </button>
-                                <button
-                                    onClick={() => scrollToSection('countdown')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    Waktu
-                                </button>
-                                <button
-                                    onClick={() => scrollToSection('schedule')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    Acara & Lokasi
-                                </button>
-                                <button
-                                    onClick={() => scrollToSection('timeline')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    Timeline
-                                </button>
-                                <button
-                                    onClick={() => scrollToSection('dresscode')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    Dresscode
-                                </button>
-                                <button
-                                    onClick={() => scrollToSection('gallery')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    Galeri
-                                </button>
-                                <button
-                                    onClick={() => scrollToSection('gift')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    Hadiah
-                                </button>
-                                <button
-                                    onClick={() => scrollToSection('rsvp')}
-                                    className="transition-colors hover:text-[#C9A84C]"
-                                >
-                                    RSVP
-                                </button>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* QR MODAL */}
-            <AnimatePresence>
-                {isQrModalOpen && (
-                    <motion.div
-                        className="absolute inset-0 z-[100] flex select-none items-center justify-center bg-black/60 p-6 backdrop-blur-sm"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <motion.div
-                            className="relative w-full max-w-sm space-y-6 rounded-3xl border border-sand/40 bg-white p-6 text-center shadow-2xl"
-                            initial={{ scale: 0.9, y: 20 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.9, y: 20 }}
-                        >
-                            <button
-                                onClick={() => setIsQrModalOpen(false)}
-                                className="absolute right-4 top-4 p-1 text-gray-400 hover:text-gray-600"
-                            >
-                                <X size={20} />
-                            </button>
-                            <div className="space-y-1">
-                                <h3
-                                    className="font-serif text-lg font-bold italic"
-                                    style={{ color: primaryColor }}
-                                >
-                                    Akses Masuk
-                                </h3>
-                                <p className="mx-auto max-w-xs text-[2.4cqw] leading-relaxed text-gray-500">
-                                    Tunjukkan QR Code ini kepada petugas
-                                    penerima tamu di lokasi acara untuk check-in
-                                    kehadiran digital.
-                                </p>
-                            </div>
                             <div
-                                className="relative mx-auto flex h-40 w-40 items-center justify-center rounded-2xl border-2 bg-neutral-50 p-3.5 shadow-inner"
-                                style={{ borderColor: `${primaryColor}20` }}
+                                className={`flex h-full w-full items-center justify-center ${isPlayingMusic ? 'animate-[spin_4s_linear_infinite]' : ''}`}
                             >
                                 <svg
-                                    viewBox="0 0 100 100"
-                                    className="h-full w-full text-[#4A3B32]"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    className="h-[22px] w-[22px] text-[#C9A84C] opacity-90"
                                 >
-                                    <rect
-                                        x="0"
-                                        y="0"
-                                        width="25"
-                                        height="25"
-                                        fill="currentColor"
-                                        rx="2"
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="11"
+                                        stroke="currentColor"
+                                        strokeWidth="1.5"
                                     />
-                                    <rect
-                                        x="5"
-                                        y="5"
-                                        width="15"
-                                        height="15"
-                                        fill="white"
-                                        rx="1"
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="3"
+                                        stroke="currentColor"
+                                        strokeWidth="1.5"
                                     />
-                                    <rect
-                                        x="8"
-                                        y="8"
-                                        width="9"
-                                        height="9"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="75"
-                                        y="0"
-                                        width="25"
-                                        height="25"
-                                        fill="currentColor"
-                                        rx="2"
-                                    />
-                                    <rect
-                                        x="80"
-                                        y="5"
-                                        width="15"
-                                        height="15"
-                                        fill="white"
-                                        rx="1"
-                                    />
-                                    <rect
-                                        x="83"
-                                        y="8"
-                                        width="9"
-                                        height="9"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="0"
-                                        y="75"
-                                        width="25"
-                                        height="25"
-                                        fill="currentColor"
-                                        rx="2"
-                                    />
-                                    <rect
-                                        x="5"
-                                        y="80"
-                                        width="15"
-                                        height="15"
-                                        fill="white"
-                                        rx="1"
-                                    />
-                                    <rect
-                                        x="8"
-                                        y="83"
-                                        width="9"
-                                        height="9"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="35"
-                                        y="5"
-                                        width="10"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="50"
-                                        y="10"
-                                        width="5"
-                                        height="15"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="60"
-                                        y="0"
-                                        width="10"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="35"
-                                        y="20"
-                                        width="15"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="0"
-                                        y="35"
-                                        width="5"
-                                        height="10"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="15"
-                                        y="35"
-                                        width="10"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="30"
-                                        y="30"
-                                        width="15"
-                                        height="15"
-                                        fill="currentColor"
-                                        rx="1"
-                                    />
-                                    <rect
-                                        x="35"
-                                        y="35"
-                                        width="5"
-                                        height="5"
-                                        fill="white"
-                                    />
-                                    <rect
-                                        x="55"
-                                        y="35"
-                                        width="20"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="85"
-                                        y="35"
-                                        width="5"
-                                        height="15"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="5"
-                                        y="55"
-                                        width="15"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="30"
-                                        y="50"
-                                        width="5"
-                                        height="20"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="40"
-                                        y="60"
-                                        width="20"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="65"
-                                        y="50"
-                                        width="10"
-                                        height="10"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="80"
-                                        y="55"
-                                        width="15"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="35"
-                                        y="80"
-                                        width="20"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="35"
-                                        y="90"
-                                        width="10"
-                                        height="5"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="60"
-                                        y="75"
-                                        width="5"
-                                        height="15"
-                                        fill="currentColor"
-                                    />
-                                    <rect
-                                        x="75"
-                                        y="75"
-                                        width="15"
-                                        height="15"
-                                        fill="currentColor"
-                                        rx="1"
-                                    />
-                                    <rect
-                                        x="80"
-                                        y="80"
-                                        width="5"
-                                        height="5"
-                                        fill="white"
+                                    <path
+                                        d="M12 9a3 3 0 0 0 0 6"
+                                        stroke="currentColor"
+                                        strokeWidth="1.5"
                                     />
                                 </svg>
                             </div>
-                            <div className="space-y-1">
-                                <span className="block text-[2.4cqw] font-bold uppercase tracking-widest text-gray-400">
-                                    NAMA TAMU
-                                </span>
-                                <span className="text-base font-bold text-gray-700">
-                                    {guestName}
-                                </span>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* QRIS MODAL */}
-            <AnimatePresence>
-                {isQrisModalOpen && (
-                    <motion.div
-                        className="absolute inset-0 z-[100] flex select-none items-center justify-center bg-black/60 p-6 backdrop-blur-sm"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    >
-                        <motion.div
-                            className="relative w-full max-w-[320px] rounded-[1.5rem] border border-[#7A223E]/20 bg-gradient-to-br from-[#FDF5F6] to-[#FCF0F2] p-8 text-center shadow-[0_10px_40px_-10px_rgba(122,34,62,0.3)] backdrop-blur-md"
-                            initial={{ scale: 0.9, y: 20 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.9, y: 20 }}
-                        >
-                            <button
-                                onClick={() => setIsQrisModalOpen(false)}
-                                className="absolute right-5 top-5 p-1.5 text-[#7A223E]/40 transition-colors hover:text-[#7A223E]"
-                            >
-                                <X size={20} />
-                            </button>
-                            <div className="space-y-6">
-                                <div>
-                                    <h3
-                                        className="font-serif text-[2.2rem] font-normal drop-shadow-sm"
-                                        style={{ color: primaryColor }}
-                                    >
-                                        QRIS
-                                    </h3>
-                                    <p className="mt-1 font-serif text-[9px] font-bold uppercase tracking-widest text-[#7A223E] opacity-70">
-                                        Scan untuk Kirim Kado
-                                    </p>
-                                </div>
-                                <div className="relative mx-auto flex aspect-square w-full max-w-[200px] items-center justify-center overflow-hidden rounded-[1rem] border border-[#7A223E]/10 bg-white p-4 shadow-inner">
-                                    <div className="pointer-events-none absolute inset-0 bg-[#7A223E]/5"></div>
-                                    <QrCode
-                                        size={120}
-                                        className="text-[#7A223E]/30"
-                                        strokeWidth={1.5}
+                            {!isPlayingMusic && (
+                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-[0.5px]">
+                                    <Play
+                                        size={16}
+                                        className="ml-0.5 text-white"
+                                        fill="white"
                                     />
                                 </div>
-                                <p className="pt-1 font-serif text-[9.5px] font-bold uppercase tracking-[0.2em] text-[#7A223E] opacity-90">
-                                    A.N. Ilyas & IFTITAH
-                                </p>
+                            )}
+                        </button>
+
+                        <button
+                            onClick={() => setIsQrisModalOpen(true)}
+                            className="absolute bottom-36 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#4A3B32] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                            title="QRIS"
+                        >
+                            <QrCode size={20} />
+                        </button>
+
+                        {guestName && (
+                            <button
+                                onClick={() => setIsQrModalOpen(true)}
+                                className="absolute bottom-36 right-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-[#4A3B32] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                                title="Akses Masuk QR"
+                            >
+                                <QrCode size={20} />
+                            </button>
+                        )}
+
+                        <button
+                            onClick={() => setIsMenuOpen(true)}
+                            className="absolute bottom-20 right-6 z-[99] rounded-full border border-sand/35 bg-white p-3.5 text-[#4A3B32] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                            title="Menu"
+                        >
+                            <Menu size={20} />
+                        </button>
+                    </>
+                )}
+
+                {/* NAVIGATION MENU */}
+                <AnimatePresence>
+                    {isMenuOpen && (
+                        <motion.div
+                            className="absolute inset-0 z-[100] flex select-none flex-col items-center justify-center bg-[#2D1A1E]/95 p-8 text-center backdrop-blur-md"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <button
+                                onClick={() => setIsMenuOpen(false)}
+                                className="absolute right-8 top-8 p-2 text-[#FAF3EC] transition-opacity hover:opacity-75"
+                            >
+                                <X size={28} />
+                            </button>
+                            <div className="space-y-6">
+                                <span className="font-sans text-[2.4cqw] font-bold uppercase tracking-[0.4em] text-[#C9A84C]">
+                                    MENU INVITATION
+                                </span>
+                                <div className="mx-auto mb-8 h-[1px] w-8 bg-[#C9A84C]/40" />
+                                <div className="flex flex-col gap-6 font-serif text-2xl italic text-[#FAF3EC]">
+                                    <button
+                                        onClick={() => scrollToSection('home')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        Home
+                                    </button>
+                                    <button
+                                        onClick={() => scrollToSection('couple')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        Mempelai
+                                    </button>
+                                    <button
+                                        onClick={() => scrollToSection('story')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        Kisah Cinta
+                                    </button>
+                                    <button
+                                        onClick={() => scrollToSection('countdown')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        Waktu
+                                    </button>
+                                    <button
+                                        onClick={() => scrollToSection('schedule')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        Acara & Lokasi
+                                    </button>
+                                    <button
+                                        onClick={() => scrollToSection('timeline')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        Timeline
+                                    </button>
+                                    <button
+                                        onClick={() => scrollToSection('dresscode')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        Dresscode
+                                    </button>
+                                    <button
+                                        onClick={() => scrollToSection('gallery')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        Galeri
+                                    </button>
+                                    <button
+                                        onClick={() => scrollToSection('gift')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        Hadiah
+                                    </button>
+                                    <button
+                                        onClick={() => scrollToSection('rsvp')}
+                                        className="transition-colors hover:text-[#C9A84C]"
+                                    >
+                                        RSVP
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    )}
+                </AnimatePresence>
+
+                {/* QR MODAL */}
+                <AnimatePresence>
+                    {isQrModalOpen && (
+                        <motion.div
+                            className="absolute inset-0 z-[100] flex select-none items-center justify-center bg-black/60 p-6 backdrop-blur-sm"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <motion.div
+                                className="relative w-full max-w-sm space-y-6 rounded-3xl border border-sand/40 bg-white p-6 text-center shadow-2xl"
+                                initial={{ scale: 0.9, y: 20 }}
+                                animate={{ scale: 1, y: 0 }}
+                                exit={{ scale: 0.9, y: 20 }}
+                            >
+                                <button
+                                    onClick={() => setIsQrModalOpen(false)}
+                                    className="absolute right-4 top-4 p-1 text-gray-400 hover:text-gray-600"
+                                >
+                                    <X size={20} />
+                                </button>
+                                <div className="space-y-1">
+                                    <h3
+                                        className="font-serif text-lg font-bold italic"
+                                        style={{ color: primaryColor }}
+                                    >
+                                        Akses Masuk
+                                    </h3>
+                                    <p className="mx-auto max-w-xs text-[2.4cqw] leading-relaxed text-gray-500">
+                                        Tunjukkan QR Code ini kepada petugas
+                                        penerima tamu di lokasi acara untuk check-in
+                                        kehadiran digital.
+                                    </p>
+                                </div>
+                                <div
+                                    className="relative mx-auto flex h-40 w-40 items-center justify-center rounded-2xl border-2 bg-neutral-50 p-3.5 shadow-inner"
+                                    style={{ borderColor: `${primaryColor}20` }}
+                                >
+                                    <svg
+                                        viewBox="0 0 100 100"
+                                        className="h-full w-full text-[#4A3B32]"
+                                    >
+                                        <rect
+                                            x="0"
+                                            y="0"
+                                            width="25"
+                                            height="25"
+                                            fill="currentColor"
+                                            rx="2"
+                                        />
+                                        <rect
+                                            x="5"
+                                            y="5"
+                                            width="15"
+                                            height="15"
+                                            fill="white"
+                                            rx="1"
+                                        />
+                                        <rect
+                                            x="8"
+                                            y="8"
+                                            width="9"
+                                            height="9"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="75"
+                                            y="0"
+                                            width="25"
+                                            height="25"
+                                            fill="currentColor"
+                                            rx="2"
+                                        />
+                                        <rect
+                                            x="80"
+                                            y="5"
+                                            width="15"
+                                            height="15"
+                                            fill="white"
+                                            rx="1"
+                                        />
+                                        <rect
+                                            x="83"
+                                            y="8"
+                                            width="9"
+                                            height="9"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="0"
+                                            y="75"
+                                            width="25"
+                                            height="25"
+                                            fill="currentColor"
+                                            rx="2"
+                                        />
+                                        <rect
+                                            x="5"
+                                            y="80"
+                                            width="15"
+                                            height="15"
+                                            fill="white"
+                                            rx="1"
+                                        />
+                                        <rect
+                                            x="8"
+                                            y="83"
+                                            width="9"
+                                            height="9"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="35"
+                                            y="5"
+                                            width="10"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="50"
+                                            y="10"
+                                            width="5"
+                                            height="15"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="60"
+                                            y="0"
+                                            width="10"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="35"
+                                            y="20"
+                                            width="15"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="0"
+                                            y="35"
+                                            width="5"
+                                            height="10"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="15"
+                                            y="35"
+                                            width="10"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="30"
+                                            y="30"
+                                            width="15"
+                                            height="15"
+                                            fill="currentColor"
+                                            rx="1"
+                                        />
+                                        <rect
+                                            x="35"
+                                            y="35"
+                                            width="5"
+                                            height="5"
+                                            fill="white"
+                                        />
+                                        <rect
+                                            x="55"
+                                            y="35"
+                                            width="20"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="85"
+                                            y="35"
+                                            width="5"
+                                            height="15"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="5"
+                                            y="55"
+                                            width="15"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="30"
+                                            y="50"
+                                            width="5"
+                                            height="20"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="40"
+                                            y="60"
+                                            width="20"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="65"
+                                            y="50"
+                                            width="10"
+                                            height="10"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="80"
+                                            y="55"
+                                            width="15"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="35"
+                                            y="80"
+                                            width="20"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="35"
+                                            y="90"
+                                            width="10"
+                                            height="5"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="60"
+                                            y="75"
+                                            width="5"
+                                            height="15"
+                                            fill="currentColor"
+                                        />
+                                        <rect
+                                            x="75"
+                                            y="75"
+                                            width="15"
+                                            height="15"
+                                            fill="currentColor"
+                                            rx="1"
+                                        />
+                                        <rect
+                                            x="80"
+                                            y="80"
+                                            width="5"
+                                            height="5"
+                                            fill="white"
+                                        />
+                                    </svg>
+                                </div>
+                                <div className="space-y-1">
+                                    <span className="block text-[2.4cqw] font-bold uppercase tracking-widest text-gray-400">
+                                        NAMA TAMU
+                                    </span>
+                                    <span className="text-base font-bold text-gray-700">
+                                        {guestName}
+                                    </span>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* QRIS MODAL */}
+                <AnimatePresence>
+                    {isQrisModalOpen && (
+                        <motion.div
+                            className="absolute inset-0 z-[100] flex select-none items-center justify-center bg-black/60 p-6 backdrop-blur-sm"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <motion.div
+                                className="relative w-full max-w-[320px] rounded-[1.5rem] border border-[#7A223E]/20 bg-gradient-to-br from-[#FDF5F6] to-[#FCF0F2] p-8 text-center shadow-[0_10px_40px_-10px_rgba(122,34,62,0.3)] backdrop-blur-md"
+                                initial={{ scale: 0.9, y: 20 }}
+                                animate={{ scale: 1, y: 0 }}
+                                exit={{ scale: 0.9, y: 20 }}
+                            >
+                                <button
+                                    onClick={() => setIsQrisModalOpen(false)}
+                                    className="absolute right-5 top-5 p-1.5 text-[#7A223E]/40 transition-colors hover:text-[#7A223E]"
+                                >
+                                    <X size={20} />
+                                </button>
+                                <div className="space-y-6">
+                                    <div>
+                                        <h3
+                                            className="font-serif text-[2.2rem] font-normal drop-shadow-sm"
+                                            style={{ color: primaryColor }}
+                                        >
+                                            QRIS
+                                        </h3>
+                                        <p className="mt-1 font-serif text-[9px] font-bold uppercase tracking-widest text-[#7A223E] opacity-70">
+                                            Scan untuk Kirim Kado
+                                        </p>
+                                    </div>
+                                    <div className="relative mx-auto flex aspect-square w-full max-w-[200px] items-center justify-center overflow-hidden rounded-[1rem] border border-[#7A223E]/10 bg-white p-4 shadow-inner">
+                                        <div className="pointer-events-none absolute inset-0 bg-[#7A223E]/5"></div>
+                                        <QrCode
+                                            size={120}
+                                            className="text-[#7A223E]/30"
+                                            strokeWidth={1.5}
+                                        />
+                                    </div>
+                                    <p className="pt-1 font-serif text-[9.5px] font-bold uppercase tracking-[0.2em] text-[#7A223E] opacity-90">
+                                        A.N. Ilyas & IFTITAH
+                                    </p>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
     );
 };
