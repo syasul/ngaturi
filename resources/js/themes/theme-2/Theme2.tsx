@@ -74,11 +74,10 @@ const CustomRSVPForm = ({
                         Ya, saya akan hadir
                     </span>
                     <div
-                        className={`flex h-4 w-4 items-center justify-center rounded-full border ${
-                            status === 'hadir'
+                        className={`flex h-4 w-4 items-center justify-center rounded-full border ${status === 'hadir'
                                 ? 'border-[#3E2723]'
                                 : 'border-[#3E2723]/50'
-                        }`}
+                            }`}
                     >
                         {status === 'hadir' && (
                             <div className="h-1.5 w-1.5 rounded-full bg-[#3E2723]"></div>
@@ -93,11 +92,10 @@ const CustomRSVPForm = ({
                         Maaf, tidak bisa hadir
                     </span>
                     <div
-                        className={`flex h-4 w-4 items-center justify-center rounded-full border ${
-                            status === 'tidak_hadir'
+                        className={`flex h-4 w-4 items-center justify-center rounded-full border ${status === 'tidak_hadir'
                                 ? 'border-[#3E2723]'
                                 : 'border-[#3E2723]/50'
-                        }`}
+                            }`}
                     >
                         {status === 'tidak_hadir' && (
                             <div className="h-1.5 w-1.5 rounded-full bg-[#3E2723]"></div>
@@ -1569,8 +1567,8 @@ export const Theme2: React.FC<Theme2Props> = ({
                                     <span>
                                         {data?.streaming?.username
                                             ? data.streaming.username.startsWith(
-                                                  '@',
-                                              )
+                                                '@',
+                                            )
                                                 ? data.streaming.username
                                                 : `@${data.streaming.username}`
                                             : '@HABIB'}
@@ -2090,7 +2088,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                                 className="font-serif text-[2.25rem]"
                                                 style={{ color: '#3E2723' }}
                                             >
-                                                Virga & Iftitah
+                                                Ilyas & Iftitah
                                             </h4>
                                             <p
                                                 className="mb-10 mt-2 max-w-[200px] font-serif text-[9px] font-bold leading-relaxed opacity-80"
@@ -2265,7 +2263,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                 className="mb-12 font-serif text-[2.2rem]"
                                 style={{ color: primaryColor }}
                             >
-                                Virga & Iftitah
+                                Ilyas & Iftitah
                             </h3>
                         </motion.div>
 
@@ -2796,7 +2794,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                     />
                                 </div>
                                 <p className="pt-1 font-serif text-[9.5px] font-bold uppercase tracking-[0.2em] text-[#7A223E] opacity-90">
-                                    A.N. VIRGA & IFTITAH
+                                    A.N. Ilyas & IFTITAH
                                 </p>
                             </div>
                         </motion.div>

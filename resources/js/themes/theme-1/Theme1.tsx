@@ -559,10 +559,10 @@ export const Theme1: React.FC<Theme1Props> = ({
                                             animate={
                                                 isOpening
                                                     ? {
-                                                          scale: 1.35,
-                                                          y: 40,
-                                                          opacity: 0,
-                                                      }
+                                                        scale: 1.35,
+                                                        y: 40,
+                                                        opacity: 0,
+                                                    }
                                                     : { scale: 1.22 }
                                             }
                                             transition={{
@@ -654,13 +654,13 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                 animate={
                                                     isOpening
                                                         ? {
-                                                              scale: 0.9,
-                                                              opacity: 0,
-                                                          }
+                                                            scale: 0.9,
+                                                            opacity: 0,
+                                                        }
                                                         : {
-                                                              scale: 1,
-                                                              opacity: 1,
-                                                          }
+                                                            scale: 1,
+                                                            opacity: 1,
+                                                        }
                                                 }
                                                 transition={{ duration: 0.5 }}
                                             >
@@ -764,7 +764,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                         color: primaryColor,
                                     }}
                                 >
-                                    {groom.nickname || 'Virga'}
+                                    {groom.nickname || 'Ilyas'}
                                 </h2>
                                 <span
                                     className="my-1 font-serif text-[5.7cqw] italic"
@@ -957,7 +957,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                         }}
                                     >
                                         {groom.name ||
-                                            'Virga A. Handsome, S.Kom'}
+                                            'Ilyas A. Handsome, S.Kom'}
                                     </h3>
                                     <p className="text-[2.4cqw] italic text-[#C9A84C]">
                                         The Son of
@@ -2734,7 +2734,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                 className="font-serif text-[2.25rem]"
                                                 style={{ color: primaryColor }}
                                             >
-                                                Virga & Iftitah
+                                                Ilyas & Iftitah
                                             </h4>
                                             <p
                                                 className="mb-10 mt-2 max-w-[200px] font-serif text-[9px] font-bold leading-relaxed opacity-80"
@@ -2943,7 +2943,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                 className="mb-12 font-serif text-[2.2rem]"
                                 style={{ color: primaryColor }}
                             >
-                                Virga & Iftitah
+                                Ilyas & Iftitah
                             </h3>
                         </motion.div>
 
@@ -3514,7 +3514,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                     </div>
 
                                     <p className="pt-1 font-serif text-[9.5px] font-bold uppercase tracking-[0.2em] text-[#7A223E] opacity-90">
-                                        A.N. VIRGA & IFTITAH
+                                        A.N. Ilyas & IFTITAH
                                     </p>
                                 </div>
                             </motion.div>
