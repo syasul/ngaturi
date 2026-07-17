@@ -2258,10 +2258,12 @@ export const Theme2: React.FC<Theme2Props> = ({
                                 TERIMAKASIH
                             </p>
                             <div className="relative mb-6 flex h-44 w-44 items-center justify-center">
-                                <img
-                                    src="/assets/theme_1/outlinecincin.webp"
-                                    className="absolute w-[125%] max-w-none opacity-80"
-                                />
+                                <span
+                                    className="absolute font-serif text-[5rem] italic leading-none opacity-40 drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)] pt-1"
+                                    style={{ color: primaryColor }}
+                                >
+                                    {'&'}
+                                </span>
                                 <div className="relative z-10 -ml-4 flex items-center justify-center">
                                     <span
                                         className="pr-5 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
