@@ -75,8 +75,8 @@ const CustomRSVPForm = ({
                     </span>
                     <div
                         className={`flex h-4 w-4 items-center justify-center rounded-full border ${status === 'hadir'
-                                ? 'border-[#3E2723]'
-                                : 'border-[#3E2723]/50'
+                            ? 'border-[#3E2723]'
+                            : 'border-[#3E2723]/50'
                             }`}
                     >
                         {status === 'hadir' && (
@@ -93,8 +93,8 @@ const CustomRSVPForm = ({
                     </span>
                     <div
                         className={`flex h-4 w-4 items-center justify-center rounded-full border ${status === 'tidak_hadir'
-                                ? 'border-[#3E2723]'
-                                : 'border-[#3E2723]/50'
+                            ? 'border-[#3E2723]'
+                            : 'border-[#3E2723]/50'
                             }`}
                     >
                         {status === 'tidak_hadir' && (
@@ -1180,7 +1180,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                         className="relative flex min-h-[580px] flex-col justify-center px-10 py-16 text-center"
                                     >
                                         <div
-                                            className="absolute z-0 bg-[length:100%_100%] bg-center bg-no-repeat"
+                                            className="absolute z-0 bg-[length:130%_100%] bg-center bg-no-repeat"
                                             style={{
                                                 backgroundImage:
                                                     "url('/assets/theme_2/border2.png')",
@@ -1285,7 +1285,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                         className="relative flex min-h-[580px] flex-col justify-center px-10 py-16 text-center"
                                     >
                                         <div
-                                            className="absolute z-0 bg-[length:100%_100%] bg-center bg-no-repeat"
+                                            className="absolute z-0 bg-[length:130%_100%] bg-center bg-no-repeat"
                                             style={{
                                                 backgroundImage:
                                                     "url('/assets/theme_2/border2.png')",
@@ -1405,7 +1405,7 @@ export const Theme2: React.FC<Theme2Props> = ({
 
                             {/* Flower Garland */}
                             <div
-                                className="top-15 pointer-events-none absolute left-0 right-0 z-0 h-[140px] w-full bg-top bg-no-repeat"
+                                className="top-10 pointer-events-none absolute left-0 right-0 z-0 h-[140px] w-full bg-top bg-no-repeat"
                                 style={{
                                     backgroundImage:
                                         "url('/assets/theme_2/VINTAGE-06-bunga3-2048x648.webp')",
@@ -2245,7 +2245,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                         className="pr-5 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
                                         style={{ color: primaryColor }}
                                     >
-                                        V
+                                        I
                                     </span>
                                     <span
                                         className="pt-12 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
