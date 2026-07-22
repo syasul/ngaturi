@@ -563,6 +563,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                 <>
                                     <motion.div
                                         className="pointer-events-none absolute inset-0 -bottom-20 z-0 flex items-end justify-center"
+                                        style={{ willChange: 'transform, opacity' }}
                                         animate={
                                             isOpening
                                                 ? { scale: 0.9, opacity: 0 }
@@ -586,6 +587,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                     <div className="relative z-20 flex h-full w-full flex-1 flex-col items-center justify-end pb-16">
                                         <motion.div
                                             className="flex flex-col items-center space-y-2"
+                                            style={{ willChange: 'transform, opacity' }}
                                             animate={
                                                 isOpening
                                                     ? { y: -40, opacity: 0 }
@@ -616,6 +618,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                             </div>
                                             <motion.div
                                                 className="mt-6"
+                                                style={{ willChange: 'transform, opacity' }}
                                                 animate={
                                                     isOpening
                                                         ? { y: 40, opacity: 0 }

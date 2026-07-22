@@ -556,6 +556,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                         {/* 1. AMPLOP DI LAYER BELAKANG (z-10 absolute) */}
                                         <motion.div
                                             className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center"
+                                            style={{ willChange: 'transform, opacity' }}
                                             animate={
                                                 isOpening
                                                     ? {
@@ -583,6 +584,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                         <div className="relative z-20 mt-1 flex flex-col items-center">
                                             <motion.div
                                                 className="flex flex-col items-center"
+                                                style={{ willChange: 'transform, opacity' }}
                                                 animate={
                                                     isOpening
                                                         ? { y: -60, opacity: 0 }
@@ -614,6 +616,7 @@ export const Theme1: React.FC<Theme1Props> = ({
 
                                             <motion.div
                                                 className="mt-6 flex flex-col items-center"
+                                                style={{ willChange: 'transform, opacity' }}
                                                 animate={
                                                     isOpening
                                                         ? { y: -30, opacity: 0 }
@@ -651,6 +654,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                         <div className="relative z-20 mb-2 flex w-full flex-col items-center space-y-6">
                                             <motion.div
                                                 className="flex flex-col items-center"
+                                                style={{ willChange: 'transform, opacity' }}
                                                 animate={
                                                     isOpening
                                                         ? {
@@ -695,6 +699,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                             </motion.div>
 
                                             <motion.div
+                                                style={{ willChange: 'transform, opacity' }}
                                                 animate={
                                                     isOpening
                                                         ? { y: 50, opacity: 0 }

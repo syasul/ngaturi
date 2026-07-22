@@ -79,8 +79,9 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
     return (
         <motion.div
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, y: '-100%' }}
-            transition={{ duration: 1.1, ease: [0.76, 0, 0.24, 1] }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
+            style={{ willChange: 'transform, opacity' }}
             className={`${positionClass ?? 'fixed inset-0 z-40'} flex select-none flex-col items-center overflow-hidden px-6 py-12 text-center ${containerBgClassName || containerBg}`}
         >
             {/* If children is provided, delegate layout rendering entirely to it */}
