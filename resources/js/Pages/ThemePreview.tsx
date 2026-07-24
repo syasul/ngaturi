@@ -422,10 +422,21 @@ export const ThemePreview: React.FC = () => {
     useEffect(() => {
         const meta = document.createElement('meta');
         meta.name = 'color-scheme';
-        meta.content = 'light';
+        meta.content = 'only light';
         document.head.appendChild(meta);
+
+        // Force light color scheme on html and body elements
+        document.documentElement.style.colorScheme = 'only light';
+        if (document.body) {
+            document.body.style.colorScheme = 'only light';
+        }
+
         return () => {
             document.head.removeChild(meta);
+            document.documentElement.style.colorScheme = '';
+            if (document.body) {
+                document.body.style.colorScheme = '';
+            }
         };
     }, []);
 
@@ -964,7 +975,7 @@ export const ThemePreview: React.FC = () => {
           overflow-x: hidden !important;
           scrollbar-width: none !important;
           -ms-overflow-style: none !important;
-          color-scheme: light !important;
+          color-scheme: only light !important;
         }
         html::-webkit-scrollbar, body::-webkit-scrollbar {
           display: none !important;
@@ -1020,7 +1031,7 @@ export const ThemePreview: React.FC = () => {
                     background: T.bg1,
                     color: T.text,
                     fontFamily: 'inherit',
-                    colorScheme: 'light',
+                    colorScheme: 'only light',
                 }}
             >
                 {/* Top App Bar */}
