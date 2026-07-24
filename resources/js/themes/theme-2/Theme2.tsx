@@ -461,7 +461,7 @@ export const Theme2: React.FC<Theme2Props> = ({
     };
 
     return (
-        <div className="flex min-h-screen w-full overflow-hidden bg-[#FDF9F1] text-[#3E2723]">
+        <div className="flex min-h-screen w-full overflow-hidden bg-[#FDF9F1] text-[#3E2723]" style={{ colorScheme: 'light' }}>
             {/* DESKTOP LEFT PANEL */}
             <div className="relative sticky left-0 top-0 hidden h-screen w-[70%] select-none flex-col justify-between overflow-hidden bg-[#F7F5F0] p-16 lg:flex">
                 <div

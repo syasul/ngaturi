@@ -419,6 +419,16 @@ export const ThemePreview: React.FC = () => {
     const themeId = raw in THEMES ? raw : 'classic-royal';
     const T = THEMES[themeId as keyof typeof THEMES];
 
+    useEffect(() => {
+        const meta = document.createElement('meta');
+        meta.name = 'color-scheme';
+        meta.content = 'light';
+        document.head.appendChild(meta);
+        return () => {
+            document.head.removeChild(meta);
+        };
+    }, []);
+
     const scrollToSection = (id: string) => {
         const el = document.querySelector(`[data-section-id="${id}"]`);
         if (el) {
@@ -954,6 +964,7 @@ export const ThemePreview: React.FC = () => {
           overflow-x: hidden !important;
           scrollbar-width: none !important;
           -ms-overflow-style: none !important;
+          color-scheme: light !important;
         }
         html::-webkit-scrollbar, body::-webkit-scrollbar {
           display: none !important;
@@ -1009,6 +1020,7 @@ export const ThemePreview: React.FC = () => {
                     background: T.bg1,
                     color: T.text,
                     fontFamily: 'inherit',
+                    colorScheme: 'light',
                 }}
             >
                 {/* Top App Bar */}

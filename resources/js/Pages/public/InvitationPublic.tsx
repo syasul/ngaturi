@@ -32,7 +32,7 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     const [isOpened, setIsOpened] = useState(false);
     const [autoPlayMusic, setAutoPlayMusic] = useState(false);
 
-    // 1. Dynamic Font Injection on Mount
+    // 1. Dynamic Font Injection and Color Scheme Setup on Mount
     useEffect(() => {
         const link = document.createElement('link');
         link.href =
@@ -40,8 +40,14 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
         link.rel = 'stylesheet';
         document.head.appendChild(link);
 
+        const meta = document.createElement('meta');
+        meta.name = 'color-scheme';
+        meta.content = 'light';
+        document.head.appendChild(meta);
+
         return () => {
             document.head.removeChild(link);
+            document.head.removeChild(meta);
         };
     }, []);
 
@@ -219,7 +225,7 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     const themeId = wedding.themeId || 'elegant';
 
     return (
-        <div className="relative min-h-screen w-full overflow-x-hidden">
+        <div className="relative min-h-screen w-full overflow-x-hidden" style={{ colorScheme: 'light' }}>
             {/* Autoplay Music Player */}
             {wedding.data?.musicUrl && (
                 <MusicPlayer
