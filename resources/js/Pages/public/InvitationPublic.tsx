@@ -42,12 +42,22 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
 
         const meta = document.createElement('meta');
         meta.name = 'color-scheme';
-        meta.content = 'light';
+        meta.content = 'only light';
         document.head.appendChild(meta);
+
+        // Force light color scheme on html and body elements
+        document.documentElement.style.colorScheme = 'only light';
+        if (document.body) {
+            document.body.style.colorScheme = 'only light';
+        }
 
         return () => {
             document.head.removeChild(link);
             document.head.removeChild(meta);
+            document.documentElement.style.colorScheme = '';
+            if (document.body) {
+                document.body.style.colorScheme = '';
+            }
         };
     }, []);
 
@@ -225,7 +235,7 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     const themeId = wedding.themeId || 'elegant';
 
     return (
-        <div className="relative min-h-screen w-full overflow-x-hidden" style={{ colorScheme: 'light' }}>
+        <div className="relative min-h-screen w-full overflow-x-hidden" style={{ colorScheme: 'only light' }}>
             {/* Autoplay Music Player */}
             {wedding.data?.musicUrl && (
                 <MusicPlayer

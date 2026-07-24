@@ -472,7 +472,7 @@ export const Theme1: React.FC<Theme1Props> = ({
     };
 
     return (
-        <div className="flex min-h-screen w-full overflow-hidden bg-[#FDF5F6] text-[#2D1A1E]" style={{ colorScheme: 'light' }}>
+        <div className="flex min-h-screen w-full overflow-hidden bg-[#FDF5F6] text-[#2D1A1E]" style={{ colorScheme: 'only light' }}>
             {/* ============================================================== */}
             {/* 1. DESKTOP LEFT PANEL (STATIC COVER) - Always visible            */}
             {/* ============================================================== */}
