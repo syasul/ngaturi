@@ -530,13 +530,13 @@ export const Theme1: React.FC<Theme1Props> = ({
             {/* ============================================================== */}
             {/* 2. RIGHT PANEL (SCROLLABLE MOBILE INVITATION)                  */}
             {/* ============================================================== */}
-            <div className="relative h-screen w-full overflow-hidden bg-white lg:w-[30%]">
+            <div className="relative h-screen w-full overflow-hidden bg-[#FAF3EC] lg:w-[30%]">
                 {/* Opening Cover - positioned inside right panel so left panel stays visible on desktop */}
                 <AnimatePresence>
                     {!isOpened && onOpen && (
                         <OpeningCover
                             onOpen={onOpen}
-                            containerBgClassName="bg-white text-[#2D1A1E]"
+                            containerBgClassName="bg-[#FAF3EC] text-[#2D1A1E]"
                             positionClass="absolute inset-0 z-40"
                         >
                             {(isOpening, handleOpen) => (
@@ -728,7 +728,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                 >
                     <section
                         id="home"
-                        className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-hidden bg-white pb-24 pt-12"
+                        className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-hidden bg-[#FAF3EC] pb-24 pt-12"
                     >
                         {/* MAIN BUNDLED BACKGROUND */}
                         <motion.div
@@ -844,7 +844,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* B. BRIDE & GROOM PROFILE SECTION */}
                     <section
                         id="couple"
-                        className="relative z-10 flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-white pb-32 pt-12"
+                        className="relative z-10 flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-[#FAF3EC] pb-32 pt-12"
                     >
                         {/* The Groom & The Bride Heading */}
                         <motion.div
@@ -1035,7 +1035,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {stories.length > 0 && (
                         <section
                             id="story"
-                            className="relative overflow-hidden bg-white px-0 py-16"
+                            className="relative overflow-hidden bg-[#FAF3EC] px-0 py-16"
                         >
                             <motion.div
                                 className="mx-auto w-full max-w-sm space-y-0"
@@ -1410,7 +1410,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* D. COUNTDOWN & CALENDAR SECTION */}
                     <section
                         id="countdown"
-                        className="relative overflow-hidden bg-white px-6 py-16"
+                        className="relative overflow-hidden bg-[#FAF3EC] px-6 py-16"
                     >
                         {/* Floral corner decorations */}
                         <div
@@ -1564,7 +1564,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* E. EVENT SCHEDULE SECTION */}
                     <section
                         id="schedule"
-                        className="relative bg-white px-6 py-20"
+                        className="relative bg-[#FAF3EC] px-6 py-20"
                     >
                         <motion.div
                             className="mx-auto w-full max-w-md space-y-12"
@@ -1756,7 +1756,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* F. TIMELINE RUNDOWN SECTION */}
                     <section
                         id="timeline"
-                        className="relative bg-white pb-24 pt-16"
+                        className="relative bg-[#FAF3EC] pb-24 pt-16"
                     >
                         <motion.div
                             className="mx-auto w-full max-w-md text-center"
@@ -1956,7 +1956,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* G. DRESSCODE SECTION */}
                     <section
                         id="dresscode"
-                        className="relative overflow-hidden bg-white px-6 py-20 pb-28"
+                        className="relative overflow-hidden bg-[#FAF3EC] px-6 py-20 pb-28"
                     >
                         <motion.div
                             className="relative mx-auto w-full max-w-[400px] text-center"
@@ -2048,7 +2048,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* H. LIVE STREAMING SECTION */}
                     <section
                         id="streaming"
-                        className="relative overflow-hidden bg-white px-6 py-20"
+                        className="relative overflow-hidden bg-[#FAF3EC] px-6 py-20"
                     >
                         {/* Top Horse Carriage Outline */}
                         <div className="absolute left-1/2 top-4 flex w-full -translate-x-1/2 -translate-y-1/4 justify-center opacity-30">
@@ -2169,7 +2169,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                     style={{
                                         borderColor: primaryColor,
                                         color: primaryColor,
-                                        backgroundColor: '#ffffff',
+                                        backgroundColor: '#FAF3EC',
                                     }}
                                 >
                                     JOIN NOW
@@ -2189,7 +2189,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* RSVP & GUEST WISHES COMBINED SECTION */}
                     <section
                         id="rsvp-wishes"
-                        className="relative overflow-x-clip overflow-y-visible bg-white px-6 py-24"
+                        className="relative overflow-x-clip overflow-y-visible bg-[#FAF3EC] px-6 py-24"
                     >
                         {/* Background Outlines */}
                         {/* Chair on top left of RSVP */}
@@ -2315,7 +2315,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* I. PHOTO GALLERY SECTION */}
                     <section
                         id="gallery"
-                        className="relative overflow-x-clip overflow-y-visible bg-white px-6 py-20"
+                        className="relative overflow-x-clip overflow-y-visible bg-[#FAF3EC] px-6 py-20"
                     >
                         <motion.div
                             className="relative z-10 mx-auto w-full max-w-sm space-y-8 text-center"
@@ -2440,7 +2440,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* J. DIGITAL GIFT SECTION */}
                     <section
                         id="gift"
-                        className="relative overflow-x-clip overflow-y-visible bg-white px-6 pb-72 pt-24"
+                        className="relative overflow-x-clip overflow-y-visible bg-[#FAF3EC] px-6 pb-72 pt-24"
                     >
                         <motion.div
                             className="relative z-10 mx-auto w-full max-w-sm text-center"
@@ -2873,7 +2873,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     {/* M. FOOTER CLOSING SECTION */}
                     <footer
                         id="footer"
-                        className="relative mt-[-1px] overflow-hidden bg-white px-0 pb-0 pt-16 text-center"
+                        className="relative mt-[-1px] overflow-hidden bg-[#FAF3EC] px-0 pb-0 pt-16 text-center"
                     >
                         <motion.div
                             className="relative z-10 mx-auto flex w-full max-w-sm flex-col items-center px-6 text-center"
