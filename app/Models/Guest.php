@@ -24,6 +24,27 @@ class Guest extends Model
         'is_message_visible' => 'boolean',
     ];
 
+    protected $appends = [
+        'uniqueToken',
+        'rsvpStatus',
+        'isMessageVisible',
+    ];
+
+    public function getUniqueTokenAttribute()
+    {
+        return $this->unique_token;
+    }
+
+    public function getRsvpStatusAttribute()
+    {
+        return $this->rsvp_status;
+    }
+
+    public function getIsMessageVisibleAttribute()
+    {
+        return (bool) $this->is_message_visible;
+    }
+
     public function wedding()
     {
         return $this->belongsTo(Wedding::class);

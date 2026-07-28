@@ -26,6 +26,15 @@ class Wedding extends Model
         'expiration_warning_sent_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'expiredAt',
+    ];
+
+    public function getExpiredAtAttribute()
+    {
+        return $this->expired_at ? $this->expired_at->toIso8601String() : null;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

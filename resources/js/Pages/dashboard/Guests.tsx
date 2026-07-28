@@ -9,6 +9,11 @@ import {
     Trash2,
     Upload,
     Users,
+    Download,
+    FileSpreadsheet,
+    FileText,
+    Check,
+    X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -18,6 +23,7 @@ import Card from '../../components/ui/Card';
 import Modal from '../../components/ui/Modal';
 import api from '../../lib/api';
 import DashboardLayout from '../DashboardLayout';
+import * as XLSX from 'xlsx';
 
 export const Guests: React.FC = () => {
     const [wedding, setWedding] = useState<any>(null);
@@ -36,6 +42,8 @@ export const Guests: React.FC = () => {
     const [guestPhone, setGuestPhone] = useState('');
     const [editingGuest, setEditingGuest] = useState<any>(null);
     const [importText, setImportText] = useState('');
+    const [excelGuests, setExcelGuests] = useState<any[]>([]);
+    const [importType, setImportType] = useState<'excel' | 'text'>('excel');
     const [waTemplate, setWaTemplate] = useState(
         'Halo {nama},\n\nKami mengundang Anda untuk menghadiri acara pernikahan kami. Kehormatan bagi kami jika Anda bersedia hadir.\n\nDetail undangan digital dapat diakses pada tautan berikut:\n{link}\n\nTerima kasih!',
     );
@@ -199,6 +207,95 @@ export const Guests: React.FC = () => {
         }
     };
 
+    const downloadExcelTemplate = () => {
+        try {
+            const worksheet = XLSX.utils.aoa_to_sheet([
+                ['Nama Tamu'],
+                ['Joni Wijaya'],
+                ['Alisa Indah'],
+            ]);
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Template Tamu');
+
+            XLSX.writeFile(workbook, 'template_import_tamu.xlsx');
+            toast.success('Template Excel berhasil diunduh!');
+        } catch (err) {
+            toast.error('Gagal mengunduh template Excel.');
+        }
+    };
+
+    const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            try {
+                const bstr = evt.target?.result;
+                const workbook = XLSX.read(bstr, { type: 'binary' });
+                const wsname = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[wsname];
+                
+                const rows = XLSX.utils.sheet_to_json<any>(worksheet);
+                const parsed: { name: string; phone: string }[] = [];
+
+                rows.forEach((row) => {
+                    let name = '';
+                    let phone = '';
+
+                    Object.keys(row).forEach((key) => {
+                        const normKey = key.toLowerCase().replace(/\s+/g, '');
+                        if (normKey.includes('nama') || normKey.includes('tamu') || normKey.includes('guest')) {
+                            name = String(row[key] || '').trim();
+                        } else if (normKey.includes('phone') || normKey.includes('telp') || normKey.includes('hp') || normKey.includes('wa')) {
+                            phone = String(row[key] || '').trim();
+                        }
+                    });
+
+                    if (!name && Object.keys(row).length > 0) {
+                        name = String(row[Object.keys(row)[0]] || '').trim();
+                    }
+
+                    if (name && name.toLowerCase() !== 'nama tamu') {
+                        parsed.push({ name, phone });
+                    }
+                });
+
+                if (parsed.length === 0) {
+                    toast.error('Tidak ditemukan data tamu yang valid di file Excel ini.');
+                    return;
+                }
+
+                setExcelGuests(parsed);
+                toast.success(`Berhasil membaca ${parsed.length} data tamu dari Excel.`);
+            } catch (err) {
+                toast.error('Gagal membaca file Excel. Pastikan format file benar.');
+            }
+        };
+        reader.readAsBinaryString(file);
+    };
+
+    const handleExcelImportSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (excelGuests.length === 0) return;
+
+        const toastId = toast.loading('Mengimport daftar tamu...');
+        try {
+            const res = await api.post('/guests/import', {
+                guests: excelGuests,
+            });
+            if (res.data.status === 'success') {
+                toast.success(res.data.message, { id: toastId });
+                setIsImportModalOpen(false);
+                setExcelGuests([]);
+                loadGuests();
+            }
+        } catch (err) {
+            toast.error('Gagal mengimport daftar tamu.', { id: toastId });
+        }
+    };
+
     // Checkbox functions
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
@@ -233,7 +330,7 @@ export const Guests: React.FC = () => {
             return;
         }
 
-        const invitationLink = getGuestInvitationLink(guest.uniqueToken);
+        const invitationLink = getGuestInvitationLink(guest.uniqueToken || guest.unique_token);
         const formattedText = waTemplate
             .replace(/{nama}/g, guest.name)
             .replace(/{link}/g, invitationLink);
@@ -394,29 +491,29 @@ export const Guests: React.FC = () => {
                                         <td className="p-3">
                                             <Badge
                                                 variant={
-                                                    g.rsvpStatus ===
+                                                    (g.rsvpStatus || g.rsvp_status) ===
                                                         'attending' ||
-                                                    g.rsvpStatus === 'hadir'
+                                                    (g.rsvpStatus || g.rsvp_status) === 'hadir'
                                                         ? 'success'
-                                                        : g.rsvpStatus ===
+                                                        : (g.rsvpStatus || g.rsvp_status) ===
                                                                 'declined' ||
-                                                            g.rsvpStatus ===
+                                                            (g.rsvpStatus || g.rsvp_status) ===
                                                                 'tidak hadir'
                                                           ? 'danger'
-                                                          : g.rsvpStatus ===
+                                                          : (g.rsvpStatus || g.rsvp_status) ===
                                                                   'tentative' ||
-                                                              g.rsvpStatus ===
+                                                              (g.rsvpStatus || g.rsvp_status) ===
                                                                   'ragu-ragu'
                                                             ? 'warning'
                                                             : 'neutral'
                                                 }
                                             >
-                                                {g.rsvpStatus}
+                                                {g.rsvpStatus || g.rsvp_status}
                                             </Badge>
                                         </td>
                                         <td className="max-w-xs truncate p-3 text-xs text-gold-600">
                                             {getGuestInvitationLink(
-                                                g.uniqueToken,
+                                                g.uniqueToken || g.unique_token,
                                             )}
                                         </td>
                                         <td className="flex justify-end gap-1.5 p-3 text-right">
@@ -430,7 +527,7 @@ export const Guests: React.FC = () => {
                                             <button
                                                 onClick={() =>
                                                     handleCopyLink(
-                                                        g.uniqueToken,
+                                                        g.uniqueToken || g.unique_token,
                                                     )
                                                 }
                                                 title="Salin Link"
@@ -581,57 +678,206 @@ export const Guests: React.FC = () => {
                 </form>
             </Modal>
 
+
             {/* MODAL: IMPORT TAMU */}
             <Modal
                 isOpen={isImportModalOpen}
-                onClose={() => setIsImportModalOpen(false)}
-                title="Import Tamu dari Data Excel / CSV"
+                onClose={() => {
+                    setIsImportModalOpen(false);
+                    setExcelGuests([]);
+                    setImportText('');
+                }}
+                title="Import Tamu Undangan"
             >
-                <form
-                    onSubmit={handleImportTextSubmit}
-                    className="space-y-4 font-sans"
-                >
-                    <p className="text-xs text-charcoal/70">
-                        Salin baris-baris dari Excel Anda dan tempel di bawah.
-                        Gunakan tanda koma (
-                        <code className="bg-cream p-0.5 font-mono">,</code>)
-                        sebagai pemisah nama dan no telepon.
-                    </p>
-                    <div className="rounded-xl border border-sand/40 bg-cream/40 p-3 font-mono text-[10px] leading-relaxed text-charcoal/50">
-                        Format input per baris:
-                        <br />
-                        Nama Tamu, No Telepon
-                        <br />
-                        <br />
-                        Contoh:
-                        <br />
-                        Joni Wijaya, 08122334455
-                        <br />
-                        Alisa Indah, 087788990011
-                    </div>
-                    <div>
-                        <textarea
-                            rows={8}
-                            required
-                            value={importText}
-                            onChange={(e) => setImportText(e.target.value)}
-                            placeholder="Joni Wijaya, 08122334455&#10;Alisa Indah, 087788990011"
-                            className="w-full rounded-xl border border-sand bg-white px-3 py-2 font-mono text-xs focus:ring-1 focus:ring-gold-500"
-                        />
-                    </div>
-                    <div className="mt-4 flex justify-end gap-2">
-                        <Button
-                            variant="ghost"
+                <div className="space-y-5 font-sans">
+                    {/* Tab Navigation */}
+                    <div className="flex border-b border-sand/30 pb-2">
+                        <button
                             type="button"
-                            onClick={() => setIsImportModalOpen(false)}
+                            onClick={() => setImportType('excel')}
+                            className={`flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-bold transition-all ${
+                                importType === 'excel'
+                                    ? 'border-gold-500 text-gold-600'
+                                    : 'border-transparent text-charcoal/50 hover:text-charcoal'
+                            }`}
                         >
-                            Batal
-                        </Button>
-                        <Button variant="primary" type="submit">
-                            Proses Import
-                        </Button>
+                            <FileSpreadsheet size={16} />
+                            <span>File Excel (.xlsx)</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setImportType('text')}
+                            className={`flex items-center gap-2 border-b-2 px-4 py-2 text-sm font-bold transition-all ${
+                                importType === 'text'
+                                    ? 'border-gold-500 text-gold-600'
+                                    : 'border-transparent text-charcoal/50 hover:text-charcoal'
+                            }`}
+                        >
+                            <FileText size={16} />
+                            <span>Copy-Paste Teks</span>
+                        </button>
                     </div>
-                </form>
+
+                    {importType === 'excel' ? (
+                        <div className="space-y-4">
+                            {/* Template Download Section */}
+                            <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-gold-500/20 bg-gradient-to-r from-cream/20 to-gold-500/5 p-4 sm:flex-row">
+                                <div className="space-y-1">
+                                    <h4 className="text-xs font-bold text-charcoal">
+                                        Unduh Template Excel
+                                    </h4>
+                                    <p className="text-[10px] text-charcoal/60">
+                                        Gunakan format template yang sesuai agar proses import lancar.
+                                    </p>
+                                </div>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    type="button"
+                                    onClick={downloadExcelTemplate}
+                                    className="flex w-full items-center justify-center gap-1.5 border-gold-300 text-gold-600 hover:bg-gold-50 sm:w-auto"
+                                >
+                                    <Download size={13} />
+                                    <span>Download Template</span>
+                                </Button>
+                            </div>
+
+                            {/* Excel File Upload Area */}
+                            {excelGuests.length === 0 ? (
+                                <label className="group flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-sand/65 bg-cream/10 transition-all hover:border-gold-500 hover:bg-cream/20">
+                                    <div className="flex flex-col items-center justify-center gap-2">
+                                        <div className="rounded-xl bg-gold-50 p-2 text-gold-600 transition-transform group-hover:scale-105">
+                                            <Upload size={20} />
+                                        </div>
+                                        <p className="text-xs font-semibold text-charcoal/70 transition-colors group-hover:text-gold-600">
+                                            Klik untuk upload file Excel (.xlsx, .xls, .csv)
+                                        </p>
+                                        <p className="text-[10px] text-charcoal/40">
+                                            Seret & taruh file di sini
+                                        </p>
+                                    </div>
+                                    <input
+                                        type="file"
+                                        accept=".xlsx, .xls, .csv"
+                                        className="hidden"
+                                        onChange={handleExcelUpload}
+                                    />
+                                </label>
+                            ) : (
+                                <div className="space-y-3">
+                                    {/* Parsed Result Info & Re-upload button */}
+                                    <div className="flex items-center justify-between border-b border-sand/20 pb-2">
+                                        <span className="text-xs font-bold text-charcoal/70">
+                                            Preview Tamu ({excelGuests.length} terdeteksi)
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={() => setExcelGuests([])}
+                                            className="text-xs font-bold text-red-500 hover:underline"
+                                        >
+                                            Hapus & Ganti File
+                                        </button>
+                                    </div>
+                                    {/* Small preview table */}
+                                    <div className="max-h-48 overflow-y-auto rounded-xl border border-sand/40 bg-white">
+                                        <table className="w-full text-left text-xs">
+                                            <thead>
+                                                <tr className="border-b border-sand/20 bg-cream/15 text-charcoal/50 font-bold uppercase">
+                                                    <th className="p-2 w-8">No</th>
+                                                    <th className="p-2">Nama Tamu</th>
+                                                    <th className="p-2">No. HP</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {excelGuests.slice(0, 10).map((g, idx) => (
+                                                    <tr key={idx} className="border-b border-sand/10 hover:bg-cream/5">
+                                                        <td className="p-2 text-charcoal/40">{idx + 1}</td>
+                                                        <td className="p-2 font-semibold text-charcoal">{g.name}</td>
+                                                        <td className="p-2 text-charcoal/60">{g.phone || '-'}</td>
+                                                    </tr>
+                                                ))}
+                                                {excelGuests.length > 10 && (
+                                                    <tr>
+                                                        <td colSpan={3} className="p-2 text-center text-[10px] italic text-charcoal/45 bg-cream/5">
+                                                            ... dan {excelGuests.length - 10} tamu lainnya.
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="mt-6 flex justify-end gap-2 border-t border-sand/20 pt-4">
+                                <Button
+                                    variant="ghost"
+                                    type="button"
+                                    onClick={() => {
+                                        setIsImportModalOpen(false);
+                                        setExcelGuests([]);
+                                    }}
+                                >
+                                    Batal
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    type="button"
+                                    disabled={excelGuests.length === 0}
+                                    onClick={handleExcelImportSubmit}
+                                    className="flex items-center gap-1.5"
+                                >
+                                    <Check size={14} />
+                                    <span>Proses Import</span>
+                                </Button>
+                            </div>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleImportTextSubmit} className="space-y-4">
+                            <p className="text-xs text-charcoal/70">
+                                Salin baris-baris dari Excel Anda dan tempel di bawah.
+                                Gunakan tanda koma (<code className="bg-cream px-1 py-0.5 rounded font-mono">,</code>) sebagai pemisah nama dan no telepon.
+                            </p>
+                            <div className="rounded-xl border border-sand/40 bg-cream/40 p-3 font-mono text-[10px] leading-relaxed text-charcoal/50">
+                                Format input per baris:
+                                <br />
+                                Nama Tamu, No Telepon
+                                <br />
+                                <br />
+                                Contoh:
+                                <br />
+                                Joni Wijaya, 08122334455
+                                <br />
+                                Alisa Indah, 087788990011
+                            </div>
+                            <div>
+                                <textarea
+                                    rows={6}
+                                    required
+                                    value={importText}
+                                    onChange={(e) => setImportText(e.target.value)}
+                                    placeholder="Joni Wijaya, 08122334455&#10;Alisa Indah, 087788990011"
+                                    className="w-full rounded-xl border border-sand bg-white px-3 py-2 font-mono text-xs focus:ring-1 focus:ring-gold-500"
+                                />
+                            </div>
+                            <div className="mt-6 flex justify-end gap-2 border-t border-sand/20 pt-4">
+                                <Button
+                                    variant="ghost"
+                                    type="button"
+                                    onClick={() => {
+                                        setIsImportModalOpen(false);
+                                        setImportText('');
+                                    }}
+                                >
+                                    Batal
+                                </Button>
+                                <Button variant="primary" type="submit">
+                                    Proses Import
+                                </Button>
+                            </div>
+                        </form>
+                    )}
+                </div>
             </Modal>
         </div>
     );

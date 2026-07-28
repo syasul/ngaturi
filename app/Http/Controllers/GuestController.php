@@ -209,15 +209,16 @@ class GuestController extends Controller
 
             $inserted = [];
             foreach ($guestList as $g) {
-                $uniqueToken = Str::random(8) . '-' . Str::random(4);
+                $uniqueToken = \Illuminate\Support\Str::random(8) . '-' . \Illuminate\Support\Str::random(4);
                 $inserted[] = Guest::create([
                     'wedding_id' => $wedding->id,
                     'name' => $g['name'],
-                    'phone' => $g['phone'] ?: null,
+                    'phone' => (isset($g['phone']) && $g['phone']) ? $g['phone'] : null,
                     'unique_token' => $uniqueToken,
                     'rsvp_status' => 'pending',
                 ]);
             }
+
 
             return response()->json([
                 'status' => 'success',
