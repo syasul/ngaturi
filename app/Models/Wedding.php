@@ -32,7 +32,8 @@ class Wedding extends Model
 
     public function getExpiredAtAttribute()
     {
-        return $this->expired_at ? $this->expired_at->toIso8601String() : null;
+        $expiredAt = $this->attributes['expired_at'] ?? null;
+        return $expiredAt ? \Illuminate\Support\Carbon::parse($expiredAt)->toIso8601String() : null;
     }
 
     public function user()
