@@ -61,6 +61,7 @@ class DatabaseSeeder extends Seeder
             ['id' => 'editorial-mono', 'name' => 'Editorial Mono', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
             ['id' => 'theme-1', 'name' => 'Burgundy Bloom', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM'],
             ['id' => 'theme-2', 'name' => 'Premium 10 Animasi', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
+            ['id' => 'theme-3', 'name' => 'Burgundy Bloom V2', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM'],
         ], ['id'], ['name', 'thumbnail_url', 'is_active', 'package_level']);
 
         // 3. Seed Users
@@ -133,12 +134,36 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        Transaction::updateOrCreate(
+        // 4c. Seed User & Premium Order & Transaction for Ilyas 3 (Theme 3)
+        $ilyas3 = User::updateOrCreate(
+            ['email' => 'ilyas3@example.com'],
             [
-                'order_id' => $order2->id,
+                'name' => 'Ilyas Theme 3',
+                'password' => bcrypt('password'),
+                'role' => 'USER',
+                'status' => 'ACTIVE',
+            ]
+        );
+
+        $order3 = Order::updateOrCreate(
+            [
+                'user_id' => $ilyas3->id,
+                'package_id' => $premiumPkg->id,
             ],
             [
-                'gateway_ref' => 'MANUAL-SEEDER-2',
+                'status' => 'PAID',
+                'amount' => $premiumPkg->price,
+                'payment_method' => 'MANUAL',
+                'paid_at' => now(),
+            ]
+        );
+
+        Transaction::updateOrCreate(
+            [
+                'order_id' => $order3->id,
+            ],
+            [
+                'gateway_ref' => 'MANUAL-SEEDER-3',
                 'status' => 'success',
                 'payload' => ['status' => 'success', 'seeded' => true],
             ]
@@ -228,6 +253,18 @@ class DatabaseSeeder extends Seeder
             [
                 'theme_id' => 'theme-2',
                 'slug' => 'ilyas2',
+                'status' => 'published',
+                'expired_at' => now()->addDays(365),
+                'data' => $weddingData,
+            ]
+        );
+
+        // Theme 3 Wedding for Ilyas 3
+        Wedding::updateOrCreate(
+            ['user_id' => $ilyas3->id],
+            [
+                'theme_id' => 'theme-3',
+                'slug' => 'ilyas3',
                 'status' => 'published',
                 'expired_at' => now()->addDays(365),
                 'data' => $weddingData,

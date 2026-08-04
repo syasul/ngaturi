@@ -13,6 +13,7 @@ import {
 import Theme1 from './theme-1/Theme1';
 
 const Theme2 = React.lazy(() => import('./theme-2/Theme2'));
+const Theme3 = React.lazy(() => import('./theme-3/Theme3'));
 
 interface ThemeRouterProps extends ThemeProps {
     themeId: string;
@@ -41,6 +42,7 @@ export const ThemeRouter: React.FC<ThemeRouterProps> = ({
         legacyThemeIds.some((id) => normalizedId.includes(id)) ||
         (!normalizedId.includes('theme-1') &&
             !normalizedId.includes('theme-2') &&
+            !normalizedId.includes('theme-3') &&
             !normalizedId.includes('premium-10') &&
             !normalizedId.includes('burgundy-bloom'));
 
@@ -90,6 +92,17 @@ export const ThemeRouter: React.FC<ThemeRouterProps> = ({
             return (
                 <React.Suspense fallback={<div>Loading...</div>}>
                     <Theme2 {...props} isOpened={isOpened} onOpen={onOpen} />
+                </React.Suspense>
+            );
+        }
+
+        if (
+            normalizedId.includes('theme-3') ||
+            normalizedId.includes('theme_3')
+        ) {
+            return (
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <Theme3 {...props} isOpened={isOpened} onOpen={onOpen} />
                 </React.Suspense>
             );
         }

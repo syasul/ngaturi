@@ -133,6 +133,7 @@ export const Overview = () => {
             'editorial-mono': 'Editorial Mono Theme',
             'burgundy-bloom': 'Burgundy Bloom Premium',
             'theme-1': 'Burgundy Bloom Premium',
+            'theme-3': 'Burgundy Bloom V2',
         };
         return themes[themeId] || themeId || 'Belum Dipilih';
     };
