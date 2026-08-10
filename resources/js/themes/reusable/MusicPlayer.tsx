@@ -4,13 +4,21 @@ import React, { useEffect, useRef, useState } from 'react';
 interface MusicPlayerProps {
     musicUrl?: string;
     autoPlay: boolean;
+    isPlaying?: boolean;
+    onTogglePlay?: (playing: boolean) => void;
+    showButton?: boolean;
 }
 
 export const MusicPlayer: React.FC<MusicPlayerProps> = ({
     musicUrl,
     autoPlay,
+    isPlaying: isPlayingProp,
+    onTogglePlay,
+    showButton = true,
 }) => {
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [localIsPlaying, setLocalIsPlaying] = useState(false);
+    const isPlaying = isPlayingProp !== undefined ? isPlayingProp : localIsPlaying;
+    const setIsPlaying = onTogglePlay !== undefined ? onTogglePlay : setLocalIsPlaying;
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -29,11 +37,14 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({
         };
     }, [musicUrl]);
 
+    // Handle autoplay trigger
     useEffect(() => {
         if (autoPlay && audioRef.current) {
             audioRef.current
                 .play()
-                .then(() => setIsPlaying(true))
+                .then(() => {
+                    setIsPlaying(true);
+                })
                 .catch((err) =>
                     console.warn(
                         'Autoplay prevented by browser security:',
@@ -43,20 +54,28 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({
         }
     }, [autoPlay]);
 
-    const togglePlayback = () => {
+    // React to changes in the isPlaying state/prop
+    useEffect(() => {
         if (!audioRef.current) return;
         if (isPlaying) {
-            audioRef.current.pause();
-            setIsPlaying(false);
+            if (audioRef.current.paused) {
+                audioRef.current.play().catch((err) =>
+                    console.warn('Playback error:', err)
+                );
+            }
         } else {
-            audioRef.current
-                .play()
-                .then(() => setIsPlaying(true))
-                .catch((err) => console.error(err));
+            if (!audioRef.current.paused) {
+                audioRef.current.pause();
+            }
         }
+    }, [isPlaying]);
+
+    const togglePlayback = () => {
+        setIsPlaying(!isPlaying);
     };
 
     if (!musicUrl) return null;
+    if (!showButton) return null;
 
     return (
         <button

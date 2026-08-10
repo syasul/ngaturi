@@ -375,6 +375,8 @@ const formatDate = (dateStr?: string) => {
 interface Theme1Props extends ThemeProps {
     isOpened?: boolean;
     onOpen?: () => void;
+    isPlayingMusic?: boolean;
+    setIsPlayingMusic?: (playing: boolean) => void;
 }
 
 export const Theme1: React.FC<Theme1Props> = ({
@@ -384,6 +386,8 @@ export const Theme1: React.FC<Theme1Props> = ({
     onRsvpSubmit,
     isOpened = true,
     onOpen,
+    isPlayingMusic: parentIsPlaying,
+    setIsPlayingMusic: parentSetIsPlaying,
 }) => {
     const groom = data?.groom || {};
     const bride = data?.bride || {};
@@ -406,7 +410,9 @@ export const Theme1: React.FC<Theme1Props> = ({
     const [isAlbumOpen, setIsAlbumOpen] = useState(false);
     const [giftTab, setGiftTab] = useState<'bank' | 'address'>('bank');
     const [showConfirmationForm, setShowConfirmationForm] = useState(false);
-    const [isPlayingMusic, setIsPlayingMusic] = useState(true);
+    const [localIsPlaying, setLocalIsPlaying] = useState(true);
+    const isPlayingMusic = parentIsPlaying !== undefined ? parentIsPlaying : localIsPlaying;
+    const setIsPlayingMusic = parentSetIsPlaying !== undefined ? parentSetIsPlaying : setLocalIsPlaying;
     const [isQrisModalOpen, setIsQrisModalOpen] = useState(false);
 
     const handleCopy = (text: string, type: 'groom' | 'bride') => {

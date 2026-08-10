@@ -19,12 +19,16 @@ interface ThemeRouterProps extends ThemeProps {
     themeId: string;
     isOpened?: boolean;
     onOpen?: () => void;
+    isPlayingMusic?: boolean;
+    setIsPlayingMusic?: (playing: boolean) => void;
 }
 
 export const ThemeRouter: React.FC<ThemeRouterProps> = ({
     themeId,
     isOpened = true,
     onOpen,
+    isPlayingMusic,
+    setIsPlayingMusic,
     ...props
 }) => {
     // Map normalized themeId to components
@@ -81,7 +85,15 @@ export const ThemeRouter: React.FC<ThemeRouterProps> = ({
             normalizedId.includes('theme-1') ||
             normalizedId.includes('theme_1')
         ) {
-            return <Theme1 {...props} isOpened={isOpened} onOpen={onOpen} />;
+            return (
+                <Theme1
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
         }
 
         if (
@@ -91,7 +103,13 @@ export const ThemeRouter: React.FC<ThemeRouterProps> = ({
         ) {
             return (
                 <React.Suspense fallback={<div>Loading...</div>}>
-                    <Theme2 {...props} isOpened={isOpened} onOpen={onOpen} />
+                    <Theme2
+                        {...props}
+                        isOpened={isOpened}
+                        onOpen={onOpen}
+                        isPlayingMusic={isPlayingMusic}
+                        setIsPlayingMusic={setIsPlayingMusic}
+                    />
                 </React.Suspense>
             );
         }
@@ -102,7 +120,13 @@ export const ThemeRouter: React.FC<ThemeRouterProps> = ({
         ) {
             return (
                 <React.Suspense fallback={<div>Loading...</div>}>
-                    <Theme3 {...props} isOpened={isOpened} onOpen={onOpen} />
+                    <Theme3
+                        {...props}
+                        isOpened={isOpened}
+                        onOpen={onOpen}
+                        isPlayingMusic={isPlayingMusic}
+                        setIsPlayingMusic={setIsPlayingMusic}
+                    />
                 </React.Suspense>
             );
         }

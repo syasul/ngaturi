@@ -31,6 +31,7 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     // Presentation States
     const [isOpened, setIsOpened] = useState(false);
     const [autoPlayMusic, setAutoPlayMusic] = useState(false);
+    const [isPlayingMusic, setIsPlayingMusic] = useState(false);
 
     // 1. Dynamic Font Injection and Color Scheme Setup on Mount
     useEffect(() => {
@@ -99,9 +100,7 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
             }
         };
 
-        if (slug) {
-            loadPublicData();
-        }
+        loadPublicData();
     }, [slug, guestToken]);
 
     // 3. Dynamic Open Graph Meta Tag Injector
@@ -152,19 +151,20 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
 
     // Handle RSVP Submit
     const handleRsvpSubmit = async (rsvpStatus: string, message: string) => {
-        if (!guestToken) return;
-
         try {
-            const res = await api.post('/guests/public/rsvp', {
-                uniqueToken: guestToken,
-                rsvpStatus,
-                message,
-            });
+            const guestTokenParam = guestToken || 'anonymous';
+            const res = await api.post(
+                `/guests/public/rsvp/${wedding.id}/${guestTokenParam}`,
+                {
+                    rsvpStatus,
+                    message,
+                },
+            );
 
             if (res.data.status === 'success') {
-                toast.success('Konfirmasi kehadiran berhasil dikirim!');
+                toast.success('Konfirmasi kehadiran berhasil dikirim.');
 
-                // Reload wishes list
+                // Refresh wishes list
                 const wishesRes = await api.get(
                     `/guests/public/wishes/${wedding.id}`,
                 );
@@ -180,6 +180,7 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     const handleOpenInvitation = () => {
         setIsOpened(true);
         setAutoPlayMusic(true);
+        setIsPlayingMusic(true);
     };
 
     if (loading) {
@@ -234,6 +235,22 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     const data = wedding.data;
     const themeId = wedding.themeId || 'elegant';
 
+    const legacyThemeIds = [
+        'elegant',
+        'rustic',
+        'modern',
+        'royal-yogyakarta',
+        'botanical-minimal',
+        'editorial-mono',
+    ];
+    const isLegacyTheme =
+        legacyThemeIds.some((id) => themeId.toLowerCase().includes(id)) ||
+        (!themeId.toLowerCase().includes('theme-1') &&
+            !themeId.toLowerCase().includes('theme-2') &&
+            !themeId.toLowerCase().includes('theme-3') &&
+            !themeId.toLowerCase().includes('premium-10') &&
+            !themeId.toLowerCase().includes('burgundy-bloom'));
+
     return (
         <div className="relative min-h-screen w-full overflow-x-hidden" style={{ colorScheme: 'only light' }}>
             {/* Autoplay Music Player */}
@@ -241,6 +258,9 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
                 <MusicPlayer
                     musicUrl={wedding.data.musicUrl}
                     autoPlay={autoPlayMusic}
+                    isPlaying={isPlayingMusic}
+                    onTogglePlay={setIsPlayingMusic}
+                    showButton={isLegacyTheme}
                 />
             )}
 
@@ -256,6 +276,8 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
                 guestToken={guestToken || undefined}
                 wishes={wishes}
                 onRsvpSubmit={handleRsvpSubmit}
+                isPlayingMusic={isPlayingMusic}
+                setIsPlayingMusic={setIsPlayingMusic}
             />
         </div>
     );
