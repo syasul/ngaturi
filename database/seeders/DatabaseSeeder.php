@@ -8,6 +8,7 @@ use App\Models\Package;
 use App\Models\Order;
 use App\Models\Transaction;
 use App\Models\Wedding;
+use App\Models\Music;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -63,6 +64,45 @@ class DatabaseSeeder extends Seeder
             ['id' => 'theme-2', 'name' => 'Premium 10 Animasi', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
             ['id' => 'theme-3', 'name' => 'Burgundy Bloom V2', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM'],
         ], ['id'], ['name', 'thumbnail_url', 'is_active', 'package_level']);
+
+        // 2b. Seed Music
+        $tracks = [
+            [
+                'title' => 'Jedag Jedug Gamelan',
+                'artist' => 'Unknown Artist',
+                'url' => '/assets/music/jedag-jedug-gamelan.mp3',
+                'is_active' => true,
+            ],
+            [
+                'title' => 'A Thousand Years',
+                'artist' => 'Christina Perri',
+                'url' => '/uploads/a_thousand_years.mp3',
+                'is_active' => true,
+            ],
+            [
+                'title' => 'Marry Me',
+                'artist' => 'Train',
+                'url' => '/uploads/marry_me.mp3',
+                'is_active' => true,
+            ],
+            [
+                'title' => 'Beautiful in White',
+                'artist' => 'Westlife',
+                'url' => '/uploads/beautiful_in_white.mp3',
+                'is_active' => true,
+            ],
+        ];
+
+        foreach ($tracks as $track) {
+            Music::firstOrCreate(
+                ['title' => $track['title']],
+                [
+                    'artist' => $track['artist'],
+                    'url' => $track['url'],
+                    'is_active' => $track['is_active'],
+                ]
+            );
+        }
 
         // 3. Seed Users
         User::firstOrCreate(
@@ -231,8 +271,9 @@ class DatabaseSeeder extends Seeder
                 'textColor' => '#2D1A1E',
                 'titleFont' => 'font-serif',
                 'bodyFont' => 'font-sans',
-                'musicUrl' => '',
+                'musicUrl' => '/assets/music/jedag-jedug-gamelan.mp3',
             ],
+            'musicUrl' => '/assets/music/jedag-jedug-gamelan.mp3',
         ];
 
         // Theme 1 Wedding for Ilyas
