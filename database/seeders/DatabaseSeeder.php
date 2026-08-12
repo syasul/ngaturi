@@ -54,15 +54,15 @@ class DatabaseSeeder extends Seeder
 
         // 2. Seed Themes
         Theme::upsert([
-            ['id' => 'elegant', 'name' => 'Elegant Gold', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'BASIC'],
-            ['id' => 'rustic', 'name' => 'Rustic Bohemian', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'BASIC'],
-            ['id' => 'modern', 'name' => 'Modern Minimalist', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
-            ['id' => 'royal-yogyakarta', 'name' => 'Royal Yogyakarta', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
-            ['id' => 'botanical-minimal', 'name' => 'Botanical Minimal', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'BASIC'],
-            ['id' => 'editorial-mono', 'name' => 'Editorial Mono', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
+            ['id' => 'elegant', 'name' => 'Elegant Gold', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC'],
+            ['id' => 'rustic', 'name' => 'Rustic Bohemian', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC'],
+            ['id' => 'modern', 'name' => 'Modern Minimalist', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM'],
+            ['id' => 'royal-yogyakarta', 'name' => 'Royal Yogyakarta', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM'],
+            ['id' => 'botanical-minimal', 'name' => 'Botanical Minimal', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC'],
+            ['id' => 'editorial-mono', 'name' => 'Editorial Mono', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM'],
             ['id' => 'theme-1', 'name' => 'Burgundy Bloom', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM'],
             ['id' => 'theme-2', 'name' => 'Premium 10 Animasi', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
-            ['id' => 'theme-3', 'name' => 'Burgundy Bloom V2', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM'],
+            ['id' => 'theme-3', 'name' => 'Burgundy Bloom V2', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'PREMIUM'],
         ], ['id'], ['name', 'thumbnail_url', 'is_active', 'package_level']);
 
         // 2b. Seed Music
@@ -217,7 +217,7 @@ class DatabaseSeeder extends Seeder
                 'parents' => 'Putra dari Bpk. Aghala Gola & Ibu Egela Egle',
                 'bio' => 'Seorang tech enthusiast yang percaya bahwa setiap baris kode memiliki arti, sama seperti setiap detak jantung untuk pasangannya.',
                 'ig' => '@ilyas_handsome',
-                'photo' => '/assets/theme_1/1781458096155-8jwgyh-Desaintanpajudul78.webp',
+                'photo' => '/assets/theme_1/foto-mempelai-pria.webp',
             ],
             'bride' => [
                 'name' => 'Iftitah Beauty, S.Kom',
@@ -225,7 +225,7 @@ class DatabaseSeeder extends Seeder
                 'parents' => 'Putri dari Bapak Lord Capulet & Ibu Lady Capulet',
                 'bio' => 'Pencinta seni dan keindahan yang menemukan harmoni dan kebahagiaan sejati dalam langkah kebersamaan bersama Ilyas.',
                 'ig' => '@Iftitah_beauty',
-                'photo' => '/assets/theme_1/1781458099113-j8vvhy-Desaintanpajudul77.webp',
+                'photo' => '/assets/theme_1/foto-mempelai-cewe.webp',
             ],
             'schedule' => [
                 'akad' => [

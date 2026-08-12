@@ -336,6 +336,7 @@ interface Theme2Props extends ThemeProps {
 export const Theme2: React.FC<Theme2Props> = ({
     data,
     guestName,
+    photos,
     wishes,
     onRsvpSubmit,
     isOpened = true,
@@ -435,7 +436,7 @@ export const Theme2: React.FC<Theme2Props> = ({
         { id: '8', url: '/assets/theme_1/gallery2.webp' },
     ];
 
-    const displayPhotos = defaultPhotos;
+    const displayPhotos = photos && photos.length > 0 ? photos : defaultPhotos;
     const weddingDate =
         schedules.akad?.date || schedules.resepsi?.date || '2026-09-21';
 

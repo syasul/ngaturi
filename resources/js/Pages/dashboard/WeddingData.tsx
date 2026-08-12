@@ -254,11 +254,7 @@ export const WeddingData: React.FC = () => {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                    {lastSaved && (
-                        <span className="text-xs font-medium text-charcoal/50">
-                            Simpan otomatis: {lastSaved}
-                        </span>
-                    )}
+
                     <Button
                         variant="outline"
                         size="md"

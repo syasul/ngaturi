@@ -382,6 +382,7 @@ interface Theme3Props extends ThemeProps {
 export const Theme3: React.FC<Theme3Props> = ({
     data,
     guestName,
+    photos,
     wishes,
     onRsvpSubmit,
     isOpened = true,
@@ -443,8 +444,8 @@ export const Theme3: React.FC<Theme3Props> = ({
         { id: '7', url: '/assets/theme_1/gallery1.webp' },
         { id: '8', url: '/assets/theme_1/gallery2.webp' },
     ];
-    // Force default photos for now to match the requested design exactly
-    const displayPhotos = defaultPhotos;
+    // Use uploaded photos if available, fallback to default photos
+    const displayPhotos = photos && photos.length > 0 ? photos : defaultPhotos;
 
     const weddingDate =
         schedules.akad?.date || schedules.resepsi?.date || '2026-09-21';
@@ -952,13 +953,13 @@ export const Theme3: React.FC<Theme3Props> = ({
 
                                 {/* Groom */}
                                 <div className="flex flex-col items-center">
-                                    {/* <div className="mb-1.5 h-[14cqw] w-[14cqw] overflow-hidden rounded-full border-[1.5px] border-[#C9A84C]/60 shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
-                                    <img
-                                        src={resolveImageUrl(groom.photo, '/assets/theme_1/foto-mempelai-pria.webp')}
-                                        alt={groom.nickname || 'Groom'}
-                                        className="h-full w-full object-cover"
-                                    />
-                                </div> */}
+                                    <div className="mb-1.5 h-[14cqw] w-[14cqw] overflow-hidden rounded-full border-[1.5px] border-[#C9A84C]/60 shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
+                                        <img
+                                            src={resolveImageUrl(groom.photo, '/assets/theme_1/foto-mempelai-pria.webp')}
+                                            alt={groom.nickname || 'Groom'}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </div>
                                     <h3
                                         className="text-[5.5cqw] font-semibold leading-tight"
                                         style={{
@@ -993,13 +994,13 @@ export const Theme3: React.FC<Theme3Props> = ({
 
                                 {/* Bride */}
                                 <div className="flex flex-col items-center">
-                                    {/* <div className="mb-1.5 h-[14cqw] w-[14cqw] overflow-hidden rounded-full border-[1.5px] border-[#C9A84C]/60 shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
-                                    <img
-                                        src={resolveImageUrl(bride.photo, '/assets/theme_1/foto-mempelai-cewe.webp')}
-                                        alt={bride.nickname || 'Bride'}
-                                        className="h-full w-full object-cover"
-                                    />
-                                </div> */}
+                                    <div className="mb-1.5 h-[14cqw] w-[14cqw] overflow-hidden rounded-full border-[1.5px] border-[#C9A84C]/60 shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
+                                        <img
+                                            src={resolveImageUrl(bride.photo, '/assets/theme_1/foto-mempelai-cewe.webp')}
+                                            alt={bride.nickname || 'Bride'}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </div>
                                     <h3
                                         className="text-[5.5cqw] font-semibold leading-tight"
                                         style={{
@@ -1479,7 +1480,7 @@ export const Theme3: React.FC<Theme3Props> = ({
                                     <Theme3Countdown targetDate={weddingDate} />
 
                                     <a
-                                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Ilyas+%26+Iftitah&dates=20260921T090000/20260921T130000&details=Mohon+doa+restu+kehadiran+Anda+di+pernikahan+kami.&location=Masjid+Raya+Al-Jihad`}
+                                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+${encodeURIComponent((groom.nickname || 'Groom') + ' & ' + (bride.nickname || 'Bride'))}&dates=${(weddingDate || '2026-09-21').replace(/-/g, '')}T090000/${(weddingDate || '2026-09-21').replace(/-/g, '')}T130000&details=Mohon+doa+restu+kehadiran+Anda+di+pernikahan+kami.&location=${encodeURIComponent(schedules.akad?.venue || schedules.akad?.address || 'Masjid Raya Al-Jihad')}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-1.5 rounded-lg bg-[#FDF5F6] px-3 py-1.5 text-[10px] font-bold text-[#8C1B2F] shadow-sm transition-all hover:bg-white active:scale-95 sm:text-[11px]"
@@ -2745,7 +2746,7 @@ export const Theme3: React.FC<Theme3Props> = ({
                                                 className="font-serif text-[2.25rem]"
                                                 style={{ color: primaryColor }}
                                             >
-                                                Ilyas & Iftitah
+                                                {groom.nickname || groom.name || 'Ilyas'} & {bride.nickname || bride.name || 'Iftitah'}
                                             </h4>
                                             <p
                                                 className="mb-10 mt-2 max-w-[200px] font-serif text-[9px] font-bold leading-relaxed opacity-80"
@@ -2924,20 +2925,20 @@ export const Theme3: React.FC<Theme3Props> = ({
                                         className="pr-5 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
                                         style={{ color: primaryColor }}
                                     >
-                                        I
+                                        {(groom.nickname || groom.name || 'I')[0].toUpperCase()}
                                     </span>
                                     <span
                                         className="pt-12 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
                                         style={{ color: primaryColor }}
                                     >
-                                        I
+                                        {(bride.nickname || bride.name || 'I')[0].toUpperCase()}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Date */}
                             <p className="mb-8 font-serif text-[8.5px] font-bold uppercase tracking-widest text-[#7A223E]">
-                                MONDAY, 21 SEPTEMBER 2026
+                                {weddingDate ? new Date(weddingDate).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase() : 'MONDAY, 21 SEPTEMBER 2026'}
                             </p>
 
                             {/* Couple Illustration */}
@@ -2954,7 +2955,7 @@ export const Theme3: React.FC<Theme3Props> = ({
                                 className="mb-12 font-serif text-[2.2rem]"
                                 style={{ color: primaryColor }}
                             >
-                                Ilyas & Iftitah
+                                {groom.nickname || groom.name || 'Ilyas'} & {bride.nickname || bride.name || 'Iftitah'}
                             </h3>
                         </motion.div>
 
@@ -3525,7 +3526,7 @@ export const Theme3: React.FC<Theme3Props> = ({
                                     </div>
 
                                     <p className="pt-1 font-serif text-[9.5px] font-bold uppercase tracking-[0.2em] text-[#7A223E] opacity-90">
-                                        A.N. Ilyas & IFTITAH
+                                        A.N. {(groom.nickname || 'ILYAS').toUpperCase()} & {(bride.nickname || 'IFTITAH').toUpperCase()}
                                     </p>
                                 </div>
                             </motion.div>
