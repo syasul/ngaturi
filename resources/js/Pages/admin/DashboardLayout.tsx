@@ -106,14 +106,16 @@ export const AdminDashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
     ];
 
     return (
-        <div className="flex min-h-screen bg-slate-950 font-sans text-slate-100">
+        <div className="flex h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
             {/* Sidebar for Desktop */}
             <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-800 bg-slate-900 lg:flex">
                 {/* Header / Branding */}
                 <div className="flex h-16 items-center gap-2.5 border-b border-slate-800 px-6">
-                    <div className="rounded-lg border border-amber-500/35 bg-amber-500/10 p-1.5 text-amber-500">
-                        <Shield size={20} />
-                    </div>
+                    <img
+                        src="/assets/logo-mark.png"
+                        alt="Ngaturi Logo"
+                        className="h-8 w-auto object-contain brightness-125 filter"
+                    />
                     <span className="font-sans text-lg font-bold tracking-wider text-amber-500">
                         Ngaturi Admin
                     </span>
@@ -180,7 +182,11 @@ export const AdminDashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
                         </div>
 
                         <div className="flex h-16 items-center gap-2.5 border-b border-slate-800 px-6">
-                            <Shield className="text-amber-500" size={24} />
+                            <img
+                                src="/assets/logo-mark.png"
+                                alt="Ngaturi Logo"
+                                className="h-8 w-auto object-contain brightness-125 filter"
+                            />
                             <span className="font-sans text-lg font-bold tracking-wider text-amber-500">
                                 Ngaturi Admin
                             </span>

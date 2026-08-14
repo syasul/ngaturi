@@ -31,11 +31,12 @@ export const Login: React.FC = () => {
             <div className="z-10 sm:mx-auto sm:w-full sm:max-w-md">
                 <Link
                     href="/"
-                    className="mb-6 flex cursor-pointer items-center justify-center gap-2"
+                    className="mb-6 flex cursor-pointer items-center justify-center gap-3.5"
                 >
-                    <Heart
-                        className="animate-pulse fill-gold-500 text-gold-500"
-                        size={28}
+                    <img
+                        src="/assets/logo-mark.png"
+                        alt="Ngaturi Logo"
+                        className="h-10 w-auto object-contain"
                     />
                     <span className="font-sans text-3xl font-bold tracking-wide text-gold-600">
                         Ngaturi
