@@ -36,7 +36,7 @@ class GoogleController extends Controller
             if ($user) {
                 // User exists, log them in
                 Auth::login($user);
-                return redirect()->intended('/dashboard');
+                return redirect()->intended($user->role === 'ADMIN' ? '/admin' : '/dashboard');
             }
             
             // Otherwise, check if user exists with the same email
@@ -54,7 +54,7 @@ class GoogleController extends Controller
                 }
                 
                 Auth::login($user);
-                return redirect()->intended('/dashboard');
+                return redirect()->intended($user->role === 'ADMIN' ? '/admin' : '/dashboard');
             }
             
             // Create a new user since they don't exist
@@ -71,7 +71,7 @@ class GoogleController extends Controller
             $newUser->markEmailAsVerified();
             
             Auth::login($newUser);
-            return redirect()->intended('/dashboard');
+            return redirect()->intended($newUser->role === 'ADMIN' ? '/admin' : '/dashboard');
             
         } catch (Exception $e) {
             return redirect('/login')->withErrors(['email' => 'Gagal masuk menggunakan akun Google. Silakan coba kembali.']);

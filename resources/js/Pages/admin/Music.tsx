@@ -529,4 +529,10 @@ export const AdminMusic: React.FC = () => {
     );
 };
 
+import AdminDashboardLayout from './DashboardLayout';
+
+AdminMusic.layout = (page: React.ReactNode) => (
+    <AdminDashboardLayout>{page}</AdminDashboardLayout>
+);
+
 export default AdminMusic;

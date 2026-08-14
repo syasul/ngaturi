@@ -491,4 +491,10 @@ export const AdminThemes: React.FC = () => {
     );
 };
 
+import AdminDashboardLayout from './DashboardLayout';
+
+AdminThemes.layout = (page: React.ReactNode) => (
+    <AdminDashboardLayout>{page}</AdminDashboardLayout>
+);
+
 export default AdminThemes;

@@ -675,4 +675,10 @@ export const AdminUsers: React.FC = () => {
     );
 };
 
+import AdminDashboardLayout from './DashboardLayout';
+
+AdminUsers.layout = (page: React.ReactNode) => (
+    <AdminDashboardLayout>{page}</AdminDashboardLayout>
+);
+
 export default AdminUsers;

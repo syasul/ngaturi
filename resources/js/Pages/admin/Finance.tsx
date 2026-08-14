@@ -445,4 +445,10 @@ export const AdminFinance: React.FC = () => {
     );
 };
 
+import AdminDashboardLayout from './DashboardLayout';
+
+AdminFinance.layout = (page: React.ReactNode) => (
+    <AdminDashboardLayout>{page}</AdminDashboardLayout>
+);
+
 export default AdminFinance;

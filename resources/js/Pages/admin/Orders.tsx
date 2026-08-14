@@ -621,4 +621,10 @@ export const AdminOrders: React.FC = () => {
     );
 };
 
+import AdminDashboardLayout from './DashboardLayout';
+
+AdminOrders.layout = (page: React.ReactNode) => (
+    <AdminDashboardLayout>{page}</AdminDashboardLayout>
+);
+
 export default AdminOrders;

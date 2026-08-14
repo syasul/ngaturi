@@ -7,7 +7,7 @@ import {
     Users,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@inertiajs/react';
 import {
     Bar,
     BarChart,
@@ -421,7 +421,7 @@ export const AdminOverview: React.FC = () => {
                         </p>
                     </div>
                     <Link
-                        to="/admin/orders"
+                        href="/admin/orders"
                         className="flex items-center gap-1 text-xs font-semibold text-amber-500 hover:text-amber-400"
                     >
                         <span>Semua Transaksi</span>
@@ -499,5 +499,11 @@ export const AdminOverview: React.FC = () => {
         </div>
     );
 };
+
+import AdminDashboardLayout from './DashboardLayout';
+
+AdminOverview.layout = (page: React.ReactNode) => (
+    <AdminDashboardLayout>{page}</AdminDashboardLayout>
+);
 
 export default AdminOverview;

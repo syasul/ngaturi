@@ -14,23 +14,24 @@ import {
     X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, router, usePage } from '@inertiajs/react';
 import { toast } from 'sonner';
-import { useAuthStore } from '../../store/auth';
 
-export const AdminDashboardLayout: React.FC = () => {
-    const { user, clearAuth } = useAuthStore();
-    const navigate = useNavigate();
-    const location = useLocation();
+export const AdminDashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
+    children,
+}) => {
+    const { props, url } = usePage();
+    const user = (props.auth as any)?.user;
+    const pathname = url.split('?')[0];
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    // 1. Guard check
+    // 1. Guard check (failsafe, though middleware also protects this)
     useEffect(() => {
         if (!user || user.role !== 'ADMIN') {
             toast.error('Akses ditolak: Silakan masuk sebagai Administrator.');
-            navigate('/admin/login', { replace: true });
+            router.visit('/login');
         }
-    }, [user, navigate]);
+    }, [user]);
 
     // 2. Strict session timeout: 2 hours idle
     useEffect(() => {
@@ -42,11 +43,17 @@ export const AdminDashboardLayout: React.FC = () => {
             if (timeoutId) clearTimeout(timeoutId);
             // 2 hours = 7200000 ms
             timeoutId = setTimeout(() => {
-                clearAuth();
-                toast.warning(
-                    'Sesi Administrator kedaluwarsa karena tidak ada aktivitas selama 2 jam.',
+                router.post(
+                    route('logout'),
+                    {},
+                    {
+                        onSuccess: () => {
+                            toast.warning(
+                                'Sesi Administrator kedaluwarsa karena tidak ada aktivitas selama 2 jam.',
+                            );
+                        },
+                    },
                 );
-                navigate('/admin/login', { replace: true });
             }, 7200000);
         };
 
@@ -65,16 +72,22 @@ export const AdminDashboardLayout: React.FC = () => {
             window.removeEventListener('click', resetTimer);
             window.removeEventListener('scroll', resetTimer);
         };
-    }, [user, clearAuth, navigate]);
+    }, [user]);
 
     if (!user || user.role !== 'ADMIN') {
         return null;
     }
 
     const handleLogout = () => {
-        clearAuth();
-        toast.success('Berhasil keluar dari panel Administrator.');
-        navigate('/admin/login');
+        router.post(
+            route('logout'),
+            {},
+            {
+                onSuccess: () => {
+                    toast.success('Berhasil keluar dari panel Administrator.');
+                },
+            },
+        );
     };
 
     const menuItems = [
@@ -110,11 +123,11 @@ export const AdminDashboardLayout: React.FC = () => {
                 <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
                     {menuItems.map((item) => {
                         const Icon = item.icon;
-                        const isActive = location.pathname === item.path;
+                        const isActive = pathname === item.path;
                         return (
                             <Link
                                 key={item.name}
-                                to={item.path}
+                                href={item.path}
                                 className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
                                     isActive
                                         ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/10'
@@ -145,7 +158,7 @@ export const AdminDashboardLayout: React.FC = () => {
                     </div>
                     <button
                         onClick={handleLogout}
-                        className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-red-400 transition-all hover:bg-red-500/10 hover:text-red-300"
+                        className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-red-400 transition-all hover:bg-red-50/10 hover:text-red-300"
                     >
                         <LogOut size={18} />
                         <span>Keluar</span>
@@ -176,12 +189,11 @@ export const AdminDashboardLayout: React.FC = () => {
                         <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
                             {menuItems.map((item) => {
                                 const Icon = item.icon;
-                                const isActive =
-                                    location.pathname === item.path;
+                                const isActive = pathname === item.path;
                                 return (
                                     <Link
                                         key={item.name}
-                                        to={item.path}
+                                        href={item.path}
                                         onClick={() => setSidebarOpen(false)}
                                         className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
                                             isActive
@@ -199,7 +211,7 @@ export const AdminDashboardLayout: React.FC = () => {
                         <div className="border-t border-slate-800 p-4">
                             <button
                                 onClick={handleLogout}
-                                className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-red-400 transition-all hover:bg-red-500/10 hover:text-red-300"
+                                className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-red-400 transition-all hover:bg-red-50/10 hover:text-red-300"
                             >
                                 <LogOut size={18} />
                                 <span>Keluar</span>
@@ -233,7 +245,7 @@ export const AdminDashboardLayout: React.FC = () => {
 
                 {/* Content body */}
                 <main className="flex-1 p-6 lg:p-8">
-                    <Outlet />
+                    {children}
                 </main>
             </div>
         </div>
