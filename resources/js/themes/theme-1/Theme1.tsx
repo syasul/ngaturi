@@ -2570,7 +2570,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                                 color: primaryColor,
                                                             }}
                                                         >
-                                                            BNI
+                                                            {groom.bankName || 'BNI'}
                                                         </span>
                                                     </div>
                                                     <CreditCard
@@ -2597,12 +2597,12 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                                 color: primaryColor,
                                                             }}
                                                         >
-                                                            123456789
+                                                            {groom.accountNumber || '123456789'}
                                                         </p>
                                                         <button
                                                             onClick={() =>
                                                                 handleCopy(
-                                                                    '123456789',
+                                                                    groom.accountNumber || '123456789',
                                                                     'groom',
                                                                 )
                                                             }
@@ -2643,7 +2643,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                             color: primaryColor,
                                                         }}
                                                     >
-                                                        a.n Ananda
+                                                        a.n {groom.accountName || 'Ananda'}
                                                     </p>
                                                 </div>
                                             </div>
@@ -2681,7 +2681,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                                 color: primaryColor,
                                                             }}
                                                         >
-                                                            MANDIRI
+                                                            {bride.bankName || 'MANDIRI'}
                                                         </span>
                                                     </div>
                                                     <CreditCard
@@ -2708,12 +2708,12 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                                 color: primaryColor,
                                                             }}
                                                         >
-                                                            123456789
+                                                            {bride.accountNumber || '123456789'}
                                                         </p>
                                                         <button
                                                             onClick={() =>
                                                                 handleCopy(
-                                                                    '123456789',
+                                                                    bride.accountNumber || '123456789',
                                                                     'bride',
                                                                 )
                                                             }
@@ -2754,7 +2754,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                             color: primaryColor,
                                                         }}
                                                     >
-                                                        a.n WRTY
+                                                        a.n {bride.accountName || 'WRTY'}
                                                     </p>
                                                 </div>
                                             </div>

@@ -44,6 +44,9 @@ export const WeddingData: React.FC = () => {
             bio: '',
             ig: '',
             photo: '',
+            bankName: '',
+            accountNumber: '',
+            accountName: '',
         },
         bride: {
             name: '',
@@ -52,6 +55,9 @@ export const WeddingData: React.FC = () => {
             bio: '',
             ig: '',
             photo: '',
+            bankName: '',
+            accountNumber: '',
+            accountName: '',
         },
         akad: { date: '', time: '', venue: '', address: '', maps: '' },
         resepsi: { date: '', time: '', venue: '', address: '', maps: '' },
@@ -487,6 +493,72 @@ export const WeddingData: React.FC = () => {
                                     className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20"
                                 />
                             </div>
+
+                            {/* Rekening Kado Online */}
+                            <div className="border-t border-sand/20 pt-6 mt-6">
+                                <h4 className="font-sans text-sm font-bold text-charcoal mb-4">
+                                    Rekening Kado Online Pria (Opsional)
+                                </h4>
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Nama Bank
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.groom.bankName || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    'groom',
+                                                    'bankName',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Contoh: BNI, BCA, Mandiri"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Nomor Rekening
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.groom.accountNumber || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    'groom',
+                                                    'accountNumber',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Nomor Rekening"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Nama Pemilik Rekening (a.n)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.groom.accountName || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    'groom',
+                                                    'accountName',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Nama Pemilik"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
 
@@ -631,6 +703,72 @@ export const WeddingData: React.FC = () => {
                                     placeholder="Ceritakan singkat tentang diri mempelai wanita..."
                                     className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20"
                                 />
+                            </div>
+
+                            {/* Rekening Kado Online */}
+                            <div className="border-t border-sand/20 pt-6 mt-6">
+                                <h4 className="font-sans text-sm font-bold text-charcoal mb-4">
+                                    Rekening Kado Online Wanita (Opsional)
+                                </h4>
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Nama Bank
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.bride.bankName || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    'bride',
+                                                    'bankName',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Contoh: BNI, BCA, Mandiri"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Nomor Rekening
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.bride.accountNumber || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    'bride',
+                                                    'accountNumber',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Nomor Rekening"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Nama Pemilik Rekening (a.n)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.bride.accountName || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    'bride',
+                                                    'accountName',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Nama Pemilik"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
