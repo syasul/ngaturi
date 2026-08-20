@@ -73,6 +73,8 @@ export const WeddingData: React.FC = () => {
             titleFont: 'font-serif',
             bodyFont: 'font-sans',
             musicUrl: '',
+            qrisUrl: '',
+            monogramUrl: '',
         },
         sections: {
             showStory: true,
@@ -1346,6 +1348,98 @@ export const WeddingData: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Monogram / Gambar Inisial Custom Upload */}
+                            <div className="space-y-4 border-t border-sand/20 pt-4">
+                                <div>
+                                    <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                        Monogram / Gambar Inisial Kustom (Opsional)
+                                    </label>
+                                    <p className="mt-1 text-[10px] text-charcoal/40">
+                                        Unggah gambar inisial kustom Anda untuk menggantikan teks watermark inisial (seperti "SI" / "II") di cover depan. Format PNG transparan direkomendasikan.
+                                    </p>
+                                    <div className="mt-2 flex items-center gap-3">
+                                        <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold shadow-sm hover:bg-cream/25">
+                                            <Upload size={14} />
+                                            <span>Pilih Gambar Monogram</span>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={async (e) => {
+                                                    const file =
+                                                        e.target.files?.[0];
+                                                    if (!file) return;
+                                                    const toastId =
+                                                        toast.loading(
+                                                            'Mengunggah gambar monogram...',
+                                                        );
+                                                    const data = new FormData();
+                                                    data.append('file', file);
+                                                    try {
+                                                        const res =
+                                                            await api.post(
+                                                                '/media/upload',
+                                                                data,
+                                                                {
+                                                                    headers: {
+                                                                        'Content-Type':
+                                                                            'multipart/form-data',
+                                                                    },
+                                                                },
+                                                            );
+                                                        if (
+                                                            res.data.status ===
+                                                            'success'
+                                                        ) {
+                                                            handleFieldChange(
+                                                                'customStyle',
+                                                                'monogramUrl',
+                                                                res.data.url,
+                                                            );
+                                                            toast.success(
+                                                                'Monogram berhasil diunggah!',
+                                                                { id: toastId },
+                                                            );
+                                                            setTimeout(
+                                                                () =>
+                                                                    handleSave(
+                                                                        false,
+                                                                    ),
+                                                                200,
+                                                            );
+                                                        }
+                                                    } catch (err) {
+                                                        toast.error(
+                                                            'Gagal mengunggah monogram.',
+                                                            { id: toastId },
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        </label>
+                                        {formData.customStyle?.monogramUrl && (
+                                            <div className="flex items-center gap-2">
+                                                <img
+                                                    src={formData.customStyle.monogramUrl}
+                                                    alt="Monogram Preview"
+                                                    className="h-10 w-10 object-contain rounded border border-sand/40 bg-neutral-50 p-1"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        handleFieldChange('customStyle', 'monogramUrl', '');
+                                                        setTimeout(() => handleSave(false), 200);
+                                                    }}
+                                                    className="text-[10px] text-red-500 hover:underline"
+                                                >
+                                                    Hapus
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
 
@@ -1573,6 +1667,96 @@ export const WeddingData: React.FC = () => {
                                             className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
                                         />
                                     </div>
+                                </div>
+                            </div>
+
+                            {/* QRIS Upload */}
+                            <div className="border-t border-sand/20 pt-6 space-y-4">
+                                <h5 className="font-sans text-sm font-semibold text-charcoal/80">
+                                    QRIS Code Kado Digital (Opsional)
+                                </h5>
+                                <p className="text-xs text-charcoal/50">
+                                    Unggah gambar QRIS Anda agar tamu undangan dapat mentransfer kado langsung dengan melakukan scan kode QR.
+                                </p>
+                                <div className="flex items-center gap-3">
+                                    <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold shadow-sm hover:bg-cream/25">
+                                        <Upload size={14} />
+                                        <span>Unggah Gambar QRIS</span>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={async (e) => {
+                                                const file =
+                                                    e.target.files?.[0];
+                                                if (!file) return;
+                                                const toastId =
+                                                    toast.loading(
+                                                        'Mengunggah gambar QRIS...',
+                                                    );
+                                                const data = new FormData();
+                                                data.append('file', file);
+                                                try {
+                                                    const res =
+                                                        await api.post(
+                                                            '/media/upload',
+                                                            data,
+                                                            {
+                                                                headers: {
+                                                                    'Content-Type':
+                                                                        'multipart/form-data',
+                                                                },
+                                                            },
+                                                        );
+                                                    if (
+                                                        res.data.status ===
+                                                        'success'
+                                                    ) {
+                                                        handleFieldChange(
+                                                            'customStyle',
+                                                            'qrisUrl',
+                                                            res.data.url,
+                                                        );
+                                                        toast.success(
+                                                            'QRIS berhasil diunggah!',
+                                                            { id: toastId },
+                                                        );
+                                                        setTimeout(
+                                                            () =>
+                                                                handleSave(
+                                                                    false,
+                                                                ),
+                                                            200,
+                                                        );
+                                                    }
+                                                } catch (err) {
+                                                    toast.error(
+                                                        'Gagal mengunggah QRIS.',
+                                                        { id: toastId },
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                    </label>
+                                    {formData.customStyle?.qrisUrl && (
+                                        <div className="flex items-center gap-2">
+                                            <img
+                                                src={formData.customStyle.qrisUrl}
+                                                alt="QRIS Preview"
+                                                className="h-10 w-10 object-contain rounded border border-sand/40 bg-neutral-50 p-1"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    handleFieldChange('customStyle', 'qrisUrl', '');
+                                                    setTimeout(() => handleSave(false), 200);
+                                                }}
+                                                className="text-[10px] text-red-500 hover:underline"
+                                            >
+                                                Hapus
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

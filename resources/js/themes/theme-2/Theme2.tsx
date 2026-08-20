@@ -349,6 +349,7 @@ export const Theme2: React.FC<Theme2Props> = ({
     const schedules = data?.schedules || data?.schedule || {};
     const stories = data?.stories || [];
     const quotes = data?.quotes || {};
+    const customStyle = data?.customStyle || {};
 
     const sections = data?.sections || {};
     const showStory = sections.showStory !== false;
@@ -409,7 +410,7 @@ export const Theme2: React.FC<Theme2Props> = ({
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isQrModalOpen, setIsQrModalOpen] = useState(false);
     const [isAlbumOpen, setIsAlbumOpen] = useState(false);
-    const [giftTab, setGiftTab] = useState<'bank' | 'address'>('bank');
+    const [giftTab, setGiftTab] = useState<'bank' | 'qris' | 'address'>('bank');
     const [showConfirmationForm, setShowConfirmationForm] = useState(false);
     const [localIsPlaying, setLocalIsPlaying] = useState(true);
     const isPlayingMusic = parentIsPlaying !== undefined ? parentIsPlaying : localIsPlaying;
@@ -1875,6 +1876,19 @@ export const Theme2: React.FC<Theme2Props> = ({
                                     >
                                         TRANSFER BANK
                                     </button>
+                                    {customStyle.qrisUrl && (
+                                        <button
+                                            onClick={() => setGiftTab('qris')}
+                                            className={`pb-2 text-[9px] font-bold tracking-widest ${giftTab === 'qris' ? '-mb-[1px] border-b-[2px] border-[#3E2723]' : 'text-[#3E2723]/40'}`}
+                                            style={
+                                                giftTab === 'qris'
+                                                    ? { color: '#3E2723' }
+                                                    : {}
+                                            }
+                                        >
+                                            QRIS
+                                        </button>
+                                    )}
                                     <button
                                         onClick={() => setGiftTab('address')}
                                         className={`pb-2 text-[9px] font-bold tracking-widest ${giftTab === 'address' ? '-mb-[1px] border-b-[2px] border-[#3E2723]' : 'text-[#3E2723]/40'}`}
@@ -1889,7 +1903,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                                 </div>
 
                                 <div className="relative z-10 space-y-6 px-2">
-                                    {giftTab === 'bank' ? (
+                                    {giftTab === 'bank' && (
                                         <>
                                             <div className="rounded-[1.25rem] border border-[#C9A84C]/40 bg-[#FAF3EC] px-4 py-6 text-left shadow-[0_4px_20px_-10px_rgba(122,34,62,0.15)] backdrop-blur-md">
                                                 <div className="mb-6 flex items-center justify-between">
@@ -2111,7 +2125,22 @@ export const Theme2: React.FC<Theme2Props> = ({
                                                 </div>
                                             </div>
                                         </>
-                                    ) : (
+                                    )}
+
+                                    {giftTab === 'qris' && customStyle.qrisUrl && (
+                                        <div className="flex flex-col items-center justify-center rounded-[1.25rem] border border-[#C9A84C]/40 bg-[#FAF3EC] p-6 text-center shadow-[0_4px_20px_-10px_rgba(122,34,62,0.15)] backdrop-blur-md">
+                                            <img
+                                                src={customStyle.qrisUrl}
+                                                alt="QRIS"
+                                                className="mx-auto max-w-[200px] rounded-lg border border-neutral-100 shadow-sm"
+                                            />
+                                            <p className="mt-4 font-medium text-[10px] text-neutral-500">
+                                                Pindai kode QR di atas untuk melakukan transfer/kado digital
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {giftTab === 'address' && (
                                         <div className="flex flex-col items-center rounded-[1.25rem] border border-[#C9A84C]/40 bg-[#FAF3EC] px-4 py-10 text-center shadow-[0_4px_20px_-10px_rgba(122,34,62,0.15)] backdrop-blur-md">
                                             <h4
                                                 className="font-serif text-[2.25rem]"

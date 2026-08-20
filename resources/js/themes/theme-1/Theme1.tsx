@@ -395,6 +395,7 @@ export const Theme1: React.FC<Theme1Props> = ({
     const schedules = data?.schedules || data?.schedule || {};
     const stories = data?.stories || [];
     const quotes = data?.quotes || {};
+    const customStyle = data?.customStyle || {};
 
     const sections = data?.sections || {};
     const showStory = sections.showStory !== false;
@@ -417,7 +418,7 @@ export const Theme1: React.FC<Theme1Props> = ({
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isQrModalOpen, setIsQrModalOpen] = useState(false);
     const [isAlbumOpen, setIsAlbumOpen] = useState(false);
-    const [giftTab, setGiftTab] = useState<'bank' | 'address'>('bank');
+    const [giftTab, setGiftTab] = useState<'bank' | 'qris' | 'address'>('bank');
     const [showConfirmationForm, setShowConfirmationForm] = useState(false);
     const [localIsPlaying, setLocalIsPlaying] = useState(true);
     const isPlayingMusic = parentIsPlaying !== undefined ? parentIsPlaying : localIsPlaying;
@@ -825,15 +826,23 @@ export const Theme1: React.FC<Theme1Props> = ({
 
                             {/* Initials Badge text (bottom-right) */}
                             <div className="absolute bottom-[3%] right-[5%] flex aspect-square w-[33%] items-center justify-center text-white drop-shadow-md">
-                                <span
-                                    className="mt-2 text-[12.2cqw] font-normal italic tracking-wider"
-                                    style={{
-                                        fontFamily: "'Dancing Script', cursive",
-                                    }}
-                                >
-                                    {(groom.nickname || 'V')[0]}
-                                    {(bride.nickname || 'B')[0]}
-                                </span>
+                                {customStyle.monogramUrl ? (
+                                    <img
+                                        src={customStyle.monogramUrl}
+                                        alt="Monogram"
+                                        className="h-[60%] w-[60%] object-contain"
+                                    />
+                                ) : (
+                                    <span
+                                        className="mt-2 text-[12.2cqw] font-normal italic tracking-wider"
+                                        style={{
+                                            fontFamily: "'Dancing Script', cursive",
+                                        }}
+                                    >
+                                        {(groom.nickname || 'V')[0]}
+                                        {(bride.nickname || 'B')[0]}
+                                    </span>
+                                )}
                             </div>
                         </motion.div>
                         {/* Horse Carriage Watermark (Mirrored) */}
@@ -2520,6 +2529,19 @@ export const Theme1: React.FC<Theme1Props> = ({
                                     >
                                         TRANSFER BANK
                                     </button>
+                                    {customStyle.qrisUrl && (
+                                        <button
+                                            onClick={() => setGiftTab('qris')}
+                                            className={`pb-2 text-[9px] font-bold tracking-widest ${giftTab === 'qris' ? '-mb-[1px] border-b-[2px] border-[#7A223E]' : 'text-[#7A223E]/40'}`}
+                                            style={
+                                                giftTab === 'qris'
+                                                    ? { color: primaryColor }
+                                                    : {}
+                                            }
+                                        >
+                                            QRIS
+                                        </button>
+                                    )}
                                     <button
                                         onClick={() => setGiftTab('address')}
                                         className={`pb-2 text-[9px] font-bold tracking-widest ${giftTab === 'address' ? '-mb-[1px] border-b-[2px] border-[#7A223E]' : 'text-[#7A223E]/40'}`}
@@ -2535,7 +2557,7 @@ export const Theme1: React.FC<Theme1Props> = ({
 
                                 {/* Cards Container */}
                                 <div className="relative z-10 space-y-6 px-2">
-                                    {giftTab === 'bank' ? (
+                                    {giftTab === 'bank' && (
                                         <>
                                             {/* Card 1: BNI */}
                                             <div className="rounded-[1.25rem] border border-[#7A223E]/15 bg-gradient-to-br from-white/90 to-[#FCF0F2]/90 p-6 text-left shadow-[0_4px_20px_-10px_rgba(122,34,62,0.15)] backdrop-blur-md">
@@ -2759,7 +2781,22 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                 </div>
                                             </div>
                                         </>
-                                    ) : (
+                                    )}
+
+                                    {giftTab === 'qris' && customStyle.qrisUrl && (
+                                        <div className="flex flex-col items-center justify-center rounded-[1.25rem] border border-[#7A223E]/15 bg-gradient-to-br from-white/90 to-[#FCF0F2]/90 p-6 text-center shadow-[0_4px_20px_-10px_rgba(122,34,62,0.15)] backdrop-blur-md">
+                                            <img
+                                                src={customStyle.qrisUrl}
+                                                alt="QRIS"
+                                                className="mx-auto max-w-[200px] rounded-lg border border-neutral-100 shadow-sm"
+                                            />
+                                            <p className="mt-4 font-medium text-[10px] text-neutral-500">
+                                                Pindai kode QR di atas untuk melakukan transfer/kado digital
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {giftTab === 'address' && (
                                         <div className="flex flex-col items-center rounded-[1.25rem] border border-[#7A223E]/15 bg-gradient-to-br from-white/90 to-[#FCF0F2]/90 px-6 py-10 text-center shadow-[0_4px_20px_-10px_rgba(122,34,62,0.15)] backdrop-blur-md">
                                             <h4
                                                 className="font-serif text-[2.25rem]"
@@ -3545,12 +3582,22 @@ export const Theme1: React.FC<Theme1Props> = ({
                                     </div>
 
                                     <div className="relative mx-auto flex aspect-square w-full max-w-[200px] items-center justify-center overflow-hidden rounded-[1rem] border border-[#7A223E]/10 bg-white p-4 shadow-inner">
-                                        <div className="pointer-events-none absolute inset-0 bg-[#7A223E]/5"></div>
-                                        <QrCode
-                                            size={120}
-                                            className="text-[#7A223E]/30"
-                                            strokeWidth={1.5}
-                                        />
+                                        {customStyle.qrisUrl ? (
+                                            <img
+                                                src={customStyle.qrisUrl}
+                                                alt="QRIS"
+                                                className="h-full w-full object-contain"
+                                            />
+                                        ) : (
+                                            <>
+                                                <div className="pointer-events-none absolute inset-0 bg-[#7A223E]/5"></div>
+                                                <QrCode
+                                                    size={120}
+                                                    className="text-[#7A223E]/30"
+                                                    strokeWidth={1.5}
+                                                />
+                                            </>
+                                        )}
                                     </div>
 
                                     <p className="pt-1 font-serif text-[9.5px] font-bold uppercase tracking-[0.2em] text-[#7A223E] opacity-90">
