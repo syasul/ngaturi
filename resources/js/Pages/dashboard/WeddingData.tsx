@@ -7,6 +7,7 @@ import {
     Palette,
     Quote,
     Save,
+    Sliders,
     Upload,
     User,
 } from 'lucide-react';
@@ -18,7 +19,14 @@ import api from '../../lib/api';
 import DashboardLayout from '../DashboardLayout';
 
 type TabType =
-    'groom' | 'bride' | 'akad' | 'resepsi' | 'stories' | 'quotes' | 'styling';
+    | 'groom'
+    | 'bride'
+    | 'akad'
+    | 'resepsi'
+    | 'stories'
+    | 'quotes'
+    | 'styling'
+    | 'sections';
 
 export const WeddingData: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabType>('groom');
@@ -27,7 +35,7 @@ export const WeddingData: React.FC = () => {
     const [saving, setSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState<string | null>(null);
 
-    // Local state for all fields
+        // Local state for all fields
     const [formData, setFormData] = useState<any>({
         groom: {
             name: '',
@@ -58,6 +66,14 @@ export const WeddingData: React.FC = () => {
             bodyFont: 'font-sans',
             musicUrl: '',
         },
+        sections: {
+            showStory: true,
+            showGallery: true,
+            showQuotes: true,
+            showGift: true,
+            showRsvp: true,
+            showWishes: true,
+        },
     });
 
     const isDirtyRef = useRef(false);
@@ -71,7 +87,7 @@ export const WeddingData: React.FC = () => {
                     const w = res.data.wedding;
                     setWedding(w);
 
-                    // Merge fetched data with default structures
+                                        // Merge fetched data with default structures
                     const merged = {
                         groom: { ...formData.groom, ...(w.data?.groom || {}) },
                         bride: { ...formData.bride, ...(w.data?.bride || {}) },
@@ -88,6 +104,15 @@ export const WeddingData: React.FC = () => {
                         customStyle: {
                             ...formData.customStyle,
                             ...(w.data?.customStyle || {}),
+                        },
+                        sections: {
+                            showStory: true,
+                            showGallery: true,
+                            showQuotes: true,
+                            showGift: true,
+                            showRsvp: true,
+                            showWishes: true,
+                            ...(w.data?.sections || {}),
                         },
                     };
                     setFormData(merged);
@@ -125,6 +150,18 @@ export const WeddingData: React.FC = () => {
                 [field]: value,
             },
         }));
+    };
+
+    const handleToggleSection = (sectionKey: string) => {
+        isDirtyRef.current = true;
+        setFormData((prev: any) => ({
+            ...prev,
+            sections: {
+                ...prev.sections,
+                [sectionKey]: !prev.sections[sectionKey],
+            },
+        }));
+        setTimeout(() => handleSave(false), 100);
     };
 
     const handleStoryChange = (index: number, field: string, value: any) => {
@@ -165,6 +202,7 @@ export const WeddingData: React.FC = () => {
                     stories: formData.stories,
                     quotes: formData.quotes,
                     customStyle: formData.customStyle,
+                    sections: formData.sections,
                 },
             };
 
@@ -238,6 +276,7 @@ export const WeddingData: React.FC = () => {
         { id: 'stories', name: 'Love Story', icon: BookOpen },
         { id: 'quotes', name: 'Quotes', icon: Quote },
         { id: 'styling', name: 'Desain & Warna', icon: Palette },
+        { id: 'sections', name: 'Kelola Section', icon: Sliders },
     ];
 
     return (
@@ -1297,6 +1336,89 @@ export const WeddingData: React.FC = () => {
                                         )}
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* TAB 8: SECTIONS */}
+                    {activeTab === 'sections' && (
+                        <div className="space-y-6">
+                            <div>
+                                <h4 className="border-b border-sand/20 pb-2 font-sans text-lg font-bold text-charcoal">
+                                    Pengaturan Visibilitas Section
+                                </h4>
+                                <p className="mt-1 text-xs text-charcoal/50">
+                                    Aktifkan atau nonaktifkan bagian tertentu agar tidak ditampilkan pada undangan digital Anda.
+                                </p>
+                            </div>
+
+                            <div className="divide-y divide-sand/20">
+                                {[
+                                    {
+                                        key: 'showQuotes',
+                                        title: 'Kutipan / Quotes',
+                                        desc: 'Menampilkan kutipan kata pengantar atau ayat suci di bagian atas undangan.',
+                                    },
+                                    {
+                                        key: 'showStory',
+                                        title: 'Love Story (Kisah Cinta)',
+                                        desc: 'Menampilkan linimasa perjalanan cinta Anda dan pasangan.',
+                                    },
+                                    {
+                                        key: 'showGallery',
+                                        title: 'Galeri Foto',
+                                        desc: 'Menampilkan album foto kebersamaan / prewedding Anda.',
+                                    },
+                                    {
+                                        key: 'showGift',
+                                        title: 'Kado Online & Transfer Bank',
+                                        desc: 'Menampilkan nomor rekening transfer dan alamat pengiriman kado.',
+                                    },
+                                    {
+                                        key: 'showRsvp',
+                                        title: 'Konfirmasi Kehadiran (RSVP)',
+                                        desc: 'Menampilkan formulir konfirmasi kehadiran bagi para tamu.',
+                                    },
+                                    {
+                                        key: 'showWishes',
+                                        title: 'Buku Tamu (Ucapan & Doa)',
+                                        desc: 'Menampilkan daftar ucapan selamat dan doa dari tamu undangan.',
+                                    },
+                                ].map((item) => (
+                                    <div
+                                        key={item.key}
+                                        className="flex items-center justify-between py-4"
+                                    >
+                                        <div className="pr-4">
+                                            <span className="block text-sm font-bold text-charcoal">
+                                                {item.title}
+                                            </span>
+                                            <span className="block text-xs text-charcoal/60 mt-0.5">
+                                                {item.desc}
+                                            </span>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleToggleSection(item.key)
+                                            }
+                                            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                                                formData.sections?.[item.key] !== false
+                                                    ? 'bg-gold-500'
+                                                    : 'bg-sand'
+                                            }`}
+                                        >
+                                            <span
+                                                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                                                    formData.sections?.[item.key] !== false
+                                                        ? 'translate-x-5'
+                                                        : 'translate-x-0'
+                                                }`}
+                                            />
+                                        </button>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}

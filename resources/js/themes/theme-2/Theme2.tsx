@@ -350,6 +350,14 @@ export const Theme2: React.FC<Theme2Props> = ({
     const stories = data?.stories || [];
     const quotes = data?.quotes || {};
 
+    const sections = data?.sections || {};
+    const showStory = sections.showStory !== false;
+    const showGallery = sections.showGallery !== false;
+    const showQuotes = sections.showQuotes !== false;
+    const showGift = sections.showGift !== false;
+    const showRsvp = sections.showRsvp !== false;
+    const showWishes = sections.showWishes !== false;
+
     const primaryColor = '#6B1D2F';
     const textColor = '#2D1A1E';
 
@@ -783,8 +791,9 @@ export const Theme2: React.FC<Theme2Props> = ({
                         </motion.div>
                     </section>
                     {/* COUPLE SECTION */}
-                    <section
-                        id="quote"
+                    {showQuotes && (
+                        <section
+                            id="quote"
                         className="relative z-10 flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip bg-transparent pb-32 pt-12"
                     >
                         {/* LAYER: Background Pohon */}
@@ -838,6 +847,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                             </p>
                         </motion.div>
                     </section>
+                    )}
                     {/* BRIDE & GROOM PROFILE SECTION */}
                     <section
                         id="couple"
@@ -1399,7 +1409,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                         </motion.div>
                     </section>
                     {/* LOVE STORY SECTION */}
-                    {stories.length > 0 && (
+                    {showStory && stories.length > 0 && (
                         <section
                             id="story"
                             className="relative bg-transparent pb-20 pt-16"
@@ -1606,10 +1616,11 @@ export const Theme2: React.FC<Theme2Props> = ({
                         />
                     </section>
                     {/* RSVP & WISHES SECTION */}
-                    <section
-                        id="rsvp-wishes"
-                        className="relative overflow-x-clip overflow-y-visible bg-transparent px-6 py-24"
-                    >
+                    {(showRsvp || showWishes) && (
+                        <section
+                            id="rsvp-wishes"
+                            className="relative overflow-x-clip overflow-y-visible bg-transparent px-6 py-24"
+                        >
                         {/* Background Ornament Watermark */}
                         <div
                             className="pointer-events-none absolute left-1/2 top-20 z-0 h-[600px] w-[150%] max-w-none -translate-x-1/2 bg-center bg-no-repeat opacity-[0.06]"
@@ -1620,13 +1631,14 @@ export const Theme2: React.FC<Theme2Props> = ({
                             }}
                         />
 
-                        <motion.div
-                            className="relative z-10 mx-auto w-full max-w-lg space-y-6 text-center"
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true, amount: 0.1 }}
-                            variants={containerVariants}
-                        >
+                        {showRsvp && (
+                            <motion.div
+                                className="relative z-10 mx-auto w-full max-w-lg space-y-6 text-center"
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true, amount: 0.1 }}
+                                variants={containerVariants}
+                            >
                             <div className="flex justify-center pb-2">
                                 <img
                                     src="/assets/theme_2/VINTAGE-06-bunga1.webp"
@@ -1662,10 +1674,12 @@ export const Theme2: React.FC<Theme2Props> = ({
                                 <CustomRSVPForm onRsvpSubmit={onRsvpSubmit} />
                             </motion.div>
                         </motion.div>
+                        )}
 
-                        <div className="h-32 md:h-40"></div>
+                        {showRsvp && showWishes && <div className="h-32 md:h-40"></div>}
 
-                        <motion.div
+                        {showWishes && (
+                            <motion.div
                             className="relative z-10 mx-auto w-full max-w-lg space-y-6 text-center"
                             initial="hidden"
                             whileInView="visible"
@@ -1708,7 +1722,9 @@ export const Theme2: React.FC<Theme2Props> = ({
                                 />
                             </motion.div>
                         </motion.div>
+                        )}
                     </section>
+                    )}
                     {/* Elegant Divider */}
                     <div className="relative z-20 mx-auto my-6 flex w-full max-w-lg items-center justify-center px-6">
                         <div className="h-[1px] flex-1 bg-[#C9A84C]/40" />
@@ -1720,10 +1736,11 @@ export const Theme2: React.FC<Theme2Props> = ({
                         <div className="h-[1px] flex-1 bg-[#C9A84C]/40" />
                     </div>
                     {/* GALLERY SECTION */}
-                    <section
-                        id="gallery"
-                        className="relative overflow-x-clip overflow-y-visible bg-transparent px-6 py-20"
-                    >
+                    {showGallery && displayPhotos.length > 0 && (
+                        <section
+                            id="gallery"
+                            className="relative overflow-x-clip overflow-y-visible bg-transparent px-6 py-20"
+                        >
                         <motion.div
                             className="relative z-10 mx-auto w-full max-w-sm space-y-8 text-center"
                             initial="hidden"
@@ -1792,12 +1809,14 @@ export const Theme2: React.FC<Theme2Props> = ({
                                 </div>
                             )}
                         </motion.div>
-                    </section>{' '}
+                    </section>
+                    )}{' '}
                     {/* GIFT SECTION */}
-                    <section
-                        id="gift"
-                        className="relative overflow-x-clip overflow-y-visible bg-transparent px-4 pb-72 pt-24"
-                    >
+                    {showGift && (
+                        <section
+                            id="gift"
+                            className="relative overflow-x-clip overflow-y-visible bg-transparent px-4 pb-72 pt-24"
+                        >
                         {/* Background Ornament Watermark */}
                         <div
                             className="pointer-events-none absolute left-1/2 top-20 z-0 h-[600px] w-[150%] max-w-none -translate-x-1/2 bg-center bg-no-repeat opacity-[0.06]"
@@ -2217,6 +2236,7 @@ export const Theme2: React.FC<Theme2Props> = ({
                         </motion.div>
                         <div className="pointer-events-none absolute bottom-0 left-0 z-0 flex w-full justify-center opacity-[0.25]"></div>
                     </section>
+                    )}
                     {/* FOOTER SECTION */}
                     <footer
                         id="footer"
@@ -2464,12 +2484,14 @@ export const Theme2: React.FC<Theme2Props> = ({
                                     >
                                         Mempelai
                                     </button>
-                                    <button
-                                        onClick={() => scrollToSection('story')}
-                                        className="transition-colors hover:text-[#C9A84C]"
-                                    >
-                                        Kisah Cinta
-                                    </button>
+                                    {showStory && (
+                                        <button
+                                            onClick={() => scrollToSection('story')}
+                                            className="transition-colors hover:text-[#C9A84C]"
+                                        >
+                                            Kisah Cinta
+                                        </button>
+                                    )}
                                     <button
                                         onClick={() => scrollToSection('countdown')}
                                         className="transition-colors hover:text-[#C9A84C]"
@@ -2494,24 +2516,30 @@ export const Theme2: React.FC<Theme2Props> = ({
                                     >
                                         Dresscode
                                     </button>
-                                    <button
-                                        onClick={() => scrollToSection('gallery')}
-                                        className="transition-colors hover:text-[#C9A84C]"
-                                    >
-                                        Galeri
-                                    </button>
-                                    <button
-                                        onClick={() => scrollToSection('gift')}
-                                        className="transition-colors hover:text-[#C9A84C]"
-                                    >
-                                        Hadiah
-                                    </button>
-                                    <button
-                                        onClick={() => scrollToSection('rsvp')}
-                                        className="transition-colors hover:text-[#C9A84C]"
-                                    >
-                                        RSVP
-                                    </button>
+                                    {showGallery && (
+                                        <button
+                                            onClick={() => scrollToSection('gallery')}
+                                            className="transition-colors hover:text-[#C9A84C]"
+                                        >
+                                            Galeri
+                                        </button>
+                                    )}
+                                    {showGift && (
+                                        <button
+                                            onClick={() => scrollToSection('gift')}
+                                            className="transition-colors hover:text-[#C9A84C]"
+                                        >
+                                            Hadiah
+                                        </button>
+                                    )}
+                                    {(showRsvp || showWishes) && (
+                                        <button
+                                            onClick={() => scrollToSection('rsvp-wishes')}
+                                            className="transition-colors hover:text-[#C9A84C]"
+                                        >
+                                            RSVP & Wishes
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>

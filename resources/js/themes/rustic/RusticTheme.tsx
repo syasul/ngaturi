@@ -64,6 +64,13 @@ export const RusticTheme: React.FC<ThemeProps> = ({
     const stories = data?.stories || [];
     const quotes = data?.quotes || {};
 
+    const sections = data?.sections || {};
+    const showStory = sections.showStory !== false;
+    const showGallery = sections.showGallery !== false;
+    const showQuotes = sections.showQuotes !== false;
+    const showRsvp = sections.showRsvp !== false;
+    const showWishes = sections.showWishes !== false;
+
     const getParents = (person: any) => {
         if (person.fatherName && person.motherName) {
             return `Putra dari Bpk. ${person.fatherName} & Ibu ${person.motherName}`;
@@ -178,20 +185,22 @@ export const RusticTheme: React.FC<ThemeProps> = ({
                         variants={childFadeUp}
                         className="mx-auto h-0.5 w-16 bg-[#D4956A]/60"
                     />
-                    <motion.p
-                        variants={childFadeUp}
-                        className="mx-auto max-w-md px-4 font-sans text-xs italic leading-relaxed text-[#3D352E]/70"
-                    >
-                        "
-                        {quotes.text ||
-                            'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya...'}
-                        "
-                        {quotes.source && (
-                            <span className="mt-1 block font-bold not-italic text-[#8B6914]">
-                                — {quotes.source}
-                            </span>
-                        )}
-                    </motion.p>
+                    {showQuotes && (
+                        <motion.p
+                            variants={childFadeUp}
+                            className="mx-auto max-w-md px-4 font-sans text-xs italic leading-relaxed text-[#3D352E]/70"
+                        >
+                            "
+                            {quotes.text ||
+                                'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya...'}
+                            "
+                            {quotes.source && (
+                                <span className="mt-1 block font-bold not-italic text-[#8B6914]">
+                                    — {quotes.source}
+                                </span>
+                            )}
+                        </motion.p>
+                    )}
                 </motion.div>
             </StackingSection>
 
@@ -513,7 +522,7 @@ export const RusticTheme: React.FC<ThemeProps> = ({
             </StackingSection>
 
             {/* Section 5: Kisah */}
-            {stories.length > 0 && (
+            {showStory && stories.length > 0 && (
                 <StackingSection
                     id="story"
                     zIndex={50}
@@ -572,7 +581,7 @@ export const RusticTheme: React.FC<ThemeProps> = ({
             )}
 
             {/* Section 6: Galeri */}
-            {photos.length > 0 && (
+            {showGallery && photos.length > 0 && (
                 <StackingSection
                     id="gallery"
                     zIndex={60}
@@ -604,9 +613,10 @@ export const RusticTheme: React.FC<ThemeProps> = ({
             )}
 
             {/* Section 7: RSVP */}
-            <StackingSection
-                id="rsvp"
-                zIndex={70}
+            {showRsvp && (
+                <StackingSection
+                    id="rsvp"
+                    zIndex={70}
                 bg="#F5EDE3"
                 roundedVal="2.5rem"
                 boxShadow="0 -15px 40px rgba(0, 0, 0, 0.05), 0 -4px 10px rgba(0, 0, 0, 0.02)"
@@ -634,11 +644,13 @@ export const RusticTheme: React.FC<ThemeProps> = ({
                     </motion.div>
                 </motion.div>
             </StackingSection>
+            )}
 
             {/* Section 8: Wishes */}
-            <StackingSection
-                id="wishes"
-                zIndex={80}
+            {showWishes && (
+                <StackingSection
+                    id="wishes"
+                    zIndex={80}
                 bg="#FAF6F0"
                 roundedVal="2.5rem"
                 boxShadow="0 -15px 40px rgba(0, 0, 0, 0.05), 0 -4px 10px rgba(0, 0, 0, 0.02)"
@@ -661,6 +673,7 @@ export const RusticTheme: React.FC<ThemeProps> = ({
                     </motion.div>
                 </motion.div>
             </StackingSection>
+            )}
         </div>
     );
 };

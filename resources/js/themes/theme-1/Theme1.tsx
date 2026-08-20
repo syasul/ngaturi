@@ -396,6 +396,14 @@ export const Theme1: React.FC<Theme1Props> = ({
     const stories = data?.stories || [];
     const quotes = data?.quotes || {};
 
+    const sections = data?.sections || {};
+    const showStory = sections.showStory !== false;
+    const showGallery = sections.showGallery !== false;
+    const showQuotes = sections.showQuotes !== false;
+    const showGift = sections.showGift !== false;
+    const showRsvp = sections.showRsvp !== false;
+    const showWishes = sections.showWishes !== false;
+
     // Premium Color Palette
     const primaryColor = '#6B1D2F'; // Burgundy
     const secondaryColor = '#C9A84C'; // Gold
@@ -519,19 +527,21 @@ export const Theme1: React.FC<Theme1Props> = ({
                     </p>
                 </div>
 
-                <div className="max-w-md">
-                    <p className="text-xs italic leading-relaxed text-[#FAF3EC]/60">
-                        "
-                        {quotes.text ||
-                            'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri...'}
-                        "
-                        {quotes.source && (
-                            <span className="mt-2 block font-bold not-italic text-[#C9A84C]">
-                                {quotes.source}
-                            </span>
-                        )}
-                    </p>
-                </div>
+                {showQuotes && (
+                    <div className="max-w-md">
+                        <p className="text-xs italic leading-relaxed text-[#FAF3EC]/60">
+                            "
+                            {quotes.text ||
+                                'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri...'}
+                            "
+                            {quotes.source && (
+                                <span className="mt-2 block font-bold not-italic text-[#C9A84C]">
+                                    {quotes.source}
+                                </span>
+                            )}
+                        </p>
+                    </div>
+                )}
             </div>
 
             {/* ============================================================== */}
@@ -1039,7 +1049,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                     </section>
 
                     {/* C. KISAH CINTA TIMELINE SECTION */}
-                    {stories.length > 0 && (
+                    {showStory && stories.length > 0 && (
                         <section
                             id="story"
                             className="relative overflow-hidden bg-[#FAF3EC] px-0 py-16"
@@ -2194,10 +2204,11 @@ export const Theme1: React.FC<Theme1Props> = ({
                     </section>
 
                     {/* RSVP & GUEST WISHES COMBINED SECTION */}
-                    <section
-                        id="rsvp-wishes"
-                        className="relative overflow-x-clip overflow-y-visible bg-[#FAF3EC] px-6 py-24"
-                    >
+                    {(showRsvp || showWishes) && (
+                        <section
+                            id="rsvp-wishes"
+                            className="relative overflow-x-clip overflow-y-visible bg-[#FAF3EC] px-6 py-24"
+                        >
                         {/* Background Outlines */}
                         {/* Chair on top left of RSVP */}
                         <img
@@ -2212,13 +2223,14 @@ export const Theme1: React.FC<Theme1Props> = ({
                         />
 
                         {/* --- RSVP BLOCK --- */}
-                        <motion.div
-                            className="relative z-10 mx-auto w-full max-w-sm space-y-6 text-center"
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true, amount: 0.1 }}
-                            variants={containerVariants}
-                        >
+                        {showRsvp && (
+                            <motion.div
+                                className="relative z-10 mx-auto w-full max-w-sm space-y-6 text-center"
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true, amount: 0.1 }}
+                                variants={containerVariants}
+                            >
                             {/* Title */}
                             <div>
                                 <h2
@@ -2259,12 +2271,14 @@ export const Theme1: React.FC<Theme1Props> = ({
                                 <CustomRSVPForm onRsvpSubmit={onRsvpSubmit} />
                             </motion.div>
                         </motion.div>
+                        )}
 
                         {/* GAP between forms */}
-                        <div className="h-32 md:h-40"></div>
+                        {showRsvp && showWishes && <div className="h-32 md:h-40"></div>}
 
                         {/* --- GUEST WISHES BLOCK --- */}
-                        <motion.div
+                        {showWishes && (
+                            <motion.div
                             className="relative z-10 mx-auto w-full max-w-sm space-y-6 text-center"
                             initial="hidden"
                             whileInView="visible"
@@ -2317,15 +2331,18 @@ export const Theme1: React.FC<Theme1Props> = ({
                                 />
                             </motion.div>
                         </motion.div>
+                        )}
                     </section>
+                    )}
 
                     {/* I. PHOTO GALLERY SECTION */}
-                    <section
-                        id="gallery"
-                        className="relative overflow-x-clip overflow-y-visible bg-[#FAF3EC] px-6 py-20"
-                    >
-                        <motion.div
-                            className="relative z-10 mx-auto w-full max-w-sm space-y-8 text-center"
+                    {showGallery && displayPhotos.length > 0 && (
+                        <section
+                            id="gallery"
+                            className="relative overflow-x-clip overflow-y-visible bg-[#FAF3EC] px-6 py-20"
+                        >
+                            <motion.div
+                                className="relative z-10 mx-auto w-full max-w-sm space-y-8 text-center"
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true, amount: 0.1 }}
@@ -2443,12 +2460,14 @@ export const Theme1: React.FC<Theme1Props> = ({
                             )}
                         </motion.div>
                     </section>
+                    )}
 
                     {/* J. DIGITAL GIFT SECTION */}
-                    <section
-                        id="gift"
-                        className="relative overflow-x-clip overflow-y-visible bg-[#FAF3EC] px-6 pb-72 pt-24"
-                    >
+                    {showGift && (
+                        <section
+                            id="gift"
+                            className="relative overflow-x-clip overflow-y-visible bg-[#FAF3EC] px-6 pb-72 pt-24"
+                        >
                         <motion.div
                             className="relative z-10 mx-auto w-full max-w-sm text-center"
                             initial="hidden"
@@ -2876,6 +2895,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                             />
                         </div>
                     </section>
+                    )}
 
                     {/* M. FOOTER CLOSING SECTION */}
                     <footer
@@ -3135,12 +3155,14 @@ export const Theme1: React.FC<Theme1Props> = ({
                                     >
                                         Mempelai
                                     </button>
-                                    <button
-                                        onClick={() => scrollToSection('story')}
-                                        className="transition-colors hover:text-[#C9A84C]"
-                                    >
-                                        Kisah Cinta
-                                    </button>
+                                    {showStory && (
+                                        <button
+                                            onClick={() => showStory && scrollToSection('story')}
+                                            className="transition-colors hover:text-[#C9A84C]"
+                                        >
+                                            Kisah Cinta
+                                        </button>
+                                    )}
                                     <button
                                         onClick={() =>
                                             scrollToSection('countdown')
@@ -3173,26 +3195,32 @@ export const Theme1: React.FC<Theme1Props> = ({
                                     >
                                         Dresscode
                                     </button>
-                                    <button
-                                        onClick={() =>
-                                            scrollToSection('gallery')
-                                        }
-                                        className="transition-colors hover:text-[#C9A84C]"
-                                    >
-                                        Galeri
-                                    </button>
-                                    <button
-                                        onClick={() => scrollToSection('gift')}
-                                        className="transition-colors hover:text-[#C9A84C]"
-                                    >
-                                        Hadiah
-                                    </button>
-                                    <button
-                                        onClick={() => scrollToSection('rsvp')}
-                                        className="transition-colors hover:text-[#C9A84C]"
-                                    >
-                                        RSVP
-                                    </button>
+                                    {showGallery && (
+                                        <button
+                                            onClick={() =>
+                                                scrollToSection('gallery')
+                                            }
+                                            className="transition-colors hover:text-[#C9A84C]"
+                                        >
+                                            Galeri
+                                        </button>
+                                    )}
+                                    {showGift && (
+                                        <button
+                                            onClick={() => scrollToSection('gift')}
+                                            className="transition-colors hover:text-[#C9A84C]"
+                                        >
+                                            Hadiah
+                                        </button>
+                                    )}
+                                    {(showRsvp || showWishes) && (
+                                        <button
+                                            onClick={() => scrollToSection('rsvp-wishes')}
+                                            className="transition-colors hover:text-[#C9A84C]"
+                                        >
+                                            RSVP & Wishes
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>

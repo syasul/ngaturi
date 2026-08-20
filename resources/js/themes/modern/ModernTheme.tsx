@@ -64,6 +64,13 @@ export const ModernTheme: React.FC<ThemeProps> = ({
     const stories = data?.stories || [];
     const quotes = data?.quotes || {};
 
+    const sections = data?.sections || {};
+    const showStory = sections.showStory !== false;
+    const showGallery = sections.showGallery !== false;
+    const showQuotes = sections.showQuotes !== false;
+    const showRsvp = sections.showRsvp !== false;
+    const showWishes = sections.showWishes !== false;
+
     const getParents = (person: any) => {
         if (person.fatherName && person.motherName) {
             return `Putra dari Bpk. ${person.fatherName} & Ibu ${person.motherName}`;
@@ -164,7 +171,7 @@ export const ModernTheme: React.FC<ThemeProps> = ({
                         variants={childFadeUp}
                         className="mx-auto mt-4 h-0.5 w-12 bg-neutral-900"
                     />
-                    {quotes.text && (
+                    {showQuotes && quotes.text && (
                         <motion.p
                             variants={childFadeUp}
                             className="mx-auto max-w-md px-6 pt-2 font-sans text-xs leading-relaxed text-neutral-500"
@@ -514,7 +521,7 @@ export const ModernTheme: React.FC<ThemeProps> = ({
             </StackingSection>
 
             {/* Section 5: Kisah */}
-            {stories.length > 0 && (
+            {showStory && stories.length > 0 && (
                 <StackingSection
                     id="story"
                     zIndex={50}
@@ -573,7 +580,7 @@ export const ModernTheme: React.FC<ThemeProps> = ({
             )}
 
             {/* Section 6: Galeri */}
-            {photos.length > 0 && (
+            {showGallery && photos.length > 0 && (
                 <StackingSection
                     id="gallery"
                     zIndex={60}
@@ -605,9 +612,10 @@ export const ModernTheme: React.FC<ThemeProps> = ({
             )}
 
             {/* Section 7: RSVP */}
-            <StackingSection
-                id="rsvp"
-                zIndex={70}
+            {showRsvp && (
+                <StackingSection
+                    id="rsvp"
+                    zIndex={70}
                 bg="#ffffff"
                 roundedVal="2.5rem"
                 boxShadow="0 -15px 40px rgba(0, 0, 0, 0.05), 0 -4px 10px rgba(0, 0, 0, 0.02)"
@@ -635,11 +643,13 @@ export const ModernTheme: React.FC<ThemeProps> = ({
                     </motion.div>
                 </motion.div>
             </StackingSection>
+            )}
 
             {/* Section 8: Wishes */}
-            <StackingSection
-                id="wishes"
-                zIndex={80}
+            {showWishes && (
+                <StackingSection
+                    id="wishes"
+                    zIndex={80}
                 bg="#F8F8F8"
                 roundedVal="2.5rem"
                 boxShadow="0 -15px 40px rgba(0, 0, 0, 0.05), 0 -4px 10px rgba(0, 0, 0, 0.02)"
@@ -659,6 +669,7 @@ export const ModernTheme: React.FC<ThemeProps> = ({
                     </motion.div>
                 </motion.div>
             </StackingSection>
+            )}
         </div>
     );
 };

@@ -63,6 +63,13 @@ export const ElegantTheme: React.FC<ThemeProps> = ({
     const stories = data?.stories || [];
     const quotes = data?.quotes || {};
 
+    const sections = data?.sections || {};
+    const showStory = sections.showStory !== false;
+    const showGallery = sections.showGallery !== false;
+    const showQuotes = sections.showQuotes !== false;
+    const showRsvp = sections.showRsvp !== false;
+    const showWishes = sections.showWishes !== false;
+
     const formatDate = (d?: string) =>
         d
             ? new Date(d).toLocaleDateString('id-ID', {
@@ -177,15 +184,17 @@ export const ElegantTheme: React.FC<ThemeProps> = ({
                         variants={childFadeUp}
                         className="mx-auto h-px w-20 bg-gradient-to-r from-transparent via-[#C9A84C] to-transparent"
                     />
-                    <motion.p
-                        variants={childFadeUp}
-                        className="mx-auto max-w-xs font-serif text-xs italic leading-relaxed text-[#2C2C2C]/60"
-                    >
-                        "
-                        {quotes.text ||
-                            'Dan Kami menciptakan kamu berpasang-pasangan'}
-                        "
-                    </motion.p>
+                    {showQuotes && (
+                        <motion.p
+                            variants={childFadeUp}
+                            className="mx-auto max-w-xs font-serif text-xs italic leading-relaxed text-[#2C2C2C]/60"
+                        >
+                            "
+                            {quotes.text ||
+                                'Dan Kami menciptakan kamu berpasang-pasangan'}
+                            "
+                        </motion.p>
+                    )}
                     {schedules.akad?.date && (
                         <motion.p
                             variants={childFadeUp}
@@ -469,7 +478,7 @@ export const ElegantTheme: React.FC<ThemeProps> = ({
             </StackingSection>
 
             {/* ═══════════════════════ SECTION 5: LOVE STORY ═══════════════════════ */}
-            {stories.length > 0 && (
+            {showStory && stories.length > 0 && (
                 <StackingSection
                     id="story"
                     zIndex={50}
@@ -531,7 +540,7 @@ export const ElegantTheme: React.FC<ThemeProps> = ({
             )}
 
             {/* ═══════════════════════ SECTION 6: GALLERY ═══════════════════════ */}
-            {photos.length > 0 && (
+            {showGallery && photos.length > 0 && (
                 <StackingSection
                     id="gallery"
                     zIndex={60}
@@ -566,8 +575,9 @@ export const ElegantTheme: React.FC<ThemeProps> = ({
             )}
 
             {/* ═══════════════════════ SECTION 7: RSVP ═══════════════════════ */}
-            <StackingSection
-                id="rsvp"
+            {showRsvp && (
+                <StackingSection
+                    id="rsvp"
                 zIndex={70}
                 bg="#FAF7F2"
                 roundedVal="2.5rem"
@@ -615,10 +625,12 @@ export const ElegantTheme: React.FC<ThemeProps> = ({
                     </motion.div>
                 </motion.div>
             </StackingSection>
+            )}
 
             {/* ═══════════════════════ SECTION 8: WISHES / GUESTBOOK ═══════════════════════ */}
-            <StackingSection
-                id="wishes"
+            {showWishes && (
+                <StackingSection
+                    id="wishes"
                 zIndex={80}
                 bg="#ffffff"
                 roundedVal="2.5rem"
@@ -648,6 +660,7 @@ export const ElegantTheme: React.FC<ThemeProps> = ({
                     </motion.div>
                 </motion.div>
             </StackingSection>
+            )}
 
             {/* ═══════════════════════ FOOTER ═══════════════════════ */}
             <StackingSection

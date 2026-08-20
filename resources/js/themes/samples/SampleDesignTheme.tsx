@@ -336,6 +336,13 @@ export const SampleDesignTheme: React.FC<
     const schedules = data?.schedules || data?.schedule || {};
     const stories = data?.stories || [];
     const quotes = data?.quotes || {};
+
+    const sections = data?.sections || {};
+    const showStory = sections.showStory !== false;
+    const showGallery = sections.showGallery !== false;
+    const showQuotes = sections.showQuotes !== false;
+    const showRsvp = sections.showRsvp !== false;
+    const showWishes = sections.showWishes !== false;
     const weddingDate = schedules.akad?.date || schedules.resepsi?.date;
 
     return (
@@ -382,24 +389,26 @@ export const SampleDesignTheme: React.FC<
                         className="mx-auto h-px w-20"
                         style={{ background: config.accent }}
                     />
-                    <motion.p
-                        variants={childFadeUp}
-                        className="mx-auto max-w-sm text-xs italic leading-relaxed"
-                        style={{ color: config.muted }}
-                    >
-                        "
-                        {quotes.text ||
-                            'Dan Kami menciptakan kamu berpasang-pasangan'}
-                        "
-                        {quotes.source && (
-                            <span
-                                className="mt-2 block font-bold not-italic"
-                                style={{ color: config.accent }}
-                            >
-                                {quotes.source}
-                            </span>
-                        )}
-                    </motion.p>
+                    {showQuotes && (
+                        <motion.p
+                            variants={childFadeUp}
+                            className="mx-auto max-w-sm text-xs italic leading-relaxed"
+                            style={{ color: config.muted }}
+                        >
+                            "
+                            {quotes.text ||
+                                'Dan Kami menciptakan kamu berpasang-pasangan'}
+                            "
+                            {quotes.source && (
+                                <span
+                                    className="mt-2 block font-bold not-italic"
+                                    style={{ color: config.accent }}
+                                >
+                                    {quotes.source}
+                                </span>
+                            )}
+                        </motion.p>
+                    )}
                     {weddingDate && (
                         <motion.p
                             variants={childFadeUp}
@@ -515,7 +524,7 @@ export const SampleDesignTheme: React.FC<
                 </motion.div>
             </StackingSection>
 
-            {stories.length > 0 && (
+            {showStory && stories.length > 0 && (
                 <StackingSection
                     id="story"
                     zIndex={50}
@@ -588,7 +597,7 @@ export const SampleDesignTheme: React.FC<
                 </StackingSection>
             )}
 
-            {photos.length > 0 && (
+            {showGallery && photos.length > 0 && (
                 <StackingSection
                     id="gallery"
                     zIndex={60}
@@ -615,8 +624,9 @@ export const SampleDesignTheme: React.FC<
                 </StackingSection>
             )}
 
-            <StackingSection
-                id="rsvp"
+            {showRsvp && (
+                <StackingSection
+                    id="rsvp"
                 zIndex={70}
                 bg={config.altBg}
                 pattern={config.pattern}
@@ -660,9 +670,11 @@ export const SampleDesignTheme: React.FC<
                     </motion.div>
                 </motion.div>
             </StackingSection>
+            )}
 
-            <StackingSection
-                id="wishes"
+            {showWishes && (
+                <StackingSection
+                    id="wishes"
                 zIndex={80}
                 bg={config.panelBg}
                 roundedVal="2.5rem"
@@ -688,6 +700,7 @@ export const SampleDesignTheme: React.FC<
                     </motion.div>
                 </motion.div>
             </StackingSection>
+            )}
 
             <StackingSection
                 id="footer"
