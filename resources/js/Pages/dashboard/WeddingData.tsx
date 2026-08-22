@@ -82,6 +82,7 @@ export const WeddingData: React.FC = () => {
             musicUrl: '',
             qrisUrl: '',
             monogramUrl: '',
+            monogramUrlDark: '',
         },
         sections: {
             showStory: true,
@@ -1723,93 +1724,128 @@ export const WeddingData: React.FC = () => {
                             </div>
 
                             {/* Monogram / Gambar Inisial Custom Upload */}
-                            <div className="space-y-4 border-t border-sand/20 pt-4">
-                                <div>
-                                    <label className="block text-xs font-bold uppercase text-charcoal/60">
-                                        Monogram / Gambar Inisial Kustom (Opsional)
-                                    </label>
-                                    <p className="mt-1 text-[10px] text-charcoal/40">
-                                        Unggah gambar inisial kustom Anda untuk menggantikan teks watermark inisial (seperti "SI" / "II") di cover depan. Format PNG transparan direkomendasikan.
-                                    </p>
-                                    <div className="mt-2 flex items-center gap-3">
-                                        <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold shadow-sm hover:bg-cream/25">
-                                            <Upload size={14} />
-                                            <span>Pilih Gambar Monogram</span>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                className="hidden"
-                                                onChange={async (e) => {
-                                                    const file =
-                                                        e.target.files?.[0];
-                                                    if (!file) return;
-                                                    const toastId =
-                                                        toast.loading(
-                                                            'Mengunggah gambar monogram...',
-                                                        );
-                                                    const data = new FormData();
-                                                    data.append('file', file);
-                                                    try {
-                                                        const res =
-                                                            await api.post(
-                                                                '/media/upload',
-                                                                data,
-                                                                {
-                                                                    headers: {
-                                                                        'Content-Type':
-                                                                            'multipart/form-data',
-                                                                    },
-                                                                },
-                                                            );
-                                                        if (
-                                                            res.data.status ===
-                                                            'success'
-                                                        ) {
-                                                            handleFieldChange(
-                                                                'customStyle',
-                                                                'monogramUrl',
-                                                                res.data.url,
-                                                            );
-                                                            toast.success(
-                                                                'Monogram berhasil diunggah!',
-                                                                { id: toastId },
-                                                            );
-                                                            setTimeout(
-                                                                () =>
-                                                                    handleSave(
-                                                                        false,
-                                                                    ),
-                                                                200,
-                                                            );
-                                                        }
-                                                    } catch (err) {
-                                                        toast.error(
-                                                            'Gagal mengunggah monogram.',
-                                                            { id: toastId },
-                                                        );
-                                                    }
-                                                }}
-                                            />
+                            <div className="space-y-6 border-t border-sand/20 pt-4">
+                                <h5 className="text-xs font-bold uppercase text-charcoal/80">
+                                    Gambar Monogram / Logo Inisial Kustom
+                                </h5>
+
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                    {/* 1. Light Monogram (Cover/Envelope) */}
+                                    <div className="space-y-2">
+                                        <label className="block text-xs font-semibold text-charcoal/70">
+                                            1. Monogram Warna Terang (Untuk Cover/Amplop Gelap)
                                         </label>
-                                        {formData.customStyle?.monogramUrl && (
-                                            <div className="flex items-center gap-2">
-                                                <img
-                                                    src={formData.customStyle.monogramUrl}
-                                                    alt="Monogram Preview"
-                                                    className="h-10 w-10 object-contain rounded border border-sand/40 bg-neutral-50 p-1"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        handleFieldChange('customStyle', 'monogramUrl', '');
-                                                        setTimeout(() => handleSave(false), 200);
+                                        <p className="text-[10px] text-charcoal/40 leading-relaxed">
+                                            Direkomendasikan warna putih atau emas transparan (PNG). Muncul di amplop depan dan inisial badge.
+                                        </p>
+                                        <div className="mt-2 flex items-center gap-3">
+                                            <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold shadow-sm hover:bg-cream/25">
+                                                <Upload size={14} />
+                                                <span>Unggah Logo Terang</span>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (!file) return;
+                                                        const toastId = toast.loading('Mengunggah monogram terang...');
+                                                        const data = new FormData();
+                                                        data.append('file', file);
+                                                        try {
+                                                            const res = await api.post('/media/upload', data, {
+                                                                headers: { 'Content-Type': 'multipart/form-data' },
+                                                            });
+                                                            if (res.data.status === 'success') {
+                                                                handleFieldChange('customStyle', 'monogramUrl', res.data.url);
+                                                                toast.success('Monogram terang berhasil diunggah!', { id: toastId });
+                                                                setTimeout(() => handleSave(false), 200);
+                                                            }
+                                                        } catch (err) {
+                                                            toast.error('Gagal mengunggah monogram.', { id: toastId });
+                                                        }
                                                     }}
-                                                    className="text-[10px] text-red-500 hover:underline"
-                                                >
-                                                    Hapus
-                                                </button>
-                                            </div>
-                                        )}
+                                                />
+                                            </label>
+                                            {formData.customStyle?.monogramUrl && (
+                                                <div className="flex items-center gap-2">
+                                                    <img
+                                                        src={formData.customStyle.monogramUrl}
+                                                        alt="Preview"
+                                                        className="h-10 w-10 object-contain rounded border border-sand/40 bg-neutral-900 p-1"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            handleFieldChange('customStyle', 'monogramUrl', '');
+                                                            setTimeout(() => handleSave(false), 200);
+                                                        }}
+                                                        className="text-[10px] text-red-500 hover:underline"
+                                                    >
+                                                        Hapus
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* 2. Dark Monogram (Final Page) */}
+                                    <div className="space-y-2">
+                                        <label className="block text-xs font-semibold text-charcoal/70">
+                                            2. Monogram Warna Gelap (Untuk Halaman Akhir Terang)
+                                        </label>
+                                        <p className="text-[10px] text-charcoal/40 leading-relaxed">
+                                            Direkomendasikan warna merah marun, cokelat, atau hitam transparan (PNG). Muncul di halaman penutup.
+                                        </p>
+                                        <div className="mt-2 flex items-center gap-3">
+                                            <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold shadow-sm hover:bg-cream/25">
+                                                <Upload size={14} />
+                                                <span>Unggah Logo Gelap</span>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (!file) return;
+                                                        const toastId = toast.loading('Mengunggah monogram gelap...');
+                                                        const data = new FormData();
+                                                        data.append('file', file);
+                                                        try {
+                                                            const res = await api.post('/media/upload', data, {
+                                                                headers: { 'Content-Type': 'multipart/form-data' },
+                                                            });
+                                                            if (res.data.status === 'success') {
+                                                                handleFieldChange('customStyle', 'monogramUrlDark', res.data.url);
+                                                                toast.success('Monogram gelap berhasil diunggah!', { id: toastId });
+                                                                setTimeout(() => handleSave(false), 200);
+                                                            }
+                                                        } catch (err) {
+                                                            toast.error('Gagal mengunggah monogram.', { id: toastId });
+                                                        }
+                                                    }}
+                                                />
+                                            </label>
+                                            {formData.customStyle?.monogramUrlDark && (
+                                                <div className="flex items-center gap-2">
+                                                    <img
+                                                        src={formData.customStyle.monogramUrlDark}
+                                                        alt="Preview"
+                                                        className="h-10 w-10 object-contain rounded border border-sand/40 bg-neutral-50 p-1"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            handleFieldChange('customStyle', 'monogramUrlDark', '');
+                                                            setTimeout(() => handleSave(false), 200);
+                                                        }}
+                                                        className="text-[10px] text-red-500 hover:underline"
+                                                    >
+                                                        Hapus
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

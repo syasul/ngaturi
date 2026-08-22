@@ -580,11 +580,11 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                             animate={
                                                 isOpening
                                                     ? {
-                                                        scale: 1.35,
+                                                        scale: 1.15,
                                                         y: 40,
                                                         opacity: 0,
                                                     }
-                                                    : { scale: 1.22 }
+                                                    : { scale: 1.0 }
                                             }
                                             transition={{
                                                 duration: 0.8,
@@ -596,7 +596,7 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                                     '/assets/wedding/burgundy-envelope-closed.png'
                                                 }
                                                 alt="Envelope"
-                                                className="pointer-events-auto mt-20 h-auto w-[110%] max-w-[28rem] object-contain drop-shadow-2xl"
+                                                className="pointer-events-auto mt-20 h-auto w-[90%] max-w-[22rem] object-contain drop-shadow-2xl"
                                             />
                                         </motion.div>
 
@@ -2892,9 +2892,9 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                     className="absolute w-[125%] max-w-none opacity-80"
                                 />
                                 <div className="relative z-10 flex items-center justify-center">
-                                    {customStyle.monogramUrl ? (
+                                    {(customStyle.monogramUrlDark || customStyle.monogramUrl) ? (
                                         <img
-                                            src={resolveImageUrl(customStyle.monogramUrl, '')}
+                                            src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
                                             alt="Monogram"
                                             className="h-28 w-28 object-contain"
                                             style={{ filter: `drop-shadow(2px 4px 10px rgba(122,34,62,0.3))` }}
@@ -2924,13 +2924,13 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                             </p>
 
                             {/* Couple Illustration */}
-                            <div className="-mb-2 flex w-full max-w-[260px] justify-center">
+                            {/* <div className="-mb-2 flex w-full max-w-[260px] justify-center">
                                 <img
                                     src="/assets/theme_1/pengantin-ciuman-outline.webp"
                                     alt="Couple"
                                     className="w-[90%] opacity-80 mix-blend-multiply"
                                 />
-                            </div>
+                            </div> */}
 
                             {/* Names */}
                             <h3

@@ -122,7 +122,7 @@ export const AdminDashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
                 </div>
 
                 {/* Navigation links */}
-                <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
+                <nav className="flex-1 space-y-1 overflow-hidden px-4 py-6">
                     {menuItems.map((item) => {
                         const Icon = item.icon;
                         const isActive = pathname === item.path;
@@ -192,7 +192,7 @@ export const AdminDashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
                             </span>
                         </div>
 
-                        <nav className="flex-1 space-y-1 overflow-y-auto px-4 py-6">
+                        <nav className="flex-1 space-y-1 overflow-hidden px-4 py-6">
                             {menuItems.map((item) => {
                                 const Icon = item.icon;
                                 const isActive = pathname === item.path;

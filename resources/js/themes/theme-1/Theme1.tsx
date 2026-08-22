@@ -578,11 +578,11 @@ export const Theme1: React.FC<Theme1Props> = ({
                                             animate={
                                                 isOpening
                                                     ? {
-                                                        scale: 1.35,
+                                                        scale: 1.15,
                                                         y: 40,
                                                         opacity: 0,
                                                     }
-                                                    : { scale: 1.22 }
+                                                    : { scale: 1.0 }
                                             }
                                             transition={{
                                                 duration: 0.8,
@@ -594,7 +594,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                     '/assets/wedding/burgundy-envelope-closed.png'
                                                 }
                                                 alt="Envelope"
-                                                className="pointer-events-auto mt-20 h-auto w-[110%] max-w-[28rem] object-contain drop-shadow-2xl"
+                                                className="pointer-events-auto mt-20 h-auto w-[90%] max-w-[22rem] object-contain drop-shadow-2xl"
                                             />
                                         </motion.div>
 
