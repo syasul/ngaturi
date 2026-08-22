@@ -616,7 +616,7 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                                     <img
                                                         src={resolveImageUrl(customStyle.monogramUrl, '')}
                                                         alt="Monogram"
-                                                        className="h-28 w-28 object-contain opacity-40 mb-2"
+                                                        className="h-28 w-28 object-contain mb-2"
                                                     />
                                                 ) : (
                                                     <>
