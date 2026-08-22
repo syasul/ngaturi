@@ -404,6 +404,8 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
     const showGift = sections.showGift !== false;
     const showRsvp = sections.showRsvp !== false;
     const showWishes = sections.showWishes !== false;
+    const showDresscode = sections.showDresscode !== false;
+    const showStreaming = sections.showStreaming !== false;
 
     // Premium Color Palette
     const primaryColor = '#6B1D2F'; // Burgundy
@@ -612,7 +614,7 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                             >
                                                 {customStyle.monogramUrl ? (
                                                     <img
-                                                        src={customStyle.monogramUrl}
+                                                        src={resolveImageUrl(customStyle.monogramUrl, '')}
                                                         alt="Monogram"
                                                         className="h-28 w-28 object-contain opacity-40 mb-2"
                                                     />
@@ -838,7 +840,7 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                             <div className="absolute bottom-[3%] right-[5%] flex aspect-square w-[33%] items-center justify-center text-white drop-shadow-md">
                                 {customStyle.monogramUrl ? (
                                     <img
-                                        src={customStyle.monogramUrl}
+                                        src={resolveImageUrl(customStyle.monogramUrl, '')}
                                         alt="Monogram"
                                         className="h-[60%] w-[60%] object-contain"
                                     />
@@ -1906,148 +1908,223 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                         </motion.div>
                     </section>
 
-                    {/* G. DRESSCODE SECTION REMOVED */}
-
-                    {/* H. LIVE STREAMING SECTION */}
-                    <section
-                        id="streaming"
-                        className="relative overflow-hidden bg-[#FAF3EC] px-6 py-20"
-                    >
-                        {/* Top Horse Carriage Outline */}
-                        <div className="absolute left-1/2 top-4 flex w-full -translate-x-1/2 -translate-y-1/4 justify-center opacity-30">
-                            <img
-                                src="/assets/theme_1/kuda-outline.webp"
-                                className="w-[125%] max-w-[500px]"
-                            />
-                        </div>
-
-                        <motion.div
-                            className="relative z-10 mx-auto mt-48 w-full max-w-sm space-y-5 text-center"
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true, amount: 0.1 }}
-                            variants={containerVariants}
+                    {/* G. DRESSCODE SECTION */}
+                    {showDresscode && (
+                        <section
+                            id="dresscode"
+                            className="relative overflow-hidden bg-[#FAF3EC] px-6 py-20 pb-28"
                         >
-                            {/* Title */}
-                            <h2
-                                className="text-[3.5rem] font-normal tracking-wide"
-                                style={{
-                                    fontFamily: "'Dancing Script', cursive",
-                                    color: primaryColor,
-                                }}
-                            >
-                                Live Streaming
-                            </h2>
-
-                            {/* Description */}
-                            <p
-                                className="px-4 font-serif text-[13px] font-semibold leading-relaxed"
-                                style={{ color: primaryColor }}
-                            >
-                                Bagi keluarga dan kerabat yang terhalang oleh
-                                jarak, kehadiran virtual Anda tetaplah sebuah
-                                berkah yang melimpah. Mari menjadi saksi dari
-                                awal perjalanan suci kami.
-                            </p>
-
-                            {/* Middle Flowers */}
-                            <div className="flex justify-center py-6">
-                                <motion.img
-                                    variants={scaleInVariants}
-                                    src="/assets/theme_1/kumpulanbunga2.webp"
-                                    className="w-[130px] drop-shadow-xl"
-                                />
-                            </div>
-
-                            {/* Embedded Player Mockup */}
                             <motion.div
-                                variants={scaleInVariants}
-                                className="relative mx-auto flex aspect-video w-full max-w-[340px] flex-col items-center justify-center overflow-hidden rounded-2xl border-4 border-white shadow-[0_10px_20px_rgba(0,0,0,0.2)]"
+                                className="relative mx-auto w-full max-w-[400px] text-center"
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true, amount: 0.1 }}
+                                variants={containerVariants}
                             >
-                                {/* Background image */}
-                                <div
-                                    className="absolute inset-0 bg-cover bg-center"
-                                    style={{
-                                        backgroundImage:
-                                            "url('/assets/theme_1/gallery1.webp')",
-                                    }}
+                                {/* Background Arch (tirai-outline.webp) */}
+                                <img
+                                    src="/assets/theme_1/tirai-outline.webp"
+                                    className="absolute -top-10 left-1/2 z-0 w-[150%] max-w-none -translate-x-1/2 opacity-70"
                                 />
-                                {/* Dark Overlay */}
-                                <div className="absolute inset-0 bg-black/40" />
 
-                                {/* Youtube UI Mockup */}
-                                <div className="absolute left-4 right-4 top-3 z-10 flex items-start justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="h-8 w-8 overflow-hidden rounded-full border border-white/50 bg-stone-300">
-                                            <img
-                                                src="/assets/theme_1/foto-mempelai-pria.webp"
-                                                className="h-full w-full object-cover"
-                                            />
-                                        </div>
-                                        <div className="text-left">
-                                            <p className="text-[13px] font-semibold leading-tight text-white drop-shadow-md">
-                                                Classic Romance
-                                            </p>
-                                            <p className="text-[10px] text-white/80 drop-shadow-md">
-                                                Abe Riki
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-white/90">
-                                        <Volume2 size={18} />
-                                        <MessageSquare size={18} />
-                                    </div>
-                                </div>
-
-                                <div className="relative z-10 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/40 backdrop-blur-sm transition-transform hover:scale-110">
-                                    <Play
-                                        size={24}
-                                        className="ml-1 text-white"
-                                        fill="white"
+                                {/* Top Flower */}
+                                <div className="relative z-10 flex justify-center">
+                                    <img
+                                        src="/assets/theme_1/bunga.webp"
+                                        className="w-[85px] drop-shadow-md"
                                     />
                                 </div>
 
-                                <div className="absolute bottom-3 left-4 right-4 z-10 flex flex-col gap-1.5">
-                                    <div className="flex items-center justify-between px-1 text-white/90">
-                                        <div className="flex items-center gap-1">
-                                            <div className="h-2 w-2 rounded-full bg-red-600"></div>
-                                            <span className="text-[10px] font-bold tracking-widest">
-                                                LIVE
-                                            </span>
-                                        </div>
-                                        <Maximize size={14} />
-                                    </div>
-                                    <div className="h-1 w-full overflow-hidden rounded-full bg-white/30">
-                                        <div className="h-full w-1/3 bg-red-600"></div>
+                                {/* Title */}
+                                <div className="relative z-10 mt-1">
+                                    <h2
+                                        className="text-[3.25rem] font-normal tracking-wide"
+                                        style={{
+                                            fontFamily: "'Dancing Script', cursive",
+                                            color: primaryColor,
+                                        }}
+                                    >
+                                        Dresscode
+                                    </h2>
+                                </div>
+
+                                {/* Description */}
+                                <div className="relative z-10 mt-10 px-6">
+                                    <p
+                                        className="font-serif text-[13px] font-semibold leading-relaxed whitespace-pre-line"
+                                        style={{ color: primaryColor }}
+                                    >
+                                        {data?.dresscode?.description || 'Kehadiran Anda adalah hadiah terindah bagi kami. Untuk menyelaraskan keindahan momen bahagia ini, kami memohon kesediaan Bapak/Ibu/Saudara/i untuk mengenakan pakaian dengan sentuhan palet warna berikut:'}
+                                    </p>
+                                </div>
+
+                                {/* Bottom Couple and Swatches */}
+                                <div className="relative z-10 mt-8 flex w-full flex-col items-center justify-end">
+                                    {/* Kissing Couple */}
+                                    <img
+                                        src="/assets/theme_1/pengantin-ciuman-outline2.webp"
+                                        className="h-[150%] w-[95%] max-w-[280px] opacity-95"
+                                    />
+
+                                    {/* Swatches Grid */}
+                                    <div className="bottom-15 absolute left-1/2 flex w-full -translate-x-1/2 items-center justify-center gap-3 px-2">
+                                        {(data?.dresscode?.colors || ['#6B1D2F', '#D4AF37', '#FCF9F6', '#2D1A1E']).map((color: string, idx: number) => (
+                                            <div
+                                                key={idx}
+                                                className="h-[4.25rem] w-[4.25rem] rounded-2xl shadow-[0_10px_20px_rgba(0,0,0,0.4)] border border-sand/40"
+                                                style={{ backgroundColor: color }}
+                                            />
+                                        ))}
                                     </div>
                                 </div>
                             </motion.div>
+                        </section>
+                    )}
 
-                            <div className="pb-10 pt-8">
-                                <a
-                                    href="https://youtube.com/live"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center rounded-[1rem] border px-10 py-2.5 text-xs font-bold tracking-widest shadow-sm transition-all hover:bg-white/50 active:scale-95"
-                                    style={{
-                                        borderColor: primaryColor,
-                                        color: primaryColor,
-                                        backgroundColor: '#FAF3EC',
-                                    }}
-                                >
-                                    JOIN NOW
-                                </a>
-                            </div>
-
-                            {/* Bottom Rumah Outline */}
-                            <div className="relative z-10 flex w-full justify-center opacity-60">
+                    {/* H. LIVE STREAMING SECTION */}
+                    {showStreaming && (
+                        <section
+                            id="streaming"
+                            className="relative overflow-hidden bg-[#FAF3EC] px-6 py-20"
+                        >
+                            {/* Top Horse Carriage Outline */}
+                            <div className="absolute left-1/2 top-4 flex w-full -translate-x-1/2 -translate-y-1/4 justify-center opacity-30">
                                 <img
-                                    src="/assets/theme_1/rumah-outline.webp"
-                                    className="w-[150%] max-w-[550px]"
+                                    src="/assets/theme_1/kuda-outline.webp"
+                                    className="w-[125%] max-w-[500px]"
                                 />
                             </div>
-                        </motion.div>
-                    </section>
+
+                            <motion.div
+                                className="relative z-10 mx-auto mt-48 w-full max-w-sm space-y-5 text-center"
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true, amount: 0.1 }}
+                                variants={containerVariants}
+                            >
+                                {/* Title */}
+                                <h2
+                                    className="text-[3.5rem] font-normal tracking-wide"
+                                    style={{
+                                        fontFamily: "'Dancing Script', cursive",
+                                        color: primaryColor,
+                                    }}
+                                >
+                                    Live Streaming
+                                </h2>
+
+                                {/* Description */}
+                                <p
+                                    className="px-4 font-serif text-[13px] font-semibold leading-relaxed whitespace-pre-line"
+                                    style={{ color: primaryColor }}
+                                >
+                                    {data?.streaming?.description || 'Bagi keluarga dan kerabat yang terhalang oleh jarak, kehadiran virtual Anda tetaplah sebuah berkah yang melimpah. Mari menjadi saksi dari awal perjalanan suci kami.'}
+                                </p>
+
+                                {/* Middle Flowers */}
+                                <div className="flex justify-center py-6">
+                                    <motion.img
+                                        variants={scaleInVariants}
+                                        src="/assets/theme_1/kumpulanbunga2.webp"
+                                        className="w-[130px] drop-shadow-xl"
+                                    />
+                                </div>
+
+                                {/* Embedded Player Mockup */}
+                                <motion.div
+                                    variants={scaleInVariants}
+                                    className="relative mx-auto flex aspect-video w-full max-w-[340px] flex-col items-center justify-center overflow-hidden rounded-2xl border-4 border-white shadow-[0_10px_20px_rgba(0,0,0,0.2)]"
+                                >
+                                    {/* Background image */}
+                                    <div
+                                        className="absolute inset-0 bg-cover bg-center"
+                                        style={{
+                                            backgroundImage:
+                                                "url('/assets/theme_1/gallery1.webp')",
+                                        }}
+                                    />
+                                    {/* Dark Overlay */}
+                                    <div className="absolute inset-0 bg-black/40" />
+
+                                    {/* Youtube UI Mockup */}
+                                    <div className="absolute left-4 right-4 top-3 z-10 flex items-start justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-8 w-8 overflow-hidden rounded-full border border-white/50 bg-stone-300">
+                                                <img
+                                                    src="/assets/theme_1/foto-mempelai-pria.webp"
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="text-[13px] font-semibold leading-tight text-white drop-shadow-md">
+                                                    Classic Romance
+                                                </p>
+                                                <p className="text-[10px] text-white/80 drop-shadow-md">
+                                                    {(groom.nickname || 'Groom').toUpperCase()} & {(bride.nickname || 'Bride').toUpperCase()}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-white/90">
+                                            <Volume2 size={18} />
+                                            <MessageSquare size={18} />
+                                        </div>
+                                    </div>
+
+                                    <a
+                                        href={data?.streaming?.youtubeUrl || 'https://youtube.com/live'}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="relative z-10 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/40 backdrop-blur-sm transition-transform hover:scale-110"
+                                    >
+                                        <Play
+                                            size={24}
+                                            className="ml-1 text-white"
+                                            fill="white"
+                                        />
+                                    </a>
+
+                                    <div className="absolute bottom-3 left-4 right-4 z-10 flex flex-col gap-1.5">
+                                        <div className="flex items-center justify-between px-1 text-white/90">
+                                            <div className="flex items-center gap-1">
+                                                <div className="h-2 w-2 rounded-full bg-red-600"></div>
+                                                <span className="text-[10px] font-bold tracking-widest">
+                                                    LIVE
+                                                </span>
+                                            </div>
+                                            <Maximize size={14} />
+                                        </div>
+                                        <div className="h-1 w-full overflow-hidden rounded-full bg-white/30">
+                                            <div className="h-full w-1/3 bg-red-600"></div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+
+                                <div className="pb-10 pt-8">
+                                    <a
+                                        href={data?.streaming?.youtubeUrl || 'https://youtube.com/live'}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center rounded-[1rem] border px-10 py-2.5 text-xs font-bold tracking-widest shadow-sm transition-all hover:bg-white/50 active:scale-95"
+                                        style={{
+                                            borderColor: primaryColor,
+                                            color: primaryColor,
+                                            backgroundColor: '#FAF3EC',
+                                        }}
+                                    >
+                                        JOIN NOW
+                                    </a>
+                                </div>
+
+                                {/* Bottom Rumah Outline */}
+                                <div className="relative z-10 flex w-full justify-center opacity-60">
+                                    <img
+                                        src="/assets/theme_1/rumah-outline.webp"
+                                        className="w-[150%] max-w-[550px]"
+                                    />
+                                </div>
+                            </motion.div>
+                        </section>
+                    )}
 
                     {/* RSVP & GUEST WISHES COMBINED SECTION */}
                     {(showRsvp || showWishes) && (
@@ -2817,7 +2894,7 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                 <div className="relative z-10 flex items-center justify-center">
                                     {customStyle.monogramUrl ? (
                                         <img
-                                            src={customStyle.monogramUrl}
+                                            src={resolveImageUrl(customStyle.monogramUrl, '')}
                                             alt="Monogram"
                                             className="h-28 w-28 object-contain"
                                             style={{ filter: `drop-shadow(2px 4px 10px rgba(122,34,62,0.3))` }}
@@ -3072,6 +3149,17 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                     >
                                         Timeline
                                     </button>
+
+                                    {showDresscode && (
+                                        <button
+                                            onClick={() =>
+                                                scrollToSection('dresscode')
+                                            }
+                                            className="transition-colors hover:text-[#C9A84C]"
+                                        >
+                                            Dresscode
+                                        </button>
+                                    )}
 
                                     {showGallery && (
                                         <button

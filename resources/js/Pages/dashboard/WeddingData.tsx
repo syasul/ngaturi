@@ -11,6 +11,9 @@ import {
     Upload,
     User,
     CreditCard,
+    Clock,
+    Shirt,
+    Video,
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -25,6 +28,9 @@ type TabType =
     | 'akad'
     | 'resepsi'
     | 'stories'
+    | 'timeline'
+    | 'dresscode'
+    | 'streaming'
     | 'quotes'
     | 'styling'
     | 'sections'
@@ -64,6 +70,7 @@ export const WeddingData: React.FC = () => {
         akad: { date: '', time: '', venue: '', address: '', maps: '' },
         resepsi: { date: '', time: '', venue: '', address: '', maps: '' },
         stories: [],
+        timeline: [],
         quotes: '',
         customStyle: {
             primaryColor: '#6B1D2F',
@@ -83,6 +90,16 @@ export const WeddingData: React.FC = () => {
             showGift: true,
             showRsvp: true,
             showWishes: true,
+            showDresscode: true,
+            showStreaming: true,
+        },
+        dresscode: {
+            description: 'Kehadiran Anda adalah hadiah terindah bagi kami. Untuk menyelaraskan keindahan momen bahagia ini, kami memohon kesediaan Bapak/Ibu/Saudara/i untuk mengenakan pakaian dengan sentuhan palet warna berikut:',
+            colors: ['#6B1D2F', '#D4AF37', '#FCF9F6', '#2D1A1E'],
+        },
+        streaming: {
+            youtubeUrl: 'https://youtube.com/live',
+            description: 'Bagi keluarga dan kerabat yang terhalang oleh jarak, kehadiran virtual Anda tetaplah sebuah berkah yang melimpah. Mari menjadi saksi dari awal perjalanan suci kami.',
         },
     });
 
@@ -110,6 +127,14 @@ export const WeddingData: React.FC = () => {
                             ...(w.data?.schedule?.resepsi || {}),
                         },
                         stories: w.data?.stories || [],
+                        timeline: w.data?.timeline || w.data?.rundown || [
+                            { time: "10:30 AM", title: "Penyambutan Tamu & Ramah Tamah", icon: "kursi" },
+                            { time: "12:00 PM", title: "Kedatangan Pengantin", icon: "pengantin" },
+                            { time: "12:30 PM", title: "Prosesi Akad Nikah", icon: "cincin" },
+                            { time: "13:00 PM", title: "Sesi Ucapan Selamat", icon: "tangan" },
+                            { time: "19:00 PM", title: "Resepsi Pernikahan", icon: "ciuman" },
+                            { time: "20:30 PM", title: "Sesi Foto Bersama", icon: "foto" }
+                        ],
                         quotes: w.data?.quotes || '',
                         customStyle: {
                             ...formData.customStyle,
@@ -122,7 +147,17 @@ export const WeddingData: React.FC = () => {
                             showGift: true,
                             showRsvp: true,
                             showWishes: true,
+                            showDresscode: true,
+                            showStreaming: true,
                             ...(w.data?.sections || {}),
+                        },
+                        dresscode: {
+                            description: w.data?.dresscode?.description || 'Kehadiran Anda adalah hadiah terindah bagi kami. Untuk menyelaraskan keindahan momen bahagia ini, kami memohon kesediaan Bapak/Ibu/Saudara/i untuk mengenakan pakaian dengan sentuhan palet warna berikut:',
+                            colors: w.data?.dresscode?.colors || ['#6B1D2F', '#D4AF37', '#FCF9F6', '#2D1A1E'],
+                        },
+                        streaming: {
+                            youtubeUrl: w.data?.streaming?.youtubeUrl || 'https://youtube.com/live',
+                            description: w.data?.streaming?.description || 'Bagi keluarga dan kerabat yang terhalang oleh jarak, kehadiran virtual Anda tetaplah sebuah berkah yang melimpah. Mari menjadi saksi dari awal perjalanan suci kami.',
                         },
                     };
                     setFormData(merged);
@@ -197,6 +232,64 @@ export const WeddingData: React.FC = () => {
         }));
     };
 
+    const handleTimelineChange = (index: number, field: string, value: any) => {
+        isDirtyRef.current = true;
+        const newTimeline = [...formData.timeline];
+        newTimeline[index] = { ...newTimeline[index], [field]: value };
+        setFormData((prev: any) => ({ ...prev, timeline: newTimeline }));
+    };
+
+    const addTimeline = () => {
+        isDirtyRef.current = true;
+        setFormData((prev: any) => ({
+            ...prev,
+            timeline: [...prev.timeline, { time: '', title: '', icon: 'kursi' }],
+        }));
+    };
+
+    const removeTimeline = (index: number) => {
+        isDirtyRef.current = true;
+        setFormData((prev: any) => ({
+            ...prev,
+            timeline: prev.timeline.filter((_: any, i: number) => i !== index),
+        }));
+    };
+
+    const handleDresscodeChange = (field: string, value: any) => {
+        isDirtyRef.current = true;
+        setFormData((prev: any) => ({
+            ...prev,
+            dresscode: {
+                ...prev.dresscode,
+                [field]: value,
+            },
+        }));
+    };
+
+    const handleDresscodeColorChange = (index: number, color: string) => {
+        isDirtyRef.current = true;
+        const newColors = [...formData.dresscode.colors];
+        newColors[index] = color;
+        setFormData((prev: any) => ({
+            ...prev,
+            dresscode: {
+                ...prev.dresscode,
+                colors: newColors,
+            },
+        }));
+    };
+
+    const handleStreamingChange = (field: string, value: any) => {
+        isDirtyRef.current = true;
+        setFormData((prev: any) => ({
+            ...prev,
+            streaming: {
+                ...prev.streaming,
+                [field]: value,
+            },
+        }));
+    };
+
     // 3. Save to database
     const handleSave = async (showToast = true) => {
         setSaving(true);
@@ -210,6 +303,9 @@ export const WeddingData: React.FC = () => {
                         resepsi: formData.resepsi,
                     },
                     stories: formData.stories,
+                    timeline: formData.timeline,
+                    dresscode: formData.dresscode,
+                    streaming: formData.streaming,
                     quotes: formData.quotes,
                     customStyle: formData.customStyle,
                     sections: formData.sections,
@@ -284,6 +380,9 @@ export const WeddingData: React.FC = () => {
         { id: 'akad', name: 'Akad Nikah', icon: Calendar },
         { id: 'resepsi', name: 'Resepsi', icon: MapPin },
         { id: 'stories', name: 'Love Story', icon: BookOpen },
+        { id: 'timeline', name: 'Timeline Rundown', icon: Clock },
+        { id: 'dresscode', name: 'Dresscode', icon: Shirt },
+        { id: 'streaming', name: 'Live Streaming', icon: Video },
         { id: 'quotes', name: 'Quotes', icon: Quote },
         { id: 'styling', name: 'Desain & Warna', icon: Palette },
         { id: 'sections', name: 'Kelola Section', icon: Sliders },
@@ -864,7 +963,6 @@ export const WeddingData: React.FC = () => {
                         </div>
                     )}
 
-                    {/* TAB 5: STORIES */}
                     {activeTab === 'stories' && (
                         <div className="space-y-6">
                             <div className="flex items-center justify-between border-b border-sand/20 pb-2">
@@ -979,6 +1077,281 @@ export const WeddingData: React.FC = () => {
                                     )}
                                 </div>
                             )}
+                        </div>
+                    )}
+
+                    {/* TAB timeline: TIMELINE */}
+                    {activeTab === 'timeline' && (
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between border-b border-sand/20 pb-2">
+                                <h4 className="font-sans text-lg font-bold text-charcoal">
+                                    Wedding Timeline / Rundown
+                                </h4>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={addTimeline}
+                                >
+                                    + Tambah Rundown
+                                </Button>
+                            </div>
+
+                            {formData.timeline.length === 0 ? (
+                                <div className="py-12 text-center text-xs text-charcoal/50">
+                                    Belum ada rundown acara yang ditambahkan.
+                                    Klik tombol di atas untuk memulai.
+                                </div>
+                            ) : (
+                                <div className="space-y-6">
+                                    {formData.timeline.map(
+                                        (item: any, index: number) => (
+                                            <div
+                                                key={index}
+                                                className="relative space-y-4 rounded-2xl border border-sand/40 bg-cream/10 p-4"
+                                            >
+                                                <button
+                                                    onClick={() =>
+                                                        removeTimeline(index)
+                                                    }
+                                                    className="absolute right-4 top-4 cursor-pointer text-xs font-bold text-red-500 hover:underline"
+                                                >
+                                                    Hapus
+                                                </button>
+
+                                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                                            Waktu
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            value={item.time}
+                                                            onBlur={() =>
+                                                                handleSave(
+                                                                    false,
+                                                                )
+                                                            }
+                                                            onChange={(e) =>
+                                                                handleTimelineChange(
+                                                                    index,
+                                                                    'time',
+                                                                    e.target
+                                                                        .value,
+                                                                )
+                                                            }
+                                                            placeholder="Contoh: 10:30 AM"
+                                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                                                        />
+                                                    </div>
+                                                    <div className="sm:col-span-2">
+                                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                                            Nama Acara / Keterangan
+                                                        </label>
+                                                        <input
+                                                            type="text"
+                                                            value={item.title}
+                                                            onBlur={() =>
+                                                                handleSave(
+                                                                    false,
+                                                                )
+                                                            }
+                                                            onChange={(e) =>
+                                                                handleTimelineChange(
+                                                                    index,
+                                                                    'title',
+                                                                    e.target
+                                                                        .value,
+                                                                )
+                                                            }
+                                                            placeholder="Contoh: Penyambutan Tamu"
+                                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                                            Ikon
+                                                        </label>
+                                                        <select
+                                                            value={item.icon || 'kursi'}
+                                                            onBlur={() => handleSave(false)}
+                                                            onChange={(e) =>
+                                                                handleTimelineChange(
+                                                                    index,
+                                                                    'icon',
+                                                                    e.target.value,
+                                                                )
+                                                            }
+                                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                                                        >
+                                                            <option value="kursi">Kursi / Penyambutan</option>
+                                                            <option value="pengantin">Pengantin / Kedatangan</option>
+                                                            <option value="cincin">Cincin / Akad Nikah</option>
+                                                            <option value="tangan">Tangan / Sesi Ucapan</option>
+                                                            <option value="ciuman">Ciuman / Resepsi</option>
+                                                            <option value="foto">Kamera / Foto Bersama</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ),
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* TAB dresscode: DRESSCODE */}
+                    {activeTab === 'dresscode' && (
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between border-b border-sand/20 pb-2">
+                                <h4 className="font-sans text-lg font-bold text-charcoal">
+                                    Pengaturan Dresscode
+                                </h4>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-semibold text-charcoal/60">
+                                        Aktifkan Dresscode:
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleToggleSection('showDresscode')}
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                                            formData.sections.showDresscode ? 'bg-gold-500' : 'bg-sand'
+                                        }`}
+                                    >
+                                        <span
+                                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                                formData.sections.showDresscode ? 'translate-x-6' : 'translate-x-1'
+                                            }`}
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                        Deskripsi Ketentuan Dresscode
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        value={formData.dresscode.description}
+                                        disabled={!formData.sections.showDresscode}
+                                        onBlur={() => handleSave(false)}
+                                        onChange={(e) =>
+                                            handleDresscodeChange('description', e.target.value)
+                                        }
+                                        placeholder="Tuliskan petunjuk warna pakaian / dresscode untuk tamu undangan..."
+                                        className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20 disabled:bg-sand/10 disabled:text-charcoal/40"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                        Palet Warna Busana (Swatch Colors)
+                                    </label>
+                                    <p className="mt-1 text-[10px] text-charcoal/40">
+                                        Tentukan 4 warna utama yang disarankan untuk dikenakan oleh tamu undangan.
+                                    </p>
+                                    <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                                        {formData.dresscode.colors.map((color: string, index: number) => (
+                                            <div
+                                                key={index}
+                                                className="flex flex-col items-center gap-2 rounded-xl border border-sand/30 bg-cream/5 p-3 text-center"
+                                            >
+                                                <div
+                                                    className="h-12 w-12 rounded-full border border-sand/50 shadow-sm transition-transform"
+                                                    style={{ backgroundColor: color }}
+                                                />
+                                                <input
+                                                    type="color"
+                                                    value={color}
+                                                    disabled={!formData.sections.showDresscode}
+                                                    onBlur={() => handleSave(false)}
+                                                    onChange={(e) =>
+                                                        handleDresscodeColorChange(index, e.target.value)
+                                                    }
+                                                    className="w-12 h-6 cursor-pointer border-0 p-0 bg-transparent disabled:opacity-40"
+                                                />
+                                                <input
+                                                    type="text"
+                                                    value={color}
+                                                    disabled={!formData.sections.showDresscode}
+                                                    onBlur={() => handleSave(false)}
+                                                    onChange={(e) =>
+                                                        handleDresscodeColorChange(index, e.target.value)
+                                                    }
+                                                    className="w-full text-center text-xs font-mono border border-sand rounded bg-white py-0.5 disabled:bg-sand/10 disabled:text-charcoal/40"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* TAB streaming: LIVE STREAMING */}
+                    {activeTab === 'streaming' && (
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between border-b border-sand/20 pb-2">
+                                <h4 className="font-sans text-lg font-bold text-charcoal">
+                                    Pengaturan Live Streaming
+                                </h4>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-semibold text-charcoal/60">
+                                        Aktifkan Live Streaming:
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleToggleSection('showStreaming')}
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                                            formData.sections.showStreaming ? 'bg-gold-500' : 'bg-sand'
+                                        }`}
+                                    >
+                                        <span
+                                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                                formData.sections.showStreaming ? 'translate-x-6' : 'translate-x-1'
+                                            }`}
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                        Link YouTube Live / Streaming
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={formData.streaming.youtubeUrl}
+                                        disabled={!formData.sections.showStreaming}
+                                        onBlur={() => handleSave(false)}
+                                        onChange={(e) =>
+                                            handleStreamingChange('youtubeUrl', e.target.value)
+                                        }
+                                        placeholder="Contoh: https://youtube.com/live/..."
+                                        className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20 disabled:bg-sand/10 disabled:text-charcoal/40"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                        Deskripsi Live Streaming
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        value={formData.streaming.description}
+                                        disabled={!formData.sections.showStreaming}
+                                        onBlur={() => handleSave(false)}
+                                        onChange={(e) =>
+                                            handleStreamingChange('description', e.target.value)
+                                        }
+                                        placeholder="Tuliskan petunjuk atau kata pengantar live streaming..."
+                                        className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20 disabled:bg-sand/10 disabled:text-charcoal/40"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     )}
 
@@ -1486,6 +1859,16 @@ export const WeddingData: React.FC = () => {
                                         key: 'showWishes',
                                         title: 'Buku Tamu (Ucapan & Doa)',
                                         desc: 'Menampilkan daftar ucapan selamat dan doa dari tamu undangan.',
+                                    },
+                                    {
+                                        key: 'showDresscode',
+                                        title: 'Dresscode',
+                                        desc: 'Menampilkan bagian dresscode pakaian & swatch palet warna untuk para tamu.',
+                                    },
+                                    {
+                                        key: 'showStreaming',
+                                        title: 'Live Streaming',
+                                        desc: 'Menampilkan bagian siaran langsung (live streaming) virtual untuk para tamu.',
                                     },
                                 ].map((item) => (
                                     <div
