@@ -398,12 +398,17 @@ export const Theme1: React.FC<Theme1Props> = ({
     const customStyle = data?.customStyle || {};
 
     const sections = data?.sections || {};
-    const showStory = sections.showStory !== false;
-    const showGallery = sections.showGallery !== false;
-    const showQuotes = sections.showQuotes !== false;
-    const showGift = sections.showGift !== false;
-    const showRsvp = sections.showRsvp !== false;
-    const showWishes = sections.showWishes !== false;
+    const isSectionVisible = (val: any) => {
+        if (val === undefined) return true;
+        if (val === null || val === '' || val === false || val === 0 || val === '0' || val === 'false') return false;
+        return true;
+    };
+    const showStory = isSectionVisible(sections.showStory);
+    const showGallery = isSectionVisible(sections.showGallery);
+    const showQuotes = isSectionVisible(sections.showQuotes);
+    const showGift = isSectionVisible(sections.showGift);
+    const showRsvp = isSectionVisible(sections.showRsvp);
+    const showWishes = isSectionVisible(sections.showWishes);
 
     // Premium Color Palette
     const primaryColor = '#6B1D2F'; // Burgundy
