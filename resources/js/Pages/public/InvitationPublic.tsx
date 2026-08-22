@@ -249,7 +249,8 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
             !themeId.toLowerCase().includes('theme-2') &&
             !themeId.toLowerCase().includes('theme-3') &&
             !themeId.toLowerCase().includes('premium-10') &&
-            !themeId.toLowerCase().includes('burgundy-bloom'));
+            !themeId.toLowerCase().includes('burgundy-bloom') &&
+            !themeId.toLowerCase().includes('custom-theme-1'));
 
     return (
         <div className="relative min-h-screen w-full overflow-x-hidden" style={{ colorScheme: 'only light' }}>

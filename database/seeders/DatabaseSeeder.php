@@ -61,6 +61,7 @@ class DatabaseSeeder extends Seeder
             ['id' => 'botanical-minimal', 'name' => 'Botanical Minimal', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC'],
             ['id' => 'editorial-mono', 'name' => 'Editorial Mono', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM'],
             ['id' => 'theme-1', 'name' => 'Burgundy Bloom', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM'],
+            ['id' => 'custom-theme-1', 'name' => 'Custom Theme 1', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'PREMIUM'],
             ['id' => 'theme-2', 'name' => 'Premium 10 Animasi', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
             ['id' => 'theme-3', 'name' => 'Burgundy Bloom V2', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'PREMIUM'],
         ], ['id'], ['name', 'thumbnail_url', 'is_active', 'package_level']);
@@ -280,7 +281,7 @@ class DatabaseSeeder extends Seeder
         Wedding::updateOrCreate(
             ['user_id' => $ilyas->id],
             [
-                'theme_id' => 'theme-1',
+                'theme_id' => 'custom-theme-1',
                 'slug' => 'ilyas',
                 'status' => 'published',
                 'expired_at' => now()->addDays(365),
