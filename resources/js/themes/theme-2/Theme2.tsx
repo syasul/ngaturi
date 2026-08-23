@@ -53,14 +53,19 @@ const CustomRSVPForm = ({
                 />
             </div>
             <div>
-                <input
+                <select
                     required
                     value={guestCount}
                     onChange={(e) => setGuestCount(e.target.value)}
-                    type="text"
-                    placeholder="JUMLAH TAMU"
-                    className="w-full border-b border-[#3E2723]/30 bg-transparent px-2 py-2 text-xs text-[#3E2723] placeholder-[#3E2723]/60 transition-colors focus:border-[#3E2723] focus:outline-none"
-                />
+                    className="w-full border-b border-[#3E2723]/30 bg-transparent px-2 py-2 text-xs text-[#3E2723] placeholder-[#3E2723]/60 transition-colors focus:border-[#3E2723] focus:outline-none cursor-pointer"
+                >
+                    <option value="" disabled className="text-neutral-800 bg-white">JUMLAH TAMU</option>
+                    <option value="1" className="text-neutral-800 bg-white">1 Orang</option>
+                    <option value="2" className="text-neutral-800 bg-white">2 Orang</option>
+                    <option value="3" className="text-neutral-800 bg-white">3 Orang</option>
+                    <option value="4" className="text-neutral-800 bg-white">4 Orang</option>
+                    <option value="5" className="text-neutral-800 bg-white">5 Orang atau lebih</option>
+                </select>
             </div>
             <div className="space-y-3 pt-2">
                 <label className="font-serif text-[10px] uppercase tracking-widest text-[#3E2723]">

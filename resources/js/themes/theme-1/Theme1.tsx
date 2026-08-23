@@ -58,14 +58,19 @@ const CustomRSVPForm = ({
                 />
             </div>
             <div>
-                <input
+                <select
                     required
                     value={guestCount}
                     onChange={(e) => setGuestCount(e.target.value)}
-                    type="text"
-                    placeholder="JUMLAH TAMU"
-                    className="w-full border-b border-white/50 bg-transparent px-2 py-2 text-xs text-white placeholder-white/70 transition-colors focus:border-white focus:outline-none"
-                />
+                    className="w-full border-b border-white/50 bg-transparent px-2 py-2 text-xs text-white placeholder-white/70 transition-colors focus:border-white focus:outline-none cursor-pointer"
+                >
+                    <option value="" disabled className="text-neutral-800 bg-white">JUMLAH TAMU</option>
+                    <option value="1" className="text-neutral-800 bg-white">1 Orang</option>
+                    <option value="2" className="text-neutral-800 bg-white">2 Orang</option>
+                    <option value="3" className="text-neutral-800 bg-white">3 Orang</option>
+                    <option value="4" className="text-neutral-800 bg-white">4 Orang</option>
+                    <option value="5" className="text-neutral-800 bg-white">5 Orang atau lebih</option>
+                </select>
             </div>
 
             <div className="space-y-3 pt-2">
@@ -1634,7 +1639,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                             }}
                                         />
 
-                                        <div className="relative z-10 space-y-7 text-[#FAF3EC]">
+                                        <div className="relative z-10 mx-auto max-w-[260px] space-y-7 text-[#FAF3EC]">
                                             <div className="space-y-2">
                                                 <h3
                                                     className="font-serif text-4xl font-bold italic"
@@ -1720,7 +1725,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                             }}
                                         />
 
-                                        <div className="relative z-10 space-y-7 text-[#FAF3EC]">
+                                        <div className="relative z-10 mx-auto max-w-[260px] space-y-7 text-[#FAF3EC]">
                                             <div className="space-y-2">
                                                 <h3
                                                     className="font-serif text-4xl font-bold italic"
