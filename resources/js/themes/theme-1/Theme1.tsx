@@ -2813,14 +2813,13 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                 className="mb-10 mt-2 max-w-[200px] font-serif text-[9px] font-bold leading-relaxed opacity-80"
                                                 style={{ color: primaryColor }}
                                             >
-                                                Perumahan Indah No. 123, Jakarta
-                                                Selatan
+                                                {data?.giftAddress || 'Perumahan Indah No. 123, Jakarta Selatan'}
                                             </p>
                                             <div className="w-full space-y-3">
                                                 <button
                                                     onClick={() =>
                                                         handleCopyAddress(
-                                                            'Perumahan Indah No. 123, Jakarta Selatan',
+                                                            data?.giftAddress || 'Perumahan Indah No. 123, Jakarta Selatan',
                                                         )
                                                     }
                                                     className="flex w-full items-center justify-center gap-2 border border-[#7A223E]/20 py-3 transition-all hover:bg-[#7A223E]/5 active:scale-95"
@@ -2842,11 +2841,16 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                             : 'SALIN ALAMAT'}
                                                     </span>
                                                 </button>
-                                                <button className="flex w-full items-center justify-center border border-[#7A223E]/20 py-3 transition-all hover:bg-[#7A223E]/5 active:scale-95">
+                                                <a
+                                                    href={data?.giftMaps || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data?.giftAddress || 'Perumahan Indah No. 123, Jakarta Selatan')}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex w-full items-center justify-center border border-[#7A223E]/20 py-3 transition-all hover:bg-[#7A223E]/5 active:scale-95 text-center"
+                                                >
                                                     <span className="text-[7px] font-bold uppercase tracking-widest text-[#7A223E]">
                                                         LIHAT PETA
                                                     </span>
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     )}

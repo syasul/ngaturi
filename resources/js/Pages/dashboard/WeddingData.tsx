@@ -72,6 +72,8 @@ export const WeddingData: React.FC = () => {
         stories: [],
         timeline: [],
         quotes: '',
+        giftAddress: '',
+        giftMaps: '',
         customStyle: {
             primaryColor: '#6B1D2F',
             secondaryColor: '#D4AF37',
@@ -137,6 +139,8 @@ export const WeddingData: React.FC = () => {
                             { time: "20:30 PM", title: "Sesi Foto Bersama", icon: "foto" }
                         ],
                         quotes: w.data?.quotes || '',
+                        giftAddress: w.data?.giftAddress || '',
+                        giftMaps: w.data?.giftMaps || '',
                         customStyle: {
                             ...formData.customStyle,
                             ...(w.data?.customStyle || {}),
@@ -308,6 +312,8 @@ export const WeddingData: React.FC = () => {
                     dresscode: formData.dresscode,
                     streaming: formData.streaming,
                     quotes: formData.quotes,
+                    giftAddress: formData.giftAddress,
+                    giftMaps: formData.giftMaps,
                     customStyle: formData.customStyle,
                     sections: formData.sections,
                 },
@@ -2176,6 +2182,54 @@ export const WeddingData: React.FC = () => {
                                             </button>
                                         </div>
                                     )}
+                                </div>
+                            </div>
+
+                            {/* Alamat Pengiriman Kado Fisik */}
+                            <div className="border-t border-sand/20 pt-6 space-y-4">
+                                <h5 className="font-sans text-sm font-semibold text-charcoal/80">
+                                    Alamat Pengiriman Kado Fisik (Opsional)
+                                </h5>
+                                <p className="text-xs text-charcoal/50">
+                                    Masukkan alamat lengkap Anda agar tamu undangan dapat mengirimkan kado fisik secara langsung ke alamat Anda.
+                                </p>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Alamat Lengkap Pengiriman
+                                        </label>
+                                        <textarea
+                                            rows={3}
+                                            value={formData.giftAddress || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                setFormData((prev: any) => ({
+                                                    ...prev,
+                                                    giftAddress: e.target.value,
+                                                }))
+                                            }
+                                            placeholder="Contoh: Perumahan Indah No. 123, Jakarta Selatan"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Link Google Maps Alamat Kado (Opsional)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.giftMaps || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                setFormData((prev: any) => ({
+                                                    ...prev,
+                                                    giftMaps: e.target.value,
+                                                }))
+                                            }
+                                            placeholder="Contoh: https://maps.app.goo.gl/..."
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
