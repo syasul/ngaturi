@@ -936,7 +936,7 @@ export const Theme3: React.FC<Theme3Props> = ({
                         {/* SCALLOPED CARD */}
                         <motion.div
                             className="relative z-10 -mt-14 mb-6 flex w-[122%] max-w-[490px] flex-col items-center justify-center @container"
-                            style={{ aspectRatio: '550 / 660' }}
+                            style={{ aspectRatio: '550 / 720' }}
                             initial="hidden"
                             whileInView="visible"
                             viewport={{ once: true, amount: 0.1 }}
