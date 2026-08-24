@@ -175,40 +175,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 4c. Seed User & Premium Order & Transaction for Ilyas 3 (Theme 3)
-        $ilyas3 = User::updateOrCreate(
-            ['email' => 'ilyas3@example.com'],
-            [
-                'name' => 'Ilyas Theme 3',
-                'password' => bcrypt('password'),
-                'role' => 'USER',
-                'status' => 'ACTIVE',
-            ]
-        );
 
-        $order3 = Order::updateOrCreate(
-            [
-                'user_id' => $ilyas3->id,
-                'package_id' => $premiumPkg->id,
-            ],
-            [
-                'status' => 'PAID',
-                'amount' => $premiumPkg->price,
-                'payment_method' => 'MANUAL',
-                'paid_at' => now(),
-            ]
-        );
-
-        Transaction::updateOrCreate(
-            [
-                'order_id' => $order3->id,
-            ],
-            [
-                'gateway_ref' => 'MANUAL-SEEDER-3',
-                'status' => 'success',
-                'payload' => ['status' => 'success', 'seeded' => true],
-            ]
-        );
 
         // 5. Seed Pre-configured Wedding for Ilyas
         $weddingData = [
@@ -301,16 +268,5 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Theme 3 Wedding for Ilyas 3
-        Wedding::updateOrCreate(
-            ['user_id' => $ilyas3->id],
-            [
-                'theme_id' => 'theme-3',
-                'slug' => 'ilyas3',
-                'status' => 'published',
-                'expired_at' => now()->addDays(365),
-                'data' => $weddingData,
-            ]
-        );
     }
 }
