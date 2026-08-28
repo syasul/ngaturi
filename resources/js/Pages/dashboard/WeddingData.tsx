@@ -83,6 +83,9 @@ export const WeddingData: React.FC = () => {
             bodyFont: 'font-sans',
             musicUrl: '',
             qrisUrl: '',
+            ewalletName: '',
+            ewalletNumber: '',
+            ewalletHolderName: '',
             monogramUrl: '',
             monogramUrlDark: '',
         },
@@ -2182,6 +2185,75 @@ export const WeddingData: React.FC = () => {
                                             </button>
                                         </div>
                                     )}
+                                </div>
+                            </div>
+
+                            {/* E-Wallet (ShopeePay/Dana/dll) */}
+                            <div className="border-t border-sand/20 pt-6 space-y-4">
+                                <h5 className="font-sans text-sm font-semibold text-charcoal/80">
+                                    Dompet Digital / E-Wallet (Opsional)
+                                </h5>
+                                <p className="text-xs text-charcoal/50">
+                                    Tambahkan informasi dompet digital Anda (seperti ShopeePay, Dana, OVO, GoPay) agar tamu undangan dapat mentransfer kado menggunakan nomor telepon/akun.
+                                </p>
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Nama E-Wallet / Bank
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.customStyle?.ewalletName || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    'customStyle',
+                                                    'ewalletName',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Contoh: ShopeePay, Dana, OVO"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Nomor E-Wallet (HP)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.customStyle?.ewalletNumber || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    'customStyle',
+                                                    'ewalletNumber',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Contoh: 08123456789"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold uppercase text-charcoal/60">
+                                            Nama Pemilik Akun
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={formData.customStyle?.ewalletHolderName || ''}
+                                            onBlur={() => handleSave(false)}
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    'customStyle',
+                                                    'ewalletHolderName',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="Contoh: Ahmad"
+                                            className="mt-1 w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gold-500/20"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
