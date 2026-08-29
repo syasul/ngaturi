@@ -351,6 +351,7 @@ export const WeddingData: React.FC = () => {
         const toastId = toast.loading('Mengunggah foto...');
         const data = new FormData();
         data.append('file', file);
+        data.append('purpose', 'profile');
 
         try {
             const res = await api.post('/media/upload', data, {
@@ -1761,6 +1762,7 @@ export const WeddingData: React.FC = () => {
                                                         const toastId = toast.loading('Mengunggah monogram terang...');
                                                         const data = new FormData();
                                                         data.append('file', file);
+                                                        data.append('purpose', 'monogram');
                                                         try {
                                                             const res = await api.post('/media/upload', data, {
                                                                 headers: { 'Content-Type': 'multipart/form-data' },
@@ -1820,6 +1822,7 @@ export const WeddingData: React.FC = () => {
                                                         const toastId = toast.loading('Mengunggah monogram gelap...');
                                                         const data = new FormData();
                                                         data.append('file', file);
+                                                        data.append('purpose', 'monogram');
                                                         try {
                                                             const res = await api.post('/media/upload', data, {
                                                                 headers: { 'Content-Type': 'multipart/form-data' },
@@ -2124,6 +2127,7 @@ export const WeddingData: React.FC = () => {
                                                     );
                                                 const data = new FormData();
                                                 data.append('file', file);
+                                                data.append('purpose', 'qris');
                                                 try {
                                                     const res =
                                                         await api.post(

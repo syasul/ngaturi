@@ -32,17 +32,17 @@ class Guest extends Model
 
     public function getUniqueTokenAttribute()
     {
-        return $this->unique_token;
+        return $this->attributes['unique_token'] ?? null;
     }
 
     public function getRsvpStatusAttribute()
     {
-        return $this->rsvp_status;
+        return $this->attributes['rsvp_status'] ?? 'pending';
     }
 
     public function getIsMessageVisibleAttribute()
     {
-        return (bool) $this->is_message_visible;
+        return (bool) ($this->attributes['is_message_visible'] ?? true);
     }
 
     public function wedding()

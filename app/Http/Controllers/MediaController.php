@@ -56,7 +56,8 @@ class MediaController extends Controller
 
             // Check if it's a photo to save to photos database table
             $wedding = Wedding::where('user_id', $user->id)->first();
-            if ($wedding && str_starts_with($mime, 'image/')) {
+            $purpose = $request->input('purpose', 'gallery');
+            if ($wedding && str_starts_with($mime, 'image/') && $purpose === 'gallery') {
                 $existingPhotosCount = Photo::where('wedding_id', $wedding->id)->count();
 
                 Photo::create([

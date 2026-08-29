@@ -431,7 +431,10 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isQrModalOpen, setIsQrModalOpen] = useState(false);
     const [isAlbumOpen, setIsAlbumOpen] = useState(false);
-    const [giftTab, setGiftTab] = useState<'bank' | 'qris' | 'address'>('bank');
+    const hasBank = !!((groom.bankName && groom.accountNumber) || (bride.bankName && bride.accountNumber));
+    const hasQris = !!(customStyle.qrisUrl || customStyle.ewalletNumber);
+    const initialGiftTab = hasBank ? 'bank' : (hasQris ? 'qris' : 'address');
+    const [giftTab, setGiftTab] = useState<'bank' | 'qris' | 'address'>(initialGiftTab);
     const [showConfirmationForm, setShowConfirmationForm] = useState(false);
     const [localIsPlaying, setLocalIsPlaying] = useState(true);
     const isPlayingMusic = parentIsPlaying !== undefined ? parentIsPlaying : localIsPlaying;
@@ -2449,17 +2452,19 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
 
                                 {/* Tabs */}
                                 <div className="relative z-10 mx-6 mb-8 mt-8 flex items-center justify-center gap-12 border-b border-[#7A223E]/15 pb-0">
-                                    <button
-                                        onClick={() => setGiftTab('bank')}
-                                        className={`pb-2 text-[9px] font-bold tracking-widest ${giftTab === 'bank' ? '-mb-[1px] border-b-[2px] border-[#7A223E]' : 'text-[#7A223E]/40'}`}
-                                        style={
-                                            giftTab === 'bank'
-                                                ? { color: primaryColor }
-                                                : {}
-                                        }
-                                    >
-                                        TRANSFER BANK
-                                    </button>
+                                    {hasBank && (
+                                        <button
+                                            onClick={() => setGiftTab('bank')}
+                                            className={`pb-2 text-[9px] font-bold tracking-widest ${giftTab === 'bank' ? '-mb-[1px] border-b-[2px] border-[#7A223E]' : 'text-[#7A223E]/40'}`}
+                                            style={
+                                                giftTab === 'bank'
+                                                    ? { color: primaryColor }
+                                                    : {}
+                                            }
+                                        >
+                                            TRANSFER BANK
+                                        </button>
+                                    )}
                                     {(customStyle.qrisUrl || customStyle.ewalletNumber) && (
                                         <button
                                             onClick={() => setGiftTab('qris')}

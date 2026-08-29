@@ -420,10 +420,14 @@ export const Theme3: React.FC<Theme3Props> = ({
     const [copiedGroomBank, setCopiedGroomBank] = useState(false);
     const [copiedBrideBank, setCopiedBrideBank] = useState(false);
     const [copiedAddress, setCopiedAddress] = useState(false);
+    const [copiedEWallet, setCopiedEWallet] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isQrModalOpen, setIsQrModalOpen] = useState(false);
     const [isAlbumOpen, setIsAlbumOpen] = useState(false);
-    const [giftTab, setGiftTab] = useState<'bank' | 'qris' | 'address'>('bank');
+    const hasBank = !!((groom.bankName && groom.accountNumber) || (bride.bankName && bride.accountNumber));
+    const hasQris = !!(customStyle.qrisUrl || customStyle.ewalletNumber);
+    const initialGiftTab = hasBank ? 'bank' : (hasQris ? 'qris' : 'address');
+    const [giftTab, setGiftTab] = useState<'bank' | 'qris' | 'address'>(initialGiftTab);
     const [showConfirmationForm, setShowConfirmationForm] = useState(false);
     const [localIsPlaying, setLocalIsPlaying] = useState(true);
     const isPlayingMusic = parentIsPlaying !== undefined ? parentIsPlaying : localIsPlaying;
@@ -439,6 +443,12 @@ export const Theme3: React.FC<Theme3Props> = ({
             setCopiedBrideBank(true);
             setTimeout(() => setCopiedBrideBank(false), 2000);
         }
+    };
+
+    const handleCopyEWallet = (text: string) => {
+        navigator.clipboard.writeText(text);
+        setCopiedEWallet(true);
+        setTimeout(() => setCopiedEWallet(false), 2000);
     };
 
     const handleCopyAddress = (text: string) => {
@@ -2523,18 +2533,20 @@ export const Theme3: React.FC<Theme3Props> = ({
 
                                 {/* Tabs */}
                                 <div className="relative z-10 mx-6 mb-8 mt-8 flex items-center justify-center gap-12 border-b border-[#7A223E]/15 pb-0">
-                                    <button
-                                        onClick={() => setGiftTab('bank')}
-                                        className={`pb-2 text-[9px] font-bold tracking-widest ${giftTab === 'bank' ? '-mb-[1px] border-b-[2px] border-[#7A223E]' : 'text-[#7A223E]/40'}`}
-                                        style={
-                                            giftTab === 'bank'
-                                                ? { color: primaryColor }
-                                                : {}
-                                        }
-                                    >
-                                        TRANSFER BANK
-                                    </button>
-                                    {customStyle.qrisUrl && (
+                                    {hasBank && (
+                                        <button
+                                            onClick={() => setGiftTab('bank')}
+                                            className={`pb-2 text-[9px] font-bold tracking-widest ${giftTab === 'bank' ? '-mb-[1px] border-b-[2px] border-[#7A223E]' : 'text-[#7A223E]/40'}`}
+                                            style={
+                                                giftTab === 'bank'
+                                                    ? { color: primaryColor }
+                                                    : {}
+                                            }
+                                        >
+                                            TRANSFER BANK
+                                        </button>
+                                    )}
+                                    {(customStyle.qrisUrl || customStyle.ewalletNumber) && (
                                         <button
                                             onClick={() => setGiftTab('qris')}
                                             className={`pb-2 text-[9px] font-bold tracking-widest ${giftTab === 'qris' ? '-mb-[1px] border-b-[2px] border-[#7A223E]' : 'text-[#7A223E]/40'}`}
@@ -2544,7 +2556,7 @@ export const Theme3: React.FC<Theme3Props> = ({
                                                     : {}
                                             }
                                         >
-                                            QRIS
+                                            {customStyle.ewalletName ? customStyle.ewalletName.toUpperCase() : 'DOMPET DIGITAL / QRIS'}
                                         </button>
                                     )}
                                     <button
@@ -2788,16 +2800,102 @@ export const Theme3: React.FC<Theme3Props> = ({
                                         </>
                                     )}
 
-                                    {giftTab === 'qris' && customStyle.qrisUrl && (
-                                        <div className="flex flex-col items-center justify-center rounded-[1.25rem] border border-[#7A223E]/15 bg-gradient-to-br from-white/90 to-[#FCF0F2]/90 p-6 text-center shadow-[0_4px_20px_-10px_rgba(122,34,62,0.15)] backdrop-blur-md">
-                                            <img
-                                                src={customStyle.qrisUrl}
-                                                alt="QRIS"
-                                                className="mx-auto max-w-[200px] rounded-lg border border-neutral-100 shadow-sm"
-                                            />
-                                            <p className="mt-4 font-medium text-[10px] text-neutral-500">
-                                                Pindai kode QR di atas untuk melakukan transfer/kado digital
-                                            </p>
+                                    {giftTab === 'qris' && (
+                                        <div className="space-y-6">
+                                            {/* E-Wallet Card */}
+                                            {customStyle.ewalletNumber && (
+                                                <div className="rounded-[1.25rem] border border-[#7A223E]/15 bg-gradient-to-br from-white/90 to-[#FCF0F2]/90 p-6 text-left shadow-[0_4px_20px_-10px_rgba(122,34,62,0.15)] backdrop-blur-md">
+                                                    <div className="mb-6 flex items-center justify-between">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="flex h-5 w-8 items-center justify-center rounded-[3px] bg-[#7A223E] text-white p-[3px]">
+                                                                <CreditCard size={14} className="opacity-90" />
+                                                            </div>
+                                                            <span
+                                                                className="font-serif text-[17px] font-bold italic tracking-wide"
+                                                                style={{
+                                                                    color: primaryColor,
+                                                                }}
+                                                            >
+                                                                {customStyle.ewalletName || 'E-Wallet'}
+                                                            </span>
+                                                        </div>
+                                                        <span className="text-[9px] font-bold uppercase tracking-widest text-[#7A223E]/50">
+                                                            DOMPET DIGITAL
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="space-y-2">
+                                                        <p
+                                                            className="text-[7.5px] font-bold uppercase tracking-[0.2em]"
+                                                            style={{
+                                                                color: primaryColor,
+                                                                opacity: 0.6,
+                                                            }}
+                                                        >
+                                                            NOMOR AKUN
+                                                        </p>
+                                                        <div className="flex items-center justify-between">
+                                                            <p
+                                                                className="font-sans text-[1.5rem] font-bold tracking-wider"
+                                                                style={{
+                                                                    color: primaryColor,
+                                                                }}
+                                                            >
+                                                                {customStyle.ewalletNumber}
+                                                            </p>
+                                                            <button
+                                                                onClick={() => handleCopyEWallet(customStyle.ewalletNumber)}
+                                                                className="flex items-center justify-center gap-1.5 rounded-full border px-3 py-1.5 text-[7px] font-bold shadow-sm transition-all hover:bg-neutral-50 active:scale-95"
+                                                                style={{
+                                                                    borderColor: `${primaryColor}25`,
+                                                                    color: primaryColor,
+                                                                }}
+                                                            >
+                                                                {copiedEWallet ? (
+                                                                    <>
+                                                                        <Check size={10} />
+                                                                        <span>COPIED</span>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <Copy size={10} />
+                                                                        <span>SALIN</span>
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                        </div>
+                                                        {customStyle.ewalletHolderName && (
+                                                            <p
+                                                                className="pt-1 font-serif text-[10px] font-bold"
+                                                                style={{
+                                                                    color: primaryColor,
+                                                                }}
+                                                            >
+                                                                a.n {customStyle.ewalletHolderName}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* QRIS Code */}
+                                            {customStyle.qrisUrl && (
+                                                <div className="flex flex-col items-center justify-center rounded-[1.25rem] border border-[#7A223E]/15 bg-gradient-to-br from-white/90 to-[#FCF0F2]/90 p-6 text-center shadow-[0_4px_20px_-10px_rgba(122,34,62,0.15)] backdrop-blur-md">
+                                                    {customStyle.ewalletNumber && (
+                                                        <p className="mb-4 font-serif text-[9px] font-bold text-[#7A223E]/70 uppercase tracking-widest">
+                                                            ATAU SCAN QRIS DI BAWAH INI:
+                                                        </p>
+                                                    )}
+                                                    <img
+                                                        src={customStyle.qrisUrl}
+                                                        alt="QRIS"
+                                                        className="mx-auto max-w-[200px] rounded-lg border border-neutral-100 shadow-sm"
+                                                    />
+                                                    <p className="mt-4 font-medium text-[10px] text-neutral-500">
+                                                        Pindai kode QR di atas untuk melakukan transfer/kado digital
+                                                    </p>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 
@@ -3132,14 +3230,16 @@ export const Theme3: React.FC<Theme3Props> = ({
                             )}
                         </button>
 
-                        {/* QRIS BUTTON */}
-                        <button
-                            onClick={() => setIsQrisModalOpen(true)}
-                            className="absolute bottom-36 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                            title="QRIS"
-                        >
-                            <QrCode size={20} />
-                        </button>
+                        {/* QRIS / E-WALLET BUTTON */}
+                        {(customStyle.qrisUrl || customStyle.ewalletNumber) && (
+                            <button
+                                onClick={() => setIsQrisModalOpen(true)}
+                                className="absolute bottom-36 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                                title={customStyle.ewalletName || "Kado Digital"}
+                            >
+                                <QrCode size={20} />
+                            </button>
+                        )}
 
                         {/* A. QR CHECK-IN SCROLLER ACCESS BUTTON */}
                         {guestName && (
@@ -3583,31 +3683,63 @@ export const Theme3: React.FC<Theme3Props> = ({
                                             className="font-serif text-[2.2rem] font-normal drop-shadow-sm"
                                             style={{ color: primaryColor }}
                                         >
-                                            QRIS
+                                            {customStyle.ewalletName || 'Kado Digital'}
                                         </h3>
                                         <p className="mt-1 font-serif text-[9px] font-bold uppercase tracking-widest text-[#7A223E] opacity-70">
-                                            Scan untuk Kirim Kado
+                                            {customStyle.ewalletNumber ? 'Salin nomor atau scan QR' : 'Scan untuk Kirim Kado'}
                                         </p>
                                     </div>
 
-                                    <div className="relative mx-auto flex aspect-square w-full max-w-[200px] items-center justify-center overflow-hidden rounded-[1rem] border border-[#7A223E]/10 bg-white p-4 shadow-inner">
-                                        {customStyle.qrisUrl ? (
+                                    {/* E-Wallet Card */}
+                                    {customStyle.ewalletNumber && (
+                                        <div className="rounded-[1rem] border border-[#7A223E]/15 bg-white p-4 text-left shadow-sm">
+                                            <div className="mb-2 flex items-center justify-between text-[11px] font-bold text-[#7A223E]" style={{ color: primaryColor }}>
+                                                <span>{customStyle.ewalletName || 'E-Wallet'}</span>
+                                                <span className="text-[7.5px] font-bold uppercase tracking-widest text-[#7A223E]/50">
+                                                    Dompet Digital
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <p className="font-sans text-[1.15rem] font-bold tracking-wide" style={{ color: primaryColor }}>
+                                                    {customStyle.ewalletNumber}
+                                                </p>
+                                                <button
+                                                    onClick={() => handleCopyEWallet(customStyle.ewalletNumber)}
+                                                    className="flex items-center justify-center gap-1 rounded-full border border-[#7A223E]/20 px-2.5 py-1 text-[7px] font-bold transition-all hover:bg-neutral-50"
+                                                    style={{ color: primaryColor }}
+                                                >
+                                                    {copiedEWallet ? 'COPIED' : 'SALIN'}
+                                                </button>
+                                            </div>
+                                            {customStyle.ewalletHolderName && (
+                                                <p className="mt-1 font-serif text-[9px] font-bold" style={{ color: primaryColor }}>
+                                                    a.n {customStyle.ewalletHolderName}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* QRIS Code */}
+                                    {customStyle.qrisUrl ? (
+                                        <div className="relative mx-auto flex aspect-square w-full max-w-[180px] items-center justify-center overflow-hidden rounded-[1rem] border border-[#7A223E]/10 bg-white p-3 shadow-inner">
                                             <img
                                                 src={customStyle.qrisUrl}
                                                 alt="QRIS"
                                                 className="h-full w-full object-contain"
                                             />
-                                        ) : (
-                                            <>
+                                        </div>
+                                    ) : (
+                                        !customStyle.ewalletNumber && (
+                                            <div className="relative mx-auto flex aspect-square w-full max-w-[200px] items-center justify-center overflow-hidden rounded-[1rem] border border-[#7A223E]/10 bg-white p-4 shadow-inner">
                                                 <div className="pointer-events-none absolute inset-0 bg-[#7A223E]/5"></div>
                                                 <QrCode
                                                     size={120}
                                                     className="text-[#7A223E]/30"
                                                     strokeWidth={1.5}
                                                 />
-                                            </>
-                                        )}
-                                    </div>
+                                            </div>
+                                        )
+                                    )}
 
                                     <p className="pt-1 font-serif text-[9.5px] font-bold uppercase tracking-[0.2em] text-[#7A223E] opacity-90">
                                         A.N. {(groom.nickname || 'ILYAS').toUpperCase()} & {(bride.nickname || 'IFTITAH').toUpperCase()}
