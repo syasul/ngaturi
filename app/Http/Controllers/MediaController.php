@@ -36,7 +36,12 @@ class MediaController extends Controller
 
             // Security Hardening: Mime-type checking
             $mime = $file->getMimeType();
-            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'audio/mpeg', 'audio/mp3'];
+            $allowedMimeTypes = [
+                'image/jpeg', 'image/jpg', 'image/pjpeg', 'image/x-citrix-pjpeg',
+                'image/png', 'image/x-png', 'image/apng',
+                'image/webp',
+                'audio/mpeg', 'audio/mp3', 'audio/x-mpeg', 'audio/x-mp3', 'audio/mpeg3', 'audio/x-mpeg3', 'audio/mpg', 'audio/x-mpg', 'audio/x-mpegaudio'
+            ];
             if (!in_array($mime, $allowedMimeTypes)) {
                 return response()->json(['status' => 'error', 'message' => 'Format file tidak valid.'], 400);
             }
