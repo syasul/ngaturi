@@ -231,7 +231,8 @@ const resolveImageUrl = (url: string | null | undefined, fallback: string) => {
     if (
         url.startsWith('storage/') ||
         url.startsWith('assets/') ||
-        url.startsWith('images/')
+        url.startsWith('images/') ||
+        url.startsWith('uploads/')
     )
         return `/${url}`;
     return `/storage/${url}`;
@@ -621,7 +622,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                         {/* 2. TEKS DI LAYER DEPAN (z-20 relative) */}
                                         <div className="relative z-20 mt-1 flex flex-col items-center">
                                             <motion.div
-                                                className="flex flex-col items-center"
+                                                className="flex flex-col items-center justify-center"
                                                 style={{ willChange: 'transform, opacity' }}
                                                 animate={
                                                     isOpening
@@ -630,26 +631,36 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                 }
                                                 transition={{ duration: 0.5 }}
                                             >
-                                                <h1
-                                                    className="mr-10 text-8xl leading-[0.7]"
-                                                    style={{
-                                                        fontFamily:
-                                                            "'Dancing Script', cursive",
-                                                        color: 'rgba(107,29,47,0.22)',
-                                                    }}
-                                                >
-                                                    {(groom.nickname || 'I')[0]}
-                                                </h1>
-                                                <h1
-                                                    className="-mt-2 ml-10 text-8xl leading-[0.7]"
-                                                    style={{
-                                                        fontFamily:
-                                                            "'Dancing Script', cursive",
-                                                        color: 'rgba(107,29,47,0.22)',
-                                                    }}
-                                                >
-                                                    {(bride.nickname || 'B')[0]}
-                                                </h1>
+                                                {customStyle.monogramUrl ? (
+                                                    <img
+                                                        src={resolveImageUrl(customStyle.monogramUrl, '')}
+                                                        alt="Monogram"
+                                                        className="h-28 w-28 object-contain mb-2"
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <h1
+                                                            className="mr-10 text-8xl leading-[0.7]"
+                                                            style={{
+                                                                fontFamily:
+                                                                    "'Dancing Script', cursive",
+                                                                color: 'rgba(107,29,47,0.22)',
+                                                            }}
+                                                        >
+                                                            {(groom.nickname || 'I')[0]}
+                                                        </h1>
+                                                        <h1
+                                                            className="-mt-2 ml-10 text-8xl leading-[0.7]"
+                                                            style={{
+                                                                fontFamily:
+                                                                    "'Dancing Script', cursive",
+                                                                color: 'rgba(107,29,47,0.22)',
+                                                            }}
+                                                        >
+                                                            {(bride.nickname || 'B')[0]}
+                                                        </h1>
+                                                    </>
+                                                )}
                                             </motion.div>
 
                                             <motion.div
@@ -3089,19 +3100,30 @@ export const Theme1: React.FC<Theme1Props> = ({
                                     src="/assets/theme_1/outlinecincin.webp"
                                     className="absolute w-[125%] max-w-none opacity-80"
                                 />
-                                <div className="relative z-10 -ml-4 flex items-center justify-center">
-                                    <span
-                                        className="pr-5 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
-                                        style={{ color: primaryColor }}
-                                    >
-                                        {(groom.nickname || groom.name || 'I')[0].toUpperCase()}
-                                    </span>
-                                    <span
-                                        className="pt-12 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
-                                        style={{ color: primaryColor }}
-                                    >
-                                        {(bride.nickname || bride.name || 'I')[0].toUpperCase()}
-                                    </span>
+                                <div className="relative z-10 flex items-center justify-center">
+                                    {(customStyle.monogramUrlDark || customStyle.monogramUrl) ? (
+                                        <img
+                                            src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
+                                            alt="Monogram"
+                                            className="h-28 w-28 object-contain"
+                                            style={{ filter: `drop-shadow(2px 4px 10px rgba(122,34,62,0.3))` }}
+                                        />
+                                    ) : (
+                                        <div className="-ml-4 flex items-center justify-center">
+                                            <span
+                                                className="pr-5 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
+                                                style={{ color: primaryColor }}
+                                            >
+                                                {(groom.nickname || groom.name || 'I')[0].toUpperCase()}
+                                            </span>
+                                            <span
+                                                className="pt-12 font-serif text-[5.5rem] italic leading-none drop-shadow-[2px_4px_10px_rgba(122,34,62,0.3)]"
+                                                style={{ color: primaryColor }}
+                                            >
+                                                {(bride.nickname || bride.name || 'I')[0].toUpperCase()}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

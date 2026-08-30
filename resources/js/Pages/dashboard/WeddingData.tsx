@@ -110,6 +110,11 @@ export const WeddingData: React.FC = () => {
     });
 
     const isDirtyRef = useRef(false);
+    const formDataRef = useRef(formData);
+
+    useEffect(() => {
+        formDataRef.current = formData;
+    }, [formData]);
 
     // 1. Load data
     useEffect(() => {
@@ -302,23 +307,24 @@ export const WeddingData: React.FC = () => {
     const handleSave = async (showToast = true) => {
         setSaving(true);
         try {
+            const currentData = formDataRef.current;
             const payload = {
                 data: {
-                    groom: formData.groom,
-                    bride: formData.bride,
+                    groom: currentData.groom,
+                    bride: currentData.bride,
                     schedule: {
-                        akad: formData.akad,
-                        resepsi: formData.resepsi,
+                        akad: currentData.akad,
+                        resepsi: currentData.resepsi,
                     },
-                    stories: formData.stories,
-                    timeline: formData.timeline,
-                    dresscode: formData.dresscode,
-                    streaming: formData.streaming,
-                    quotes: formData.quotes,
-                    giftAddress: formData.giftAddress,
-                    giftMaps: formData.giftMaps,
-                    customStyle: formData.customStyle,
-                    sections: formData.sections,
+                    stories: currentData.stories,
+                    timeline: currentData.timeline,
+                    dresscode: currentData.dresscode,
+                    streaming: currentData.streaming,
+                    quotes: currentData.quotes,
+                    giftAddress: currentData.giftAddress,
+                    giftMaps: currentData.giftMaps,
+                    customStyle: currentData.customStyle,
+                    sections: currentData.sections,
                 },
             };
 

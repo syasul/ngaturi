@@ -229,7 +229,8 @@ const resolveImageUrl = (url: string | null | undefined, fallback: string) => {
     if (
         url.startsWith('storage/') ||
         url.startsWith('assets/') ||
-        url.startsWith('images/')
+        url.startsWith('images/') ||
+        url.startsWith('uploads/')
     )
         return `/${url}`;
     return `/storage/${url}`;
