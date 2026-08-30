@@ -633,12 +633,12 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                                 }
                                                 transition={{ duration: 0.5 }}
                                             >
-                                                {customStyle.monogramUrl ? (
-                                                    <img
-                                                        src={resolveImageUrl(customStyle.monogramUrl, '')}
-                                                        alt="Monogram"
-                                                        className="h-28 w-28 object-contain mb-2"
-                                                    />
+                                                {(customStyle.monogramUrlDark || customStyle.monogramUrl) ? (
+                                                     <img
+                                                         src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
+                                                         alt="Monogram"
+                                                         className="h-28 w-28 object-contain mb-2"
+                                                     />
                                                 ) : (
                                                     <>
                                                         <h1

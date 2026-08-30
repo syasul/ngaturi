@@ -626,9 +626,9 @@ export const Theme3: React.FC<Theme3Props> = ({
                                                 }
                                                 transition={{ duration: 0.5 }}
                                             >
-                                                {customStyle.monogramUrl ? (
+                                                {(customStyle.monogramUrlDark || customStyle.monogramUrl) ? (
                                                      <img
-                                                         src={resolveImageUrl(customStyle.monogramUrl, '')}
+                                                         src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
                                                          alt="Monogram"
                                                          className="h-28 w-28 object-contain mb-2"
                                                      />
