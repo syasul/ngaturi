@@ -56,6 +56,7 @@ export const WeddingData: React.FC = () => {
     const [audioInstance, setAudioInstance] = useState<HTMLAudioElement | null>(null);
     const [isDragOverMusic, setIsDragOverMusic] = useState(false);
     const [showAdvancedMusic, setShowAdvancedMusic] = useState(false);
+    const [activeYoutubePreviewId, setActiveYoutubePreviewId] = useState<string | null>(null);
 
         // Local state for all fields
     const [formData, setFormData] = useState<any>({
@@ -226,8 +227,31 @@ export const WeddingData: React.FC = () => {
         };
     }, [audioInstance]);
 
+    const getYouTubeId = (url: string): string | null => {
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return match && match[2].length === 11 ? match[2] : null;
+    };
+
     const handleTogglePreview = (url: string) => {
         if (!url) return;
+
+        const ytId = getYouTubeId(url);
+        if (ytId) {
+            if (activeYoutubePreviewId === ytId) {
+                setActiveYoutubePreviewId(null);
+                setPreviewPlayingUrl(null);
+            } else {
+                if (audioInstance) {
+                    audioInstance.pause();
+                }
+                setActiveYoutubePreviewId(ytId);
+                setPreviewPlayingUrl(url);
+            }
+            return;
+        }
+
         const fullUrl = url.startsWith('/')
             ? `${window.location.origin}${url}`
             : url;
@@ -238,6 +262,7 @@ export const WeddingData: React.FC = () => {
             }
             setPreviewPlayingUrl(null);
         } else {
+            setActiveYoutubePreviewId(null);
             if (audioInstance) {
                 audioInstance.pause();
             }
@@ -1837,7 +1862,16 @@ export const WeddingData: React.FC = () => {
 
                                 {/* 3. Active Music Preview Player */}
                                 {formData.customStyle?.musicUrl && (
-                                    <div className="flex flex-col gap-2 rounded-2xl border border-sand/40 bg-cream/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                    <>
+                                        {activeYoutubePreviewId && (
+                                            <iframe
+                                                className="pointer-events-none absolute h-0 w-0 opacity-0"
+                                                src={`https://www.youtube.com/embed/${activeYoutubePreviewId}?autoplay=1&enablejsapi=1`}
+                                                allow="autoplay"
+                                                title="YouTube Preview"
+                                            />
+                                        )}
+                                        <div className="flex flex-col gap-2 rounded-2xl border border-sand/40 bg-cream/10 p-4 sm:flex-row sm:items-center sm:justify-between">
                                         <div className="flex items-center gap-3">
                                             <button
                                                 type="button"
@@ -1884,6 +1918,7 @@ export const WeddingData: React.FC = () => {
                                             <span>Lepas Musik</span>
                                         </button>
                                     </div>
+                                    </>
                                 )}
 
                                 {/* 4. Advanced: Direct URL Input Collapsible */}
