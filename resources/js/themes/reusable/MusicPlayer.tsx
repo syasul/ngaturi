@@ -98,7 +98,6 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({
     };
 
     if (!musicUrl) return null;
-    if (!showButton) return null;
 
     return (
         <>
@@ -111,18 +110,20 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({
                     title="YouTube Background Music"
                 />
             )}
-            <button
-                type="button"
-                onClick={togglePlayback}
-                className={`fixed bottom-16 left-6 z-30 flex cursor-pointer items-center justify-center rounded-full border border-sand/35 p-3 shadow-2xl transition-all duration-300 ${
-                    isPlaying
-                        ? 'animate-spin-slow bg-amber-500 text-white shadow-amber-500/20'
-                        : 'bg-white text-charcoal'
-                }`}
-                title={isPlaying ? 'Mute Music' : 'Play Music'}
-            >
-                {isPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
-            </button>
+            {showButton && (
+                <button
+                    type="button"
+                    onClick={togglePlayback}
+                    className={`fixed bottom-16 left-6 z-30 flex cursor-pointer items-center justify-center rounded-full border border-sand/35 p-3 shadow-2xl transition-all duration-300 ${
+                        isPlaying
+                            ? 'animate-spin-slow bg-amber-500 text-white shadow-amber-500/20'
+                            : 'bg-white text-charcoal'
+                    }`}
+                    title={isPlaying ? 'Mute Music' : 'Play Music'}
+                >
+                    {isPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
+                </button>
+            )}
         </>
     );
 };
