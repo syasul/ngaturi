@@ -404,6 +404,7 @@ export const WeddingData: React.FC = () => {
             const currentData = formDataRef.current;
             const payload = {
                 data: {
+                    musicUrl: currentData.customStyle?.musicUrl || '',
                     groom: currentData.groom,
                     bride: currentData.bride,
                     schedule: {
@@ -1793,6 +1794,12 @@ export const WeddingData: React.FC = () => {
                                                 return;
                                             }
 
+                                            // Validate file size (15MB)
+                                            if (file.size > 15 * 1024 * 1024) {
+                                                toast.error('Ukuran file musik kustom melebihi batas maksimal (15MB).');
+                                                return;
+                                            }
+
                                             const toastId = toast.loading('Mengunggah file musik...');
                                             const data = new FormData();
                                             data.append('file', file);
@@ -1803,7 +1810,7 @@ export const WeddingData: React.FC = () => {
                                                 if (res.data.status === 'success') {
                                                     handleFieldChange('customStyle', 'musicUrl', res.data.url);
                                                     toast.success('Musik kustom berhasil diunggah!', { id: toastId });
-                                                    setTimeout(() => handleSave(false), 200);
+                                                    setTimeout(() => handleSave(true), 200);
                                                 }
                                             } catch (err) {
                                                 toast.error('Gagal mengunggah file musik.', { id: toastId });
@@ -1828,7 +1835,7 @@ export const WeddingData: React.FC = () => {
                                                     Seret & letakkan file musik (.mp3) ke sini, atau klik untuk memilih file.
                                                 </p>
                                                 <p className="mt-1 text-[10px] text-charcoal/40">
-                                                    Maksimal ukuran file: 5MB. format .mp3 saja.
+                                                    Maksimal ukuran file: 15MB. format .mp3 saja.
                                                 </p>
                                             </>
                                         )}
@@ -1840,6 +1847,12 @@ export const WeddingData: React.FC = () => {
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
 
+                                                // Validate file size (15MB)
+                                                if (file.size > 15 * 1024 * 1024) {
+                                                    toast.error('Ukuran file musik kustom melebihi batas maksimal (15MB).');
+                                                    return;
+                                                }
+
                                                 const toastId = toast.loading('Mengunggah file musik...');
                                                 const data = new FormData();
                                                 data.append('file', file);
@@ -1850,7 +1863,7 @@ export const WeddingData: React.FC = () => {
                                                     if (res.data.status === 'success') {
                                                         handleFieldChange('customStyle', 'musicUrl', res.data.url);
                                                         toast.success('Musik kustom berhasil diunggah!', { id: toastId });
-                                                        setTimeout(() => handleSave(false), 200);
+                                                        setTimeout(() => handleSave(true), 200);
                                                     }
                                                 } catch (err) {
                                                     toast.error('Gagal mengunggah file musik.', { id: toastId });

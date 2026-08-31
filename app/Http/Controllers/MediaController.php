@@ -22,9 +22,9 @@ class MediaController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Tidak ada file yang diunggah.'], 400);
             }
 
-            // Security Hardening: File Size check (max 5MB)
-            if ($file->getSize() > 5 * 1024 * 1024) {
-                return response()->json(['status' => 'error', 'message' => 'Ukuran file melebihi batas maksimal (5MB).'], 400);
+            // Security Hardening: File Size check (max 15MB)
+            if ($file->getSize() > 15 * 1024 * 1024) {
+                return response()->json(['status' => 'error', 'message' => 'Ukuran file melebihi batas maksimal (15MB).'], 400);
             }
 
             // Security Hardening: Extension whitelist

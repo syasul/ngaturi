@@ -219,6 +219,12 @@ export const Settings: React.FC = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Validate file size (15MB)
+        if (file.size > 15 * 1024 * 1024) {
+            toast.error('Ukuran file musik kustom melebihi batas maksimal (15MB).');
+            return;
+        }
+
         const userPkg = wedding?.package?.packageName || 'BASIC';
         if (userPkg !== 'PREMIUM') {
             toast.error(
@@ -241,6 +247,10 @@ export const Settings: React.FC = () => {
                 const updatedData = {
                     ...wedding.data,
                     musicUrl: res.data.url,
+                    customStyle: {
+                        ...(wedding.data?.customStyle || {}),
+                        musicUrl: res.data.url,
+                    }
                 };
 
                 const saveRes = await api.put('/weddings/me', {
@@ -267,6 +277,10 @@ export const Settings: React.FC = () => {
             const updatedData = {
                 ...wedding.data,
                 musicUrl: null,
+                customStyle: {
+                    ...(wedding.data?.customStyle || {}),
+                    musicUrl: null,
+                }
             };
             const res = await api.put('/weddings/me', { data: updatedData });
             if (res.data.status === 'success') {
@@ -491,6 +505,10 @@ export const Settings: React.FC = () => {
                                     const updatedData = {
                                         ...wedding.data,
                                         musicUrl: selectedUrl || null,
+                                        customStyle: {
+                                            ...(wedding.data?.customStyle || {}),
+                                            musicUrl: selectedUrl || null,
+                                        }
                                     };
                                     try {
                                         const res = await api.put('/weddings/me', { data: updatedData });
@@ -537,6 +555,12 @@ export const Settings: React.FC = () => {
                                         return;
                                     }
 
+                                    // Validate file size (15MB)
+                                    if (file.size > 15 * 1024 * 1024) {
+                                        toast.error('Ukuran file musik kustom melebihi batas maksimal (15MB).');
+                                        return;
+                                    }
+
                                     setUploadingMusic(true);
                                     const toastId = toast.loading('Mengunggah file musik...');
                                     const data = new FormData();
@@ -549,6 +573,10 @@ export const Settings: React.FC = () => {
                                             const updatedData = {
                                                 ...wedding.data,
                                                 musicUrl: res.data.url,
+                                                customStyle: {
+                                                    ...(wedding.data?.customStyle || {}),
+                                                    musicUrl: res.data.url,
+                                                }
                                             };
                                             const saveRes = await api.put('/weddings/me', { data: updatedData });
                                             if (saveRes.data.status === 'success') {
@@ -581,7 +609,7 @@ export const Settings: React.FC = () => {
                                             Seret & letakkan file musik (.mp3) ke sini, atau klik untuk memilih file.
                                         </p>
                                         <p className="mt-1 text-[10px] text-charcoal/40">
-                                            Maksimal ukuran file: 5MB. format .mp3 saja.
+                                            Maksimal ukuran file: 15MB. format .mp3 saja.
                                         </p>
                                     </>
                                 )}
@@ -681,6 +709,10 @@ export const Settings: React.FC = () => {
                                             const updatedData = {
                                                 ...wedding.data,
                                                 musicUrl: val || null,
+                                                customStyle: {
+                                                    ...(wedding.data?.customStyle || {}),
+                                                    musicUrl: val || null,
+                                                }
                                             };
                                             setWedding((prev: any) => ({ ...prev, data: updatedData }));
                                         }}
