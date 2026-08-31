@@ -127,6 +127,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/api/weddings/me/theme', [WeddingController::class, 'changeTheme']);
     Route::put('/api/weddings/me/status', [WeddingController::class, 'toggleStatus']);
     Route::delete('/api/weddings/me', [WeddingController::class, 'destroy']);
+    Route::get('/api/music', [WeddingController::class, 'getMusicList']);
 
     // API: Guests
     Route::get('/api/guests', [GuestController::class, 'index']);

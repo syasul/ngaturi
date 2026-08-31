@@ -6,6 +6,7 @@ use App\Models\Wedding;
 use App\Models\Photo;
 use App\Models\Order;
 use App\Models\Package;
+use App\Models\Music;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -308,6 +309,17 @@ class WeddingController extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Gagal mengubah status publikasi.'], 500);
+        }
+    }
+
+    // 10. GET /api/music - Get active music list
+    public function getMusicList()
+    {
+        try {
+            $list = Music::where('is_active', true)->orderBy('title')->get();
+            return response()->json(['status' => 'success', 'music' => $list]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Gagal mengambil daftar musik.'], 500);
         }
     }
 

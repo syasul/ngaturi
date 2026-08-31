@@ -8,6 +8,12 @@ import {
     Music,
     Volume2,
     XCircle,
+    Play,
+    Pause,
+    Upload,
+    X,
+    ChevronDown,
+    ChevronUp,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -23,6 +29,13 @@ export const Settings: React.FC = () => {
     const [savingSlug, setSavingSlug] = useState(false);
     const [savingStatus, setSavingStatus] = useState(false);
     const [uploadingMusic, setUploadingMusic] = useState(false);
+
+    // States for enhanced music selection
+    const [libraryMusic, setLibraryMusic] = useState<any[]>([]);
+    const [previewPlayingUrl, setPreviewPlayingUrl] = useState<string | null>(null);
+    const [audioInstance, setAudioInstance] = useState<HTMLAudioElement | null>(null);
+    const [isDragOverMusic, setIsDragOverMusic] = useState(false);
+    const [showAdvancedMusic, setShowAdvancedMusic] = useState(false);
 
     // Slug check states
     const [slugInput, setSlugInput] = useState('');
@@ -47,8 +60,62 @@ export const Settings: React.FC = () => {
     };
 
     useEffect(() => {
+        const fetchMusic = async () => {
+            try {
+                const res = await api.get('/api/music');
+                if (res.data.status === 'success' && res.data.music) {
+                    setLibraryMusic(res.data.music);
+                }
+            } catch (err) {
+                console.error('Gagal memuat pustaka musik:', err);
+            }
+        };
+
         loadWedding();
+        fetchMusic();
+
+        return () => {
+            if (audioInstance) {
+                audioInstance.pause();
+            }
+        };
     }, []);
+
+    // Cleanup audio on component transition/unmount
+    useEffect(() => {
+        return () => {
+            if (audioInstance) {
+                audioInstance.pause();
+            }
+        };
+    }, [audioInstance]);
+
+    const handleTogglePreview = (url: string) => {
+        if (!url) return;
+        const fullUrl = url.startsWith('/')
+            ? `${window.location.origin}${url}`
+            : url;
+
+        if (previewPlayingUrl === url) {
+            if (audioInstance) {
+                audioInstance.pause();
+            }
+            setPreviewPlayingUrl(null);
+        } else {
+            if (audioInstance) {
+                audioInstance.pause();
+            }
+            const newAudio = new Audio(fullUrl);
+            newAudio.play().catch((err) => {
+                toast.error('Gagal memutar audio pratinjau.');
+            });
+            newAudio.onended = () => {
+                setPreviewPlayingUrl(null);
+            };
+            setAudioInstance(newAudio);
+            setPreviewPlayingUrl(url);
+        }
+    };
 
     // Check Slug availability
     const checkSlugAvailability = async () => {
@@ -377,69 +444,228 @@ export const Settings: React.FC = () => {
                 </div>
 
                 <p className="text-xs leading-relaxed text-charcoal/60">
-                    Unggah file MP3 untuk diputar otomatis ketika tamu membuka
+                    Unggah file MP3 atau pilih lagu dari pustaka untuk diputar otomatis ketika tamu membuka
                     undangan digital pernikahan Anda.
                 </p>
 
                 {isPremium ? (
                     <div className="space-y-4">
-                        {wedding?.data?.musicUrl ? (
-                            <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-sand/30 bg-cream/15 p-4 sm:flex-row sm:items-center">
-                                <div className="flex items-center gap-2.5">
-                                    <Volume2
-                                        className="text-gold-600"
-                                        size={20}
-                                    />
-                                    <div>
-                                        <span className="block text-xs font-semibold text-charcoal/70">
-                                            Audio Aktif:
-                                        </span>
-                                        <span className="block max-w-xs truncate text-xs text-charcoal/50">
-                                            {wedding.data.musicUrl}
-                                        </span>
-                                    </div>
-                                </div>
+                        {/* 1. Dropdown Preset Music Library */}
+                        <div className="space-y-1.5">
+                            <label className="block text-xs font-semibold text-charcoal/60">
+                                Pilih dari Pustaka Musik Bawaan
+                            </label>
+                            <select
+                                value={
+                                    libraryMusic.some(m => m.url === wedding?.data?.musicUrl)
+                                        ? wedding?.data?.musicUrl
+                                        : ''
+                                }
+                                onChange={async (e) => {
+                                    const selectedUrl = e.target.value;
+                                    const updatedData = {
+                                        ...wedding.data,
+                                        musicUrl: selectedUrl || null,
+                                    };
+                                    try {
+                                        const res = await api.put('/weddings/me', { data: updatedData });
+                                        if (res.data.status === 'success') {
+                                            setWedding((prev: any) => ({ ...prev, data: updatedData }));
+                                            toast.success('Musik latar belakang berhasil diubah!');
+                                        }
+                                    } catch (err) {
+                                        toast.error('Gagal memperbarui musik latar belakang.');
+                                    }
+                                }}
+                                className="w-full rounded-xl border border-sand bg-white px-3 py-2 text-sm"
+                            >
+                                <option value="">-- Gunakan musik kustom atau tanpa musik --</option>
+                                {libraryMusic.map((track) => (
+                                    <option key={track.id} value={track.url}>
+                                        {track.title} - {track.artist}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={handleDeleteMusic}
-                                        className="cursor-pointer rounded-xl border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100"
-                                    >
-                                        Hapus Musik
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <label className="group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-sand/75 bg-cream/5 p-6 transition-colors hover:border-gold-500">
+                        {/* 2. Drag & Drop Custom Music Upload */}
+                        <div className="space-y-1.5">
+                            <label className="block text-xs font-semibold text-charcoal/60">
+                                Atau Unggah File Musik Kustom Anda
+                            </label>
+
+                            <div
+                                onDragOver={(e) => {
+                                    e.preventDefault();
+                                    setIsDragOverMusic(true);
+                                }}
+                                onDragLeave={() => setIsDragOverMusic(false)}
+                                onDrop={async (e) => {
+                                    e.preventDefault();
+                                    setIsDragOverMusic(false);
+                                    const file = e.dataTransfer.files?.[0];
+                                    if (!file) return;
+
+                                    // Validate file type
+                                    if (!file.type.startsWith('audio/') && !file.name.endsWith('.mp3')) {
+                                        toast.error('Format file tidak didukung. Hanya menerima file .mp3.');
+                                        return;
+                                    }
+
+                                    setUploadingMusic(true);
+                                    const toastId = toast.loading('Mengunggah file musik...');
+                                    const data = new FormData();
+                                    data.append('file', file);
+                                    try {
+                                        const res = await api.post('/media/upload', data, {
+                                            headers: { 'Content-Type': 'multipart/form-data' },
+                                        });
+                                        if (res.data.status === 'success') {
+                                            const updatedData = {
+                                                ...wedding.data,
+                                                musicUrl: res.data.url,
+                                            };
+                                            const saveRes = await api.put('/weddings/me', { data: updatedData });
+                                            if (saveRes.data.status === 'success') {
+                                                setWedding((prev: any) => ({ ...prev, data: updatedData }));
+                                                toast.success('Musik kustom berhasil diunggah!', { id: toastId });
+                                            }
+                                        }
+                                    } catch (err) {
+                                        toast.error('Gagal mengunggah file musik.', { id: toastId });
+                                    } finally {
+                                        setUploadingMusic(false);
+                                    }
+                                }}
+                                className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center transition-all ${
+                                    isDragOverMusic
+                                        ? 'border-gold-500 bg-gold-500/5'
+                                        : 'border-sand/75 bg-cream/5 hover:border-gold-500'
+                                }`}
+                            >
                                 {uploadingMusic ? (
-                                    <Loader2
-                                        className="animate-spin text-gold-500"
-                                        size={24}
-                                    />
+                                    <Loader2 className="h-6 w-6 animate-spin text-gold-500" />
                                 ) : (
                                     <>
-                                        <Music
-                                            className="text-charcoal/30 transition-colors group-hover:text-gold-500"
-                                            size={24}
+                                        <Upload
+                                            className={`h-6 w-6 transition-colors ${
+                                                isDragOverMusic ? 'text-gold-500' : 'text-charcoal/30 group-hover:text-gold-500'
+                                            }`}
                                         />
-                                        <p className="mt-2 text-xs font-semibold text-charcoal/60 transition-colors group-hover:text-gold-500">
-                                            Pilih & Unggah File MP3 Latar
-                                            Belakang
+                                        <p className="mt-2 text-xs font-semibold text-charcoal/70">
+                                            Seret & letakkan file musik (.mp3) ke sini, atau klik untuk memilih file.
                                         </p>
                                         <p className="mt-1 text-[10px] text-charcoal/40">
-                                            Format: MP3 (Maksimal 4MB)
+                                            Maksimal ukuran file: 5MB. format .mp3 saja.
                                         </p>
                                     </>
                                 )}
                                 <input
                                     type="file"
-                                    accept="audio/mpeg"
-                                    disabled={uploadingMusic}
-                                    className="hidden"
+                                    accept="audio/mp3,audio/mpeg"
+                                    className="absolute inset-0 cursor-pointer opacity-0"
                                     onChange={handleMusicUpload}
+                                    disabled={uploadingMusic}
                                 />
-                            </label>
+                            </div>
+                        </div>
+
+                        {/* 3. Active Music Preview Player */}
+                        {wedding?.data?.musicUrl && (
+                            <div className="flex flex-col gap-2 rounded-2xl border border-sand/40 bg-cream/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleTogglePreview(wedding.data.musicUrl)}
+                                        className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
+                                            previewPlayingUrl === wedding.data.musicUrl
+                                                ? 'bg-gold-500 text-white'
+                                                : 'bg-sand/30 text-charcoal hover:bg-gold-500 hover:text-white'
+                                        }`}
+                                    >
+                                        {previewPlayingUrl === wedding.data.musicUrl ? (
+                                            <Pause size={14} fill="currentColor" />
+                                        ) : (
+                                            <Play size={14} className="ml-0.5" fill="currentColor" />
+                                        )}
+                                    </button>
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-1.5">
+                                            <Volume2 size={14} className="text-gold-600" />
+                                            <span className="text-xs font-bold text-charcoal/80">
+                                                Musik Terpasang
+                                            </span>
+                                        </div>
+                                        <span className="block truncate text-xs text-charcoal/50 font-mono">
+                                            {wedding.data.musicUrl}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={handleDeleteMusic}
+                                    className="flex items-center gap-1 self-start rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1 text-xs font-medium text-red-600 hover:bg-red-50 sm:self-center"
+                                >
+                                    <X size={12} />
+                                    <span>Hapus Musik</span>
+                                </button>
+                            </div>
                         )}
+
+                        {/* 4. Advanced Options (URL Input) */}
+                        <div className="border-t border-sand/15 pt-2">
+                            <button
+                                type="button"
+                                onClick={() => setShowAdvancedMusic(!showAdvancedMusic)}
+                                className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-charcoal/45 hover:text-charcoal/70"
+                            >
+                                {showAdvancedMusic ? (
+                                    <>
+                                        <ChevronUp size={12} />
+                                        <span>Sembunyikan Opsi Lanjutan (URL)</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <ChevronDown size={12} />
+                                        <span>Tampilkan Opsi Lanjutan (URL)</span>
+                                    </>
+                                )}
+                            </button>
+
+                            {showAdvancedMusic && (
+                                <div className="mt-3 space-y-2 rounded-xl bg-charcoal/[0.02] p-3 border border-sand/30">
+                                    <label className="block text-[11px] font-bold uppercase tracking-wider text-charcoal/60">
+                                        Link URL Musik Langsung (MP3 / Direct Link)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={wedding?.data?.musicUrl || ''}
+                                        onChange={async (e) => {
+                                            const val = e.target.value;
+                                            const updatedData = {
+                                                ...wedding.data,
+                                                musicUrl: val || null,
+                                            };
+                                            setWedding((prev: any) => ({ ...prev, data: updatedData }));
+                                        }}
+                                        onBlur={async () => {
+                                            try {
+                                                await api.put('/weddings/me', { data: wedding.data });
+                                                toast.success('Link URL musik berhasil disimpan!');
+                                            } catch (err) {
+                                                toast.error('Gagal menyimpan link musik.');
+                                            }
+                                        }}
+                                        placeholder="Contoh: https://domain.com/music/backsound.mp3"
+                                        className="w-full rounded-lg border border-sand bg-white px-3 py-1.5 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-gold-500/20"
+                                    />
+                                    <p className="text-[9px] text-charcoal/40 leading-relaxed">
+                                        Gunakan opsi ini jika Anda ingin menempelkan link musik MP3 eksternal secara langsung tanpa mengunggah file.
+                                    </p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 ) : (
                     <div className="space-y-3 rounded-2xl border border-sand/35 bg-sand/10 p-6 text-center">
