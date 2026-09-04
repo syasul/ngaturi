@@ -295,113 +295,135 @@ export const WeddingData: React.FC = () => {
         value: any,
     ) => {
         isDirtyRef.current = true;
-        setFormData((prev: any) => ({
-            ...prev,
+        const updated = {
+            ...formDataRef.current,
             [tab]: {
-                ...prev[tab],
+                ...formDataRef.current[tab],
                 [field]: value,
             },
-        }));
+        };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     const handleToggleSection = (sectionKey: string) => {
         isDirtyRef.current = true;
-        setFormData((prev: any) => ({
-            ...prev,
+        const updated = {
+            ...formDataRef.current,
             sections: {
-                ...prev.sections,
-                [sectionKey]: !prev.sections[sectionKey],
+                ...formDataRef.current.sections,
+                [sectionKey]: !formDataRef.current.sections[sectionKey],
             },
-        }));
-        setTimeout(() => handleSave(false), 100);
+        };
+        formDataRef.current = updated;
+        setFormData(updated);
+        handleSave(false, updated);
     };
 
     const handleStoryChange = (index: number, field: string, value: any) => {
         isDirtyRef.current = true;
-        const newStories = [...formData.stories];
+        const newStories = [...formDataRef.current.stories];
         newStories[index] = { ...newStories[index], [field]: value };
-        setFormData((prev: any) => ({ ...prev, stories: newStories }));
+        const updated = { ...formDataRef.current, stories: newStories };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     const addStory = () => {
         isDirtyRef.current = true;
-        setFormData((prev: any) => ({
-            ...prev,
-            stories: [...prev.stories, { year: '', title: '', story: '' }],
-        }));
+        const updated = {
+            ...formDataRef.current,
+            stories: [...formDataRef.current.stories, { year: '', title: '', story: '' }],
+        };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     const removeStory = (index: number) => {
         isDirtyRef.current = true;
-        setFormData((prev: any) => ({
-            ...prev,
-            stories: prev.stories.filter((_: any, i: number) => i !== index),
-        }));
+        const updated = {
+            ...formDataRef.current,
+            stories: formDataRef.current.stories.filter((_: any, i: number) => i !== index),
+        };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     const handleTimelineChange = (index: number, field: string, value: any) => {
         isDirtyRef.current = true;
-        const newTimeline = [...formData.timeline];
+        const newTimeline = [...formDataRef.current.timeline];
         newTimeline[index] = { ...newTimeline[index], [field]: value };
-        setFormData((prev: any) => ({ ...prev, timeline: newTimeline }));
+        const updated = { ...formDataRef.current, timeline: newTimeline };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     const addTimeline = () => {
         isDirtyRef.current = true;
-        setFormData((prev: any) => ({
-            ...prev,
-            timeline: [...prev.timeline, { time: '', title: '', icon: 'kursi' }],
-        }));
+        const updated = {
+            ...formDataRef.current,
+            timeline: [...formDataRef.current.timeline, { time: '', title: '', icon: 'kursi' }],
+        };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     const removeTimeline = (index: number) => {
         isDirtyRef.current = true;
-        setFormData((prev: any) => ({
-            ...prev,
-            timeline: prev.timeline.filter((_: any, i: number) => i !== index),
-        }));
+        const updated = {
+            ...formDataRef.current,
+            timeline: formDataRef.current.timeline.filter((_: any, i: number) => i !== index),
+        };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     const handleDresscodeChange = (field: string, value: any) => {
         isDirtyRef.current = true;
-        setFormData((prev: any) => ({
-            ...prev,
+        const updated = {
+            ...formDataRef.current,
             dresscode: {
-                ...prev.dresscode,
+                ...formDataRef.current.dresscode,
                 [field]: value,
             },
-        }));
+        };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     const handleDresscodeColorChange = (index: number, color: string) => {
         isDirtyRef.current = true;
-        const newColors = [...formData.dresscode.colors];
+        const newColors = [...formDataRef.current.dresscode.colors];
         newColors[index] = color;
-        setFormData((prev: any) => ({
-            ...prev,
+        const updated = {
+            ...formDataRef.current,
             dresscode: {
-                ...prev.dresscode,
+                ...formDataRef.current.dresscode,
                 colors: newColors,
             },
-        }));
+        };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     const handleStreamingChange = (field: string, value: any) => {
         isDirtyRef.current = true;
-        setFormData((prev: any) => ({
-            ...prev,
+        const updated = {
+            ...formDataRef.current,
             streaming: {
-                ...prev.streaming,
+                ...formDataRef.current.streaming,
                 [field]: value,
             },
-        }));
+        };
+        formDataRef.current = updated;
+        setFormData(updated);
     };
 
     // 3. Save to database
-    const handleSave = async (showToast = true) => {
+    const handleSave = async (showToast = true, dataOverride?: any) => {
         setSaving(true);
         try {
-            const currentData = formDataRef.current;
+            const currentData = dataOverride || formDataRef.current;
             const payload = {
                 data: {
                     musicUrl: currentData.customStyle?.musicUrl || '',
@@ -459,13 +481,22 @@ export const WeddingData: React.FC = () => {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             if (res.data.status === 'success') {
-                handleFieldChange(tab, 'photo', res.data.url);
+                const updated = {
+                    ...formDataRef.current,
+                    [tab]: {
+                        ...formDataRef.current[tab],
+                        photo: res.data.url,
+                    },
+                };
+                formDataRef.current = updated;
+                setFormData(updated);
                 toast.success('Foto berhasil diunggah!', { id: toastId });
-                // Save automatically
-                setTimeout(() => handleSave(false), 200);
+                handleSave(false, updated);
             }
-        } catch (err) {
-            toast.error('Gagal mengunggah foto.', { id: toastId });
+        } catch (err: any) {
+            toast.error(err?.response?.data?.message || 'Gagal mengunggah foto.', { id: toastId });
+        } finally {
+            e.target.value = '';
         }
     };
 
@@ -593,6 +624,9 @@ export const WeddingData: React.FC = () => {
                                             type="file"
                                             accept="image/*"
                                             className="hidden"
+                                            onClick={(e) => {
+                                                (e.target as HTMLInputElement).value = '';
+                                            }}
                                             onChange={(e) =>
                                                 handlePhotoUpload('groom', e)
                                             }
@@ -738,6 +772,9 @@ export const WeddingData: React.FC = () => {
                                             type="file"
                                             accept="image/*"
                                             className="hidden"
+                                            onClick={(e) => {
+                                                (e.target as HTMLInputElement).value = '';
+                                            }}
                                             onChange={(e) =>
                                                 handlePhotoUpload('bride', e)
                                             }
@@ -1843,6 +1880,9 @@ export const WeddingData: React.FC = () => {
                                             type="file"
                                             accept="audio/mp3,audio/mpeg"
                                             className="absolute inset-0 cursor-pointer opacity-0"
+                                            onClick={(e) => {
+                                                (e.target as HTMLInputElement).value = '';
+                                            }}
                                             onChange={async (e) => {
                                                 const file = e.target.files?.[0];
                                                 if (!file) return;
@@ -1861,12 +1901,22 @@ export const WeddingData: React.FC = () => {
                                                         headers: { 'Content-Type': 'multipart/form-data' },
                                                     });
                                                     if (res.data.status === 'success') {
-                                                        handleFieldChange('customStyle', 'musicUrl', res.data.url);
+                                                        const updated = {
+                                                            ...formDataRef.current,
+                                                            customStyle: {
+                                                                ...(formDataRef.current.customStyle || {}),
+                                                                musicUrl: res.data.url,
+                                                            },
+                                                        };
+                                                        formDataRef.current = updated;
+                                                        setFormData(updated);
                                                         toast.success('Musik kustom berhasil diunggah!', { id: toastId });
-                                                        setTimeout(() => handleSave(true), 200);
+                                                        handleSave(true, updated);
                                                     }
-                                                } catch (err) {
-                                                    toast.error('Gagal mengunggah file musik.', { id: toastId });
+                                                } catch (err: any) {
+                                                    toast.error(err?.response?.data?.message || 'Gagal mengunggah file musik.', { id: toastId });
+                                                } finally {
+                                                    e.target.value = '';
                                                 }
                                             }}
                                         />
@@ -1994,7 +2044,7 @@ export const WeddingData: React.FC = () => {
                                             1. Monogram Warna Terang (Untuk Cover/Amplop Gelap)
                                         </label>
                                         <p className="text-[10px] text-charcoal/40 leading-relaxed">
-                                            Direkomendasikan warna putih atau emas transparan (PNG). Muncul di amplop depan dan inisial badge.
+                                            Direkomendasikan warna putih atau emas transparan (PNG/SVG). Muncul di amplop depan dan inisial badge.
                                         </p>
                                         <div className="mt-2 flex items-center gap-3">
                                             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold shadow-sm hover:bg-cream/25">
@@ -2004,6 +2054,9 @@ export const WeddingData: React.FC = () => {
                                                     type="file"
                                                     accept="image/*"
                                                     className="hidden"
+                                                    onClick={(e) => {
+                                                        (e.target as HTMLInputElement).value = '';
+                                                    }}
                                                     onChange={async (e) => {
                                                         const file = e.target.files?.[0];
                                                         if (!file) return;
@@ -2016,12 +2069,22 @@ export const WeddingData: React.FC = () => {
                                                                 headers: { 'Content-Type': 'multipart/form-data' },
                                                             });
                                                             if (res.data.status === 'success') {
-                                                                handleFieldChange('customStyle', 'monogramUrl', res.data.url);
+                                                                const updated = {
+                                                                    ...formDataRef.current,
+                                                                    customStyle: {
+                                                                        ...(formDataRef.current.customStyle || {}),
+                                                                        monogramUrl: res.data.url,
+                                                                    },
+                                                                };
+                                                                formDataRef.current = updated;
+                                                                setFormData(updated);
                                                                 toast.success('Monogram terang berhasil diunggah!', { id: toastId });
-                                                                setTimeout(() => handleSave(false), 200);
+                                                                handleSave(false, updated);
                                                             }
-                                                        } catch (err) {
-                                                            toast.error('Gagal mengunggah monogram.', { id: toastId });
+                                                        } catch (err: any) {
+                                                            toast.error(err?.response?.data?.message || 'Gagal mengunggah monogram.', { id: toastId });
+                                                        } finally {
+                                                            e.target.value = '';
                                                         }
                                                     }}
                                                 />
@@ -2036,8 +2099,16 @@ export const WeddingData: React.FC = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => {
-                                                            handleFieldChange('customStyle', 'monogramUrl', '');
-                                                            setTimeout(() => handleSave(false), 200);
+                                                            const updated = {
+                                                                ...formDataRef.current,
+                                                                customStyle: {
+                                                                    ...(formDataRef.current.customStyle || {}),
+                                                                    monogramUrl: '',
+                                                                },
+                                                            };
+                                                            formDataRef.current = updated;
+                                                            setFormData(updated);
+                                                            handleSave(false, updated);
                                                         }}
                                                         className="text-[10px] text-red-500 hover:underline"
                                                     >
@@ -2054,7 +2125,7 @@ export const WeddingData: React.FC = () => {
                                             2. Monogram Warna Gelap (Untuk Halaman Akhir Terang)
                                         </label>
                                         <p className="text-[10px] text-charcoal/40 leading-relaxed">
-                                            Direkomendasikan warna merah marun, cokelat, atau hitam transparan (PNG). Muncul di halaman penutup.
+                                            Direkomendasikan warna merah marun, cokelat, atau hitam transparan (PNG/SVG). Muncul di halaman penutup.
                                         </p>
                                         <div className="mt-2 flex items-center gap-3">
                                             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold shadow-sm hover:bg-cream/25">
@@ -2064,6 +2135,9 @@ export const WeddingData: React.FC = () => {
                                                     type="file"
                                                     accept="image/*"
                                                     className="hidden"
+                                                    onClick={(e) => {
+                                                        (e.target as HTMLInputElement).value = '';
+                                                    }}
                                                     onChange={async (e) => {
                                                         const file = e.target.files?.[0];
                                                         if (!file) return;
@@ -2076,12 +2150,22 @@ export const WeddingData: React.FC = () => {
                                                                 headers: { 'Content-Type': 'multipart/form-data' },
                                                             });
                                                             if (res.data.status === 'success') {
-                                                                handleFieldChange('customStyle', 'monogramUrlDark', res.data.url);
+                                                                const updated = {
+                                                                    ...formDataRef.current,
+                                                                    customStyle: {
+                                                                        ...(formDataRef.current.customStyle || {}),
+                                                                        monogramUrlDark: res.data.url,
+                                                                    },
+                                                                };
+                                                                formDataRef.current = updated;
+                                                                setFormData(updated);
                                                                 toast.success('Monogram gelap berhasil diunggah!', { id: toastId });
-                                                                setTimeout(() => handleSave(false), 200);
+                                                                handleSave(false, updated);
                                                             }
-                                                        } catch (err) {
-                                                            toast.error('Gagal mengunggah monogram.', { id: toastId });
+                                                        } catch (err: any) {
+                                                            toast.error(err?.response?.data?.message || 'Gagal mengunggah monogram.', { id: toastId });
+                                                        } finally {
+                                                            e.target.value = '';
                                                         }
                                                     }}
                                                 />
@@ -2096,8 +2180,16 @@ export const WeddingData: React.FC = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => {
-                                                            handleFieldChange('customStyle', 'monogramUrlDark', '');
-                                                            setTimeout(() => handleSave(false), 200);
+                                                            const updated = {
+                                                                ...formDataRef.current,
+                                                                customStyle: {
+                                                                    ...(formDataRef.current.customStyle || {}),
+                                                                    monogramUrlDark: '',
+                                                                },
+                                                            };
+                                                            formDataRef.current = updated;
+                                                            setFormData(updated);
+                                                            handleSave(false, updated);
                                                         }}
                                                         className="text-[10px] text-red-500 hover:underline"
                                                     >
@@ -2365,6 +2457,9 @@ export const WeddingData: React.FC = () => {
                                             type="file"
                                             accept="image/*"
                                             className="hidden"
+                                            onClick={(e) => {
+                                                (e.target as HTMLInputElement).value = '';
+                                            }}
                                             onChange={async (e) => {
                                                 const file =
                                                     e.target.files?.[0];
@@ -2392,28 +2487,28 @@ export const WeddingData: React.FC = () => {
                                                         res.data.status ===
                                                         'success'
                                                     ) {
-                                                        handleFieldChange(
-                                                            'customStyle',
-                                                            'qrisUrl',
-                                                            res.data.url,
-                                                        );
+                                                        const updated = {
+                                                            ...formDataRef.current,
+                                                            customStyle: {
+                                                                ...(formDataRef.current.customStyle || {}),
+                                                                qrisUrl: res.data.url,
+                                                            },
+                                                        };
+                                                        formDataRef.current = updated;
+                                                        setFormData(updated);
                                                         toast.success(
                                                             'QRIS berhasil diunggah!',
                                                             { id: toastId },
                                                         );
-                                                        setTimeout(
-                                                            () =>
-                                                                handleSave(
-                                                                    false,
-                                                                ),
-                                                            200,
-                                                        );
+                                                        handleSave(false, updated);
                                                     }
-                                                } catch (err) {
+                                                } catch (err: any) {
                                                     toast.error(
-                                                        'Gagal mengunggah QRIS.',
+                                                        err?.response?.data?.message || 'Gagal mengunggah QRIS.',
                                                         { id: toastId },
                                                     );
+                                                } finally {
+                                                    e.target.value = '';
                                                 }
                                             }}
                                         />
@@ -2428,8 +2523,16 @@ export const WeddingData: React.FC = () => {
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    handleFieldChange('customStyle', 'qrisUrl', '');
-                                                    setTimeout(() => handleSave(false), 200);
+                                                    const updated = {
+                                                        ...formDataRef.current,
+                                                        customStyle: {
+                                                            ...(formDataRef.current.customStyle || {}),
+                                                            qrisUrl: '',
+                                                        },
+                                                    };
+                                                    formDataRef.current = updated;
+                                                    setFormData(updated);
+                                                    handleSave(false, updated);
                                                 }}
                                                 className="text-[10px] text-red-500 hover:underline"
                                             >

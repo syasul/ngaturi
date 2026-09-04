@@ -29,9 +29,9 @@ class MediaController extends Controller
 
             // Security Hardening: Extension whitelist
             $ext = '.' . strtolower($file->getClientOriginalExtension());
-            $allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.mp3'];
+            $allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.mp3', '.svg'];
             if (!in_array($ext, $allowedExtensions)) {
-                return response()->json(['status' => 'error', 'message' => 'Tipe file tidak diizinkan. Hanya menerima jpg, png, webp, dan mp3.'], 400);
+                return response()->json(['status' => 'error', 'message' => 'Tipe file tidak diizinkan. Hanya menerima jpg, png, webp, svg, dan mp3.'], 400);
             }
 
             // Security Hardening: Mime-type checking
@@ -40,6 +40,7 @@ class MediaController extends Controller
                 'image/jpeg', 'image/jpg', 'image/pjpeg', 'image/x-citrix-pjpeg',
                 'image/png', 'image/x-png', 'image/apng',
                 'image/webp',
+                'image/svg+xml',
                 'audio/mpeg', 'audio/mp3', 'audio/x-mpeg', 'audio/x-mp3', 'audio/mpeg3', 'audio/x-mpeg3', 'audio/mpg', 'audio/x-mpg', 'audio/x-mpegaudio'
             ];
             if (!in_array($mime, $allowedMimeTypes)) {
