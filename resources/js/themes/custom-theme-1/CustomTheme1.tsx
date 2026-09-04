@@ -643,10 +643,10 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                                 }
                                                 transition={{ duration: 0.5 }}
                                             >
-                                                {/* Memaksa versi terang di amplop */}
-                                                {(customStyle.monogramUrl) ? (
+                                                {/* Memaksa versi gelap di amplop (OpeningCover) karena background terang */}
+                                                {(customStyle.monogramUrlDark || customStyle.monogramUrl) ? (
                                                      <img
-                                                         src={resolveImageUrl(customStyle.monogramUrl, '')}
+                                                         src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
                                                          alt="Monogram"
                                                          className="h-28 w-28 object-contain mb-2"
                                                      />
@@ -877,10 +877,10 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
 
                             {/* Initials Badge text (bottom-right) */}
                             <div className="absolute bottom-[3%] right-[5%] flex aspect-square w-[33%] items-center justify-center text-white drop-shadow-md">
-                                {/* Memaksa versi terang di badge */}
-                                {(customStyle.monogramUrl) ? (
+                                {/* Memaksa versi gelap di badge karena permintaan user */}
+                                {(customStyle.monogramUrlDark || customStyle.monogramUrl) ? (
                                     <img
-                                        src={resolveImageUrl(customStyle.monogramUrl, '')}
+                                        src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
                                         alt="Monogram"
                                         className="h-[60%] w-[60%] object-contain drop-shadow-md"
                                     />
