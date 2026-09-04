@@ -877,10 +877,10 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
 
                             {/* Initials Badge text (bottom-right) */}
                             <div className="absolute bottom-[3%] right-[5%] flex aspect-square w-[33%] items-center justify-center text-white drop-shadow-md">
-                                {/* Memaksa versi gelap di badge karena permintaan user */}
-                                {(customStyle.monogramUrlDark || customStyle.monogramUrl) ? (
+                                {/* Badge memiliki background gelap (merah tua), jadi harus pakai versi terang (putih) */}
+                                {(customStyle.monogramUrl) ? (
                                     <img
-                                        src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
+                                        src={resolveImageUrl(customStyle.monogramUrl, '')}
                                         alt="Monogram"
                                         className="h-[60%] w-[60%] object-contain drop-shadow-md"
                                     />
