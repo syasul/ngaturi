@@ -72,7 +72,7 @@ export const WeddingData: React.FC = () => {
     const [showAdvancedMusic, setShowAdvancedMusic] = useState(false);
     const [activeYoutubePreviewId, setActiveYoutubePreviewId] = useState<string | null>(null);
 
-        // Local state for all fields
+    // Local state for all fields
     const [formData, setFormData] = useState<any>({
         groom: {
             name: '',
@@ -154,7 +154,7 @@ export const WeddingData: React.FC = () => {
                     const w = res.data.wedding;
                     setWedding(w);
 
-                                        // Merge fetched data with default structures
+                    // Merge fetched data with default structures
                     const merged = {
                         groom: { ...formData.groom, ...(w.data?.groom || {}) },
                         bride: { ...formData.bride, ...(w.data?.bride || {}) },
@@ -598,11 +598,10 @@ export const WeddingData: React.FC = () => {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`flex shrink-0 items-center gap-3 whitespace-nowrap rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
-                                    isActive
-                                        ? 'bg-gold-500 text-white shadow-md shadow-gold-500/20'
-                                        : 'border border-sand/45 bg-white text-charcoal/70 hover:bg-cream/40'
-                                }`}
+                                className={`flex shrink-0 items-center gap-3 whitespace-nowrap rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${isActive
+                                    ? 'bg-gold-500 text-white shadow-md shadow-gold-500/20'
+                                    : 'border border-sand/45 bg-white text-charcoal/70 hover:bg-cream/40'
+                                    }`}
                             >
                                 <Icon size={16} />
                                 <span>{tab.name}</span>
@@ -1378,14 +1377,12 @@ export const WeddingData: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleSection('showDresscode')}
-                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                                            formData.sections.showDresscode ? 'bg-gold-500' : 'bg-sand'
-                                        }`}
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${formData.sections.showDresscode ? 'bg-gold-500' : 'bg-sand'
+                                            }`}
                                     >
                                         <span
-                                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                                formData.sections.showDresscode ? 'translate-x-6' : 'translate-x-1'
-                                            }`}
+                                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.sections.showDresscode ? 'translate-x-6' : 'translate-x-1'
+                                                }`}
                                         />
                                     </button>
                                 </div>
@@ -1468,14 +1465,12 @@ export const WeddingData: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={() => handleToggleSection('showStreaming')}
-                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                                            formData.sections.showStreaming ? 'bg-gold-500' : 'bg-sand'
-                                        }`}
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${formData.sections.showStreaming ? 'bg-gold-500' : 'bg-sand'
+                                            }`}
                                     >
                                         <span
-                                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                                formData.sections.showStreaming ? 'translate-x-6' : 'translate-x-1'
-                                            }`}
+                                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.sections.showStreaming ? 'translate-x-6' : 'translate-x-1'
+                                                }`}
                                         />
                                     </button>
                                 </div>
@@ -1868,20 +1863,18 @@ export const WeddingData: React.FC = () => {
                                                 toast.error('Gagal mengunggah file musik.', { id: toastId });
                                             }
                                         }}
-                                        className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center transition-all ${
-                                            isDragOverMusic
-                                                ? 'border-gold-500 bg-gold-500/5'
-                                                : 'border-sand/75 bg-cream/5 hover:border-gold-500'
-                                        }`}
+                                        className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center transition-all ${isDragOverMusic
+                                            ? 'border-gold-500 bg-gold-500/5'
+                                            : 'border-sand/75 bg-cream/5 hover:border-gold-500'
+                                            }`}
                                     >
                                         {saving ? (
                                             <Loader2 className="h-6 w-6 animate-spin text-gold-500" />
                                         ) : (
                                             <>
                                                 <Upload
-                                                    className={`h-6 w-6 transition-colors ${
-                                                        isDragOverMusic ? 'text-gold-500' : 'text-charcoal/30 group-hover:text-gold-500'
-                                                    }`}
+                                                    className={`h-6 w-6 transition-colors ${isDragOverMusic ? 'text-gold-500' : 'text-charcoal/30 group-hover:text-gold-500'
+                                                        }`}
                                                 />
                                                 <p className="mt-2 text-xs font-semibold text-charcoal/70">
                                                     Seret & letakkan file musik (.mp3) ke sini, atau klik untuk memilih file.
@@ -1950,52 +1943,51 @@ export const WeddingData: React.FC = () => {
                                             />
                                         )}
                                         <div className="flex flex-col gap-2 rounded-2xl border border-sand/40 bg-cream/10 p-4 sm:flex-row sm:items-center sm:justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <button
-                                                type="button"
-                                                onClick={() => handleTogglePreview(formData.customStyle.musicUrl)}
-                                                className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
-                                                    previewPlayingUrl === formData.customStyle.musicUrl
+                                            <div className="flex items-center gap-3">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleTogglePreview(formData.customStyle.musicUrl)}
+                                                    className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${previewPlayingUrl === formData.customStyle.musicUrl
                                                         ? 'bg-gold-500 text-white'
                                                         : 'bg-sand/30 text-charcoal hover:bg-gold-500 hover:text-white'
-                                                }`}
-                                            >
-                                                {previewPlayingUrl === formData.customStyle.musicUrl ? (
-                                                    <Pause size={14} fill="currentColor" />
-                                                ) : (
-                                                    <Play size={14} className="ml-0.5" fill="currentColor" />
-                                                )}
-                                            </button>
-                                            <div className="min-w-0 flex-1">
-                                                <div className="flex items-center gap-1.5">
-                                                    <Volume2 size={14} className="text-gold-600" />
-                                                    <span className="text-xs font-bold text-charcoal/80">
-                                                        Musik Terpasang
+                                                        }`}
+                                                >
+                                                    {previewPlayingUrl === formData.customStyle.musicUrl ? (
+                                                        <Pause size={14} fill="currentColor" />
+                                                    ) : (
+                                                        <Play size={14} className="ml-0.5" fill="currentColor" />
+                                                    )}
+                                                </button>
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="flex items-center gap-1.5">
+                                                        <Volume2 size={14} className="text-gold-600" />
+                                                        <span className="text-xs font-bold text-charcoal/80">
+                                                            Musik Terpasang
+                                                        </span>
+                                                    </div>
+                                                    <span className="block truncate text-xs text-charcoal/50 font-mono">
+                                                        {formData.customStyle.musicUrl}
                                                     </span>
                                                 </div>
-                                                <span className="block truncate text-xs text-charcoal/50 font-mono">
-                                                    {formData.customStyle.musicUrl}
-                                                </span>
                                             </div>
-                                        </div>
 
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                if (previewPlayingUrl === formData.customStyle.musicUrl && audioInstance) {
-                                                    audioInstance.pause();
-                                                    setPreviewPlayingUrl(null);
-                                                }
-                                                handleFieldChange('customStyle', 'musicUrl', '');
-                                                setTimeout(() => handleSave(false), 200);
-                                                toast.success('Musik dilepas.');
-                                            }}
-                                            className="flex items-center gap-1 self-start rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1 text-xs font-medium text-red-600 hover:bg-red-50 sm:self-center"
-                                        >
-                                            <X size={12} />
-                                            <span>Lepas Musik</span>
-                                        </button>
-                                    </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    if (previewPlayingUrl === formData.customStyle.musicUrl && audioInstance) {
+                                                        audioInstance.pause();
+                                                        setPreviewPlayingUrl(null);
+                                                    }
+                                                    handleFieldChange('customStyle', 'musicUrl', '');
+                                                    setTimeout(() => handleSave(false), 200);
+                                                    toast.success('Musik dilepas.');
+                                                }}
+                                                className="flex items-center gap-1 self-start rounded-lg border border-red-200 bg-red-50/50 px-2.5 py-1 text-xs font-medium text-red-600 hover:bg-red-50 sm:self-center"
+                                            >
+                                                <X size={12} />
+                                                <span>Lepas Musik</span>
+                                            </button>
+                                        </div>
                                     </>
                                 )}
 
@@ -2056,7 +2048,7 @@ export const WeddingData: React.FC = () => {
                                     {/* 1. Light Monogram (Cover/Envelope) */}
                                     <div className="space-y-2">
                                         <label className="block text-xs font-semibold text-charcoal/70">
-                                            1. Monogram Warna Terang (Untuk Cover/Amplop Gelap)
+                                            1. Monogram Warna Gelap (Untuk Halaman Akhir Terang)
                                         </label>
                                         <p className="text-[10px] text-charcoal/40 leading-relaxed">
                                             Direkomendasikan warna putih atau emas transparan (PNG/SVG). Muncul di amplop depan dan inisial badge.
@@ -2137,7 +2129,7 @@ export const WeddingData: React.FC = () => {
                                     {/* 2. Dark Monogram (Final Page) */}
                                     <div className="space-y-2">
                                         <label className="block text-xs font-semibold text-charcoal/70">
-                                            2. Monogram Warna Gelap (Untuk Halaman Akhir Terang)
+                                            2. Monogram Warna Terang (Untuk Cover/Amplop Gelap)
                                         </label>
                                         <p className="text-[10px] text-charcoal/40 leading-relaxed">
                                             Direkomendasikan warna merah marun, cokelat, atau hitam transparan (PNG/SVG). Muncul di halaman penutup.
@@ -2292,18 +2284,16 @@ export const WeddingData: React.FC = () => {
                                             onClick={() =>
                                                 handleToggleSection(item.key)
                                             }
-                                            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                                formData.sections?.[item.key] !== false
-                                                    ? 'bg-gold-500'
-                                                    : 'bg-sand'
-                                            }`}
+                                            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.sections?.[item.key] !== false
+                                                ? 'bg-gold-500'
+                                                : 'bg-sand'
+                                                }`}
                                         >
                                             <span
-                                                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                                    formData.sections?.[item.key] !== false
-                                                        ? 'translate-x-5'
-                                                        : 'translate-x-0'
-                                                }`}
+                                                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.sections?.[item.key] !== false
+                                                    ? 'translate-x-5'
+                                                    : 'translate-x-0'
+                                                    }`}
                                             />
                                         </button>
                                     </div>
