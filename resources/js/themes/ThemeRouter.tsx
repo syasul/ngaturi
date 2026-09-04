@@ -169,6 +169,7 @@ export const ThemeRouter: React.FC<ThemeRouterProps> = ({
                         }
                         guestName={props.guestName}
                         themeId={themeId}
+                        monogramUrl={props.data?.customStyle?.monogramUrl || props.data?.customStyle?.monogramUrlDark}
                         onOpen={onOpen}
                     />
                 )}

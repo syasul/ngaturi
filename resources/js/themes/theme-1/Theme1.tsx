@@ -527,6 +527,15 @@ export const Theme1: React.FC<Theme1Props> = ({
                 />
 
                 <div className="space-y-4">
+                    {(customStyle.monogramUrl || customStyle.monogramUrlDark) && (
+                        <div className="mb-2">
+                            <img
+                                src={resolveImageUrl(customStyle.monogramUrl || customStyle.monogramUrlDark, '')}
+                                alt="Monogram"
+                                className="h-20 w-20 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
+                            />
+                        </div>
+                    )}
                     <span className="block font-sans text-xs font-bold uppercase tracking-[0.3em] text-[#C9A84C]">
                         THE WEDDING INVITATION OF
                     </span>
@@ -631,9 +640,9 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                 }
                                                 transition={{ duration: 0.5 }}
                                             >
-                                                {(customStyle.monogramUrlDark || customStyle.monogramUrl) ? (
+                                                {(customStyle.monogramUrl || customStyle.monogramUrlDark) ? (
                                                     <img
-                                                        src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
+                                                        src={resolveImageUrl(customStyle.monogramUrl || customStyle.monogramUrlDark, '')}
                                                         alt="Monogram"
                                                         className="h-28 w-28 object-contain mb-2"
                                                     />
@@ -804,9 +813,16 @@ export const Theme1: React.FC<Theme1Props> = ({
                             {/* ABSOLUTE POSITIONED DYNAMIC TEXT OVERLAYS */}
 
                             {/* Main Arch Names */}
-                            <div className="absolute top-[45%] flex w-[60%] flex-col items-center text-center">
+                            <div className="absolute top-[42%] flex w-[60%] flex-col items-center text-center">
+                                {(customStyle.monogramUrlDark || customStyle.monogramUrl) && (
+                                    <img
+                                        src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
+                                        alt="Monogram"
+                                        className="mb-2 h-14 w-14 object-contain drop-shadow-sm"
+                                    />
+                                )}
                                 <span
-                                    className="mb-3 font-sans text-[2.4cqw] font-medium tracking-[0.2em]"
+                                    className="mb-2 font-sans text-[2.4cqw] font-medium tracking-[0.2em]"
                                     style={{ color: '#666' }}
                                 >
                                     The Wedding of
@@ -857,11 +873,11 @@ export const Theme1: React.FC<Theme1Props> = ({
 
                             {/* Initials Badge text (bottom-right) */}
                             <div className="absolute bottom-[3%] right-[5%] flex aspect-square w-[33%] items-center justify-center text-white drop-shadow-md">
-                                {customStyle.monogramUrl ? (
+                                {(customStyle.monogramUrl || customStyle.monogramUrlDark) ? (
                                     <img
-                                        src={customStyle.monogramUrl}
+                                        src={resolveImageUrl(customStyle.monogramUrl || customStyle.monogramUrlDark, '')}
                                         alt="Monogram"
-                                        className="h-[60%] w-[60%] object-contain"
+                                        className="h-[60%] w-[60%] object-contain drop-shadow-md"
                                     />
                                 ) : (
                                     <span
@@ -2572,7 +2588,11 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                     : {}
                                             }
                                         >
-                                            {customStyle.ewalletName ? customStyle.ewalletName.toUpperCase() : 'DOMPET DIGITAL / QRIS'}
+                                            {customStyle.qrisUrl && customStyle.ewalletName
+                                                ? `QRIS / ${customStyle.ewalletName.toUpperCase()}`
+                                                : customStyle.qrisUrl
+                                                  ? 'QRIS'
+                                                  : (customStyle.ewalletName ? customStyle.ewalletName.toUpperCase() : 'DOMPET DIGITAL / QRIS')}
                                         </button>
                                     )}
                                     <button
@@ -2903,7 +2923,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                                         </p>
                                                     )}
                                                     <img
-                                                        src={customStyle.qrisUrl}
+                                                        src={resolveImageUrl(customStyle.qrisUrl, '')}
                                                         alt="QRIS"
                                                         className="mx-auto max-w-[200px] rounded-lg border border-neutral-100 shadow-sm"
                                                     />
@@ -3710,7 +3730,9 @@ export const Theme1: React.FC<Theme1Props> = ({
                                             className="font-serif text-[2.2rem] font-normal drop-shadow-sm"
                                             style={{ color: primaryColor }}
                                         >
-                                            {customStyle.ewalletName || 'Kado Digital'}
+                                            {customStyle.qrisUrl
+                                                ? (customStyle.ewalletName ? `QRIS & ${customStyle.ewalletName}` : 'QRIS')
+                                                : (customStyle.ewalletName || 'Kado Digital')}
                                         </h3>
                                         <p className="mt-1 font-serif text-[9px] font-bold uppercase tracking-widest text-[#7A223E] opacity-70">
                                             {customStyle.ewalletNumber ? 'Salin nomor atau scan QR' : 'Scan untuk Kirim Kado'}
@@ -3749,7 +3771,7 @@ export const Theme1: React.FC<Theme1Props> = ({
                                     {customStyle.qrisUrl && (
                                         <div className="relative mx-auto flex aspect-square w-full max-w-[180px] items-center justify-center overflow-hidden rounded-[1rem] border border-[#7A223E]/10 bg-white p-3 shadow-inner">
                                             <img
-                                                src={customStyle.qrisUrl}
+                                                src={resolveImageUrl(customStyle.qrisUrl, '')}
                                                 alt="QRIS"
                                                 className="h-full w-full object-contain"
                                             />

@@ -43,6 +43,20 @@ type TabType =
     | 'sections'
     | 'gifts';
 
+const resolveImageUrl = (url: string | null | undefined, fallback: string = '') => {
+    if (!url) return fallback;
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('/')) return url;
+    if (
+        url.startsWith('storage/') ||
+        url.startsWith('assets/') ||
+        url.startsWith('images/') ||
+        url.startsWith('uploads/')
+    )
+        return `/${url}`;
+    return `/storage/${url}`;
+};
+
 export const WeddingData: React.FC = () => {
     const [activeTab, setActiveTab] = useState<TabType>('groom');
     const [wedding, setWedding] = useState<any>(null);
@@ -188,6 +202,7 @@ export const WeddingData: React.FC = () => {
                             description: w.data?.streaming?.description || 'Bagi keluarga dan kerabat yang terhalang oleh jarak, kehadiran virtual Anda tetaplah sebuah berkah yang melimpah. Mari menjadi saksi dari awal perjalanan suci kami.',
                         },
                     };
+                    formDataRef.current = merged;
                     setFormData(merged);
                 }
             } catch (err) {
@@ -2092,8 +2107,8 @@ export const WeddingData: React.FC = () => {
                                             {formData.customStyle?.monogramUrl && (
                                                 <div className="flex items-center gap-2">
                                                     <img
-                                                        src={formData.customStyle.monogramUrl}
-                                                        alt="Preview"
+                                                        src={resolveImageUrl(formData.customStyle.monogramUrl)}
+                                                        alt="Preview Monogram Terang"
                                                         className="h-10 w-10 object-contain rounded border border-sand/40 bg-neutral-900 p-1"
                                                     />
                                                     <button
@@ -2173,8 +2188,8 @@ export const WeddingData: React.FC = () => {
                                             {formData.customStyle?.monogramUrlDark && (
                                                 <div className="flex items-center gap-2">
                                                     <img
-                                                        src={formData.customStyle.monogramUrlDark}
-                                                        alt="Preview"
+                                                        src={resolveImageUrl(formData.customStyle.monogramUrlDark)}
+                                                        alt="Preview Monogram Gelap"
                                                         className="h-10 w-10 object-contain rounded border border-sand/40 bg-neutral-50 p-1"
                                                     />
                                                     <button
@@ -2516,9 +2531,9 @@ export const WeddingData: React.FC = () => {
                                     {formData.customStyle?.qrisUrl && (
                                         <div className="flex items-center gap-2">
                                             <img
-                                                src={formData.customStyle.qrisUrl}
+                                                src={resolveImageUrl(formData.customStyle.qrisUrl)}
                                                 alt="QRIS Preview"
-                                                className="h-10 w-10 object-contain rounded border border-sand/40 bg-neutral-50 p-1"
+                                                className="h-14 w-14 object-contain rounded border border-sand/40 bg-white p-1 shadow-sm"
                                             />
                                             <button
                                                 type="button"

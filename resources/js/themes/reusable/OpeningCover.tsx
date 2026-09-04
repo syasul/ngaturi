@@ -8,6 +8,7 @@ export interface OpeningCoverProps {
     brideName?: string;
     guestName?: string;
     themeId?: string;
+    monogramUrl?: string;
     onOpen: () => void;
     containerBgClassName?: string;
     positionClass?: string; // override default 'fixed inset-0 z-40'
@@ -21,6 +22,7 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
     brideName,
     guestName,
     themeId,
+    monogramUrl,
     onOpen,
     containerBgClassName,
     positionClass,
@@ -109,7 +111,7 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
 
                     {/* Invitation Header */}
                     <motion.div
-                        className="z-10 mt-8 space-y-4"
+                        className="z-10 mt-8 space-y-4 flex flex-col items-center"
                         animate={
                             isOpening
                                 ? { y: -50, opacity: 0 }
@@ -117,6 +119,13 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
                         }
                         transition={{ duration: 0.5 }}
                     >
+                        {monogramUrl && (
+                            <img
+                                src={monogramUrl.startsWith('http') || monogramUrl.startsWith('/') ? monogramUrl : `/${monogramUrl}`}
+                                alt="Monogram"
+                                className="h-20 w-20 object-contain drop-shadow-md"
+                            />
+                        )}
                         <span className="block text-[10px] font-bold uppercase tracking-widest text-[#a8822c]">
                             THE WEDDING OF
                         </span>
