@@ -2048,10 +2048,10 @@ export const WeddingData: React.FC = () => {
                                     {/* 1. Light Monogram (Cover/Envelope) */}
                                     <div className="space-y-2">
                                         <label className="block text-xs font-semibold text-charcoal/70">
-                                            1. Monogram Warna Gelap (Untuk Halaman Akhir Terang)
+                                            1. Monogram Warna Terang (Putih/Emas)
                                         </label>
                                         <p className="text-[10px] text-charcoal/40 leading-relaxed">
-                                            Direkomendasikan warna putih atau emas transparan (PNG/SVG). Muncul di amplop depan dan inisial badge.
+                                            Direkomendasikan warna putih transparan (PNG/SVG). Muncul di lencana/badge inisial (background merah).
                                         </p>
                                         <div className="mt-2 flex items-center gap-3">
                                             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold shadow-sm hover:bg-cream/25">
@@ -2129,10 +2129,10 @@ export const WeddingData: React.FC = () => {
                                     {/* 2. Dark Monogram (Final Page) */}
                                     <div className="space-y-2">
                                         <label className="block text-xs font-semibold text-charcoal/70">
-                                            2. Monogram Warna Terang (Untuk Cover/Amplop Gelap)
+                                            2. Monogram Warna Gelap (Maroon/Cokelat)
                                         </label>
                                         <p className="text-[10px] text-charcoal/40 leading-relaxed">
-                                            Direkomendasikan warna merah marun, cokelat, atau hitam transparan (PNG/SVG). Muncul di halaman penutup.
+                                            Direkomendasikan warna gelap transparan (PNG/SVG). Muncul di atas amplop dan lengkungan isi (background terang).
                                         </p>
                                         <div className="mt-2 flex items-center gap-3">
                                             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold shadow-sm hover:bg-cream/25">
