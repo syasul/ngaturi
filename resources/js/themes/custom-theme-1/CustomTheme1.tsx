@@ -529,10 +529,10 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                 />
 
                 <div className="space-y-4">
-                    {(customStyle.monogramUrl || customStyle.monogramUrlDark) && (
+                    {customStyle.monogramUrl && (
                         <div className="mb-2">
                             <img
-                                src={resolveImageUrl(customStyle.monogramUrl || customStyle.monogramUrlDark, '')}
+                                src={resolveImageUrl(customStyle.monogramUrl, '')}
                                 alt="Monogram"
                                 className="h-20 w-20 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
                             />
@@ -642,7 +642,8 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                                 }
                                                 transition={{ duration: 0.5 }}
                                             >
-                                                {(customStyle.monogramUrl || customStyle.monogramUrlDark) ? (
+                                                {/* Diminta untuk dihilangkan logonya di sisi amplop kanan */}
+                                                {false ? (
                                                      <img
                                                          src={resolveImageUrl(customStyle.monogramUrl || customStyle.monogramUrlDark, '')}
                                                          alt="Monogram"
@@ -816,7 +817,8 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
 
                             {/* Main Arch Names */}
                             <div className="absolute top-[42%] flex w-[60%] flex-col items-center text-center">
-                                {(customStyle.monogramUrlDark || customStyle.monogramUrl) && (
+                                {/* Diminta untuk dihilangkan logonya di sisi kanan */}
+                                {false && (
                                     <img
                                         src={resolveImageUrl(customStyle.monogramUrlDark || customStyle.monogramUrl, '')}
                                         alt="Monogram"
@@ -875,7 +877,8 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
 
                             {/* Initials Badge text (bottom-right) */}
                             <div className="absolute bottom-[3%] right-[5%] flex aspect-square w-[33%] items-center justify-center text-white drop-shadow-md">
-                                {(customStyle.monogramUrl || customStyle.monogramUrlDark) ? (
+                                {/* Diminta untuk dihilangkan logonya di sisi kanan */}
+                                {false ? (
                                     <img
                                         src={resolveImageUrl(customStyle.monogramUrl || customStyle.monogramUrlDark, '')}
                                         alt="Monogram"
