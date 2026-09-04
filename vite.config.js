@@ -4,6 +4,14 @@ import react from '@vitejs/plugin-react-oxc';
 import path from 'path';
 
 export default defineConfig({
+    server: {
+        proxy: {
+            '/api': 'http://127.0.0.1:8000',
+            '/assets': 'http://127.0.0.1:8000',
+            '/uploads': 'http://127.0.0.1:8000',
+            '/storage': 'http://127.0.0.1:8000',
+        },
+    },
     plugins: [
         laravel({
             input: 'resources/js/app.tsx',
