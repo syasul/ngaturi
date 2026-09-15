@@ -50,6 +50,7 @@ Route::get('/api/weddings/public/{slug}', [WeddingController::class, 'getPublic'
 Route::get('/api/guests/public/wishes/{weddingId}', [GuestController::class, 'getPublicWishes']);
 Route::get('/api/guests/public/by-token/{token}', [GuestController::class, 'getPublicGuestByToken']);
 Route::post('/api/guests/public/rsvp', [GuestController::class, 'submitPublicRsvp']);
+Route::post('/api/guests/public/rsvp/{weddingId?}/{token?}', [GuestController::class, 'submitPublicRsvp']);
 Route::get('/api/weddings/check-slug/{slug}', [WeddingController::class, 'checkSlug']);
 
 // Tripay Payment Callback Webhook

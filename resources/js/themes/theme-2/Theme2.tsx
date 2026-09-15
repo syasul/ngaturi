@@ -11,6 +11,7 @@ import {
     X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import type { ThemeProps } from '../elegant/ElegantTheme';
 import OpeningCover from '../reusable/OpeningCover';
 
@@ -342,6 +343,7 @@ interface Theme2Props extends ThemeProps {
 export const Theme2: React.FC<Theme2Props> = ({
     data,
     guestName,
+    guestToken,
     photos,
     wishes,
     onRsvpSubmit,
@@ -2588,17 +2590,17 @@ export const Theme2: React.FC<Theme2Props> = ({
                             <button
                                 onClick={() => setIsQrisModalOpen(true)}
                                 className="absolute bottom-36 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#4A3B32] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                                title={customStyle.ewalletName || "Kado Digital"}
+                                title={customStyle.ewalletName || "Kado Digital / Angpao"}
                             >
-                                <QrCode size={20} />
+                                <CreditCard size={20} />
                             </button>
                         )}
 
-                        {guestName && (
+                        {(guestName || guestToken) && (
                             <button
                                 onClick={() => setIsQrModalOpen(true)}
                                 className="absolute bottom-36 right-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-[#4A3B32] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                                title="Akses Masuk QR"
+                                title="QR Kehadiran Tamu"
                             >
                                 <QrCode size={20} />
                             </button>
@@ -2743,234 +2745,37 @@ export const Theme2: React.FC<Theme2Props> = ({
                                         kehadiran digital.
                                     </p>
                                 </div>
+                                {/* Real QR Code */}
                                 <div
-                                    className="relative mx-auto flex h-40 w-40 items-center justify-center rounded-2xl border-2 bg-neutral-50 p-3.5 shadow-inner"
+                                    className="relative mx-auto flex h-44 w-44 items-center justify-center rounded-2xl border-2 bg-white p-3 shadow-inner"
                                     style={{ borderColor: `${primaryColor}20` }}
                                 >
-                                    <svg
-                                        viewBox="0 0 100 100"
-                                        className="h-full w-full text-[#4A3B32]"
-                                    >
-                                        <rect
-                                            x="0"
-                                            y="0"
-                                            width="25"
-                                            height="25"
-                                            fill="currentColor"
-                                            rx="2"
+                                    {guestToken ? (
+                                        <QRCodeSVG
+                                            value={guestToken}
+                                            size={150}
+                                            level="H"
+                                            includeMargin={true}
                                         />
-                                        <rect
-                                            x="5"
-                                            y="5"
-                                            width="15"
-                                            height="15"
-                                            fill="white"
-                                            rx="1"
-                                        />
-                                        <rect
-                                            x="8"
-                                            y="8"
-                                            width="9"
-                                            height="9"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="75"
-                                            y="0"
-                                            width="25"
-                                            height="25"
-                                            fill="currentColor"
-                                            rx="2"
-                                        />
-                                        <rect
-                                            x="80"
-                                            y="5"
-                                            width="15"
-                                            height="15"
-                                            fill="white"
-                                            rx="1"
-                                        />
-                                        <rect
-                                            x="83"
-                                            y="8"
-                                            width="9"
-                                            height="9"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="0"
-                                            y="75"
-                                            width="25"
-                                            height="25"
-                                            fill="currentColor"
-                                            rx="2"
-                                        />
-                                        <rect
-                                            x="5"
-                                            y="80"
-                                            width="15"
-                                            height="15"
-                                            fill="white"
-                                            rx="1"
-                                        />
-                                        <rect
-                                            x="8"
-                                            y="83"
-                                            width="9"
-                                            height="9"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="35"
-                                            y="5"
-                                            width="10"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="50"
-                                            y="10"
-                                            width="5"
-                                            height="15"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="60"
-                                            y="0"
-                                            width="10"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="35"
-                                            y="20"
-                                            width="15"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="0"
-                                            y="35"
-                                            width="5"
-                                            height="10"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="15"
-                                            y="35"
-                                            width="10"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="30"
-                                            y="30"
-                                            width="15"
-                                            height="15"
-                                            fill="currentColor"
-                                            rx="1"
-                                        />
-                                        <rect
-                                            x="35"
-                                            y="35"
-                                            width="5"
-                                            height="5"
-                                            fill="white"
-                                        />
-                                        <rect
-                                            x="55"
-                                            y="35"
-                                            width="20"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="85"
-                                            y="35"
-                                            width="5"
-                                            height="15"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="5"
-                                            y="55"
-                                            width="15"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="30"
-                                            y="50"
-                                            width="5"
-                                            height="20"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="40"
-                                            y="60"
-                                            width="20"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="65"
-                                            y="50"
-                                            width="10"
-                                            height="10"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="80"
-                                            y="55"
-                                            width="15"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="35"
-                                            y="80"
-                                            width="20"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="35"
-                                            y="90"
-                                            width="10"
-                                            height="5"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="60"
-                                            y="75"
-                                            width="5"
-                                            height="15"
-                                            fill="currentColor"
-                                        />
-                                        <rect
-                                            x="75"
-                                            y="75"
-                                            width="15"
-                                            height="15"
-                                            fill="currentColor"
-                                            rx="1"
-                                        />
-                                        <rect
-                                            x="80"
-                                            y="80"
-                                            width="5"
-                                            height="5"
-                                            fill="white"
-                                        />
-                                    </svg>
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center p-2 text-center text-xs text-gray-400">
+                                            <QrCode size={40} className="mb-2 text-gray-300" />
+                                            <span>QR Code tersedia via link personal tamu</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="space-y-1">
-                                    <span className="block text-[2.4cqw] font-bold uppercase tracking-widest text-gray-400">
+                                    <span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400">
                                         NAMA TAMU
                                     </span>
                                     <span className="text-base font-bold text-gray-700">
-                                        {guestName}
+                                        {guestName || 'Tamu Undangan'}
                                     </span>
+                                    {guestToken && (
+                                        <span className="block font-mono text-[10px] text-gray-400">
+                                            Token: {guestToken}
+                                        </span>
+                                    )}
                                 </div>
                             </motion.div>
                         </motion.div>

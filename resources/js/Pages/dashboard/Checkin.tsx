@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5Qrcode } from 'html5-qrcode';
 import {
     AlertCircle,
     Camera,
@@ -25,7 +25,7 @@ export const Checkin: React.FC = () => {
     const [soundEnabled, setSoundEnabled] = useState(true);
     const [scanHistory, setScanHistory] = useState<any[]>([]);
 
-    const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+    const scannerRef = useRef<Html5Qrcode | null>(null);
 
     // Web Audio success beep
     const playBeep = () => {
@@ -55,8 +55,16 @@ export const Checkin: React.FC = () => {
     const processCheckin = async (token: string) => {
         setLoading(true);
         try {
+            let cleanToken = (token || '').trim();
+            if (cleanToken.includes('to=')) {
+                const match = cleanToken.match(/[?&]to=([^&#]+)/);
+                if (match && match[1]) {
+                    cleanToken = decodeURIComponent(match[1]);
+                }
+            }
+
             const res = await api.post('/guests/checkin', {
-                uniqueToken: token,
+                uniqueToken: cleanToken,
             });
             if (res.data.status === 'success') {
                 playBeep();
@@ -86,48 +94,77 @@ export const Checkin: React.FC = () => {
         }
     };
 
-    // Html5QrcodeScanner init/cleanup
+    // Html5Qrcode init/cleanup
     useEffect(() => {
+        let isMounted = true;
+
         if (isScanning) {
-            // Small timeout to ensure element exists in DOM
             const timer = setTimeout(() => {
-                const scanner = new Html5QrcodeScanner(
-                    'qr-reader',
-                    {
-                        fps: 10,
-                        qrbox: { width: 250, height: 250 },
-                        rememberLastUsedCamera: true,
-                    },
-                    false,
-                );
+                const html5QrCode = new Html5Qrcode('qr-reader');
+                scannerRef.current = html5QrCode;
 
-                scanner.render(
-                    (decodedText) => {
-                        // Stop scanning on success
-                        scanner
-                            .clear()
-                            .then(() => {
-                                setIsScanning(false);
-                                processCheckin(decodedText);
-                            })
-                            .catch((e) => console.error(e));
-                    },
-                    () => {
-                        // Quiet mode for scanner errors
-                    },
-                );
+                const qrConfig = {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 },
+                    aspectRatio: 1.0,
+                };
 
-                scannerRef.current = scanner;
+                html5QrCode
+                    .start(
+                        { facingMode: 'environment' },
+                        qrConfig,
+                        (decodedText) => {
+                            if (html5QrCode.isScanning) {
+                                html5QrCode
+                                    .stop()
+                                    .then(() => {
+                                        if (isMounted) {
+                                            setIsScanning(false);
+                                            processCheckin(decodedText);
+                                        }
+                                    })
+                                    .catch(() => {
+                                        if (isMounted) {
+                                            setIsScanning(false);
+                                            processCheckin(decodedText);
+                                        }
+                                    });
+                            }
+                        },
+                        () => {
+                            // quiet mode for frame-level decode errors
+                        }
+                    )
+                    .catch((err) => {
+                        console.error('Error starting camera scanner:', err);
+                        toast.error(
+                            'Gagal mengaktifkan kamera. Pastikan browser diizinkan mengakses kamera.'
+                        );
+                        if (isMounted) {
+                            setIsScanning(false);
+                        }
+                    });
             }, 300);
 
             return () => {
+                isMounted = false;
                 clearTimeout(timer);
                 if (scannerRef.current) {
-                    scannerRef.current
-                        .clear()
-                        .catch((e) =>
-                            console.error('Error clearing scanner:', e),
-                        );
+                    const currentScanner = scannerRef.current;
+                    if (currentScanner.isScanning) {
+                        currentScanner
+                            .stop()
+                            .then(() => {
+                                try {
+                                    currentScanner.clear();
+                                } catch (e) {}
+                            })
+                            .catch((e) => console.error(e));
+                    } else {
+                        try {
+                            currentScanner.clear();
+                        } catch (e) {}
+                    }
                     scannerRef.current = null;
                 }
             };

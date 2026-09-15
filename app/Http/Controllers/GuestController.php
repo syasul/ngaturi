@@ -44,21 +44,45 @@ class GuestController extends Controller
     }
 
     // 3. POST /api/guests/public/rsvp - Submit RSVP from public page
-    public function submitPublicRsvp(Request $request)
+    public function submitPublicRsvp(Request $request, $weddingId = null, $token = null)
     {
         try {
-            $uniqueToken = $request->input('uniqueToken');
-            $rsvpStatus = $request->input('rsvpStatus');
+            $uniqueToken = $request->input('uniqueToken') ?: ($token ?: $request->input('token'));
+            $rsvpStatus = $request->input('rsvpStatus') ?: $request->input('status');
             $message = $request->input('message');
 
-            if (!$uniqueToken || !$rsvpStatus) {
-                return response()->json(['status' => 'error', 'message' => 'Token dan Status RSVP wajib diisi.'], 400);
+            if ($uniqueToken && $uniqueToken !== 'anonymous') {
+                $guest = Guest::where('unique_token', $uniqueToken)->first();
+            } else {
+                $guest = null;
             }
 
-            $guest = Guest::where('unique_token', $uniqueToken)->first();
+            if (!$guest && ($weddingId || $request->input('weddingId') || $request->input('wedding_id'))) {
+                $wid = $weddingId ?: ($request->input('weddingId') ?: $request->input('wedding_id'));
+                $name = $request->input('name') ?: 'Tamu Undangan';
+                $newToken = Str::random(8) . '-' . Str::random(4);
+                $guest = Guest::create([
+                    'wedding_id' => $wid,
+                    'name' => $name,
+                    'unique_token' => $newToken,
+                    'rsvp_status' => $rsvpStatus ?: 'hadir',
+                    'message' => $message ?: null,
+                    'is_message_visible' => true,
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Konfirmasi kehadiran berhasil dikirim.',
+                    'guest' => $guest,
+                ]);
+            }
 
             if (!$guest) {
                 return response()->json(['status' => 'error', 'message' => 'Data tamu tidak valid.'], 400);
+            }
+
+            if (!$rsvpStatus) {
+                return response()->json(['status' => 'error', 'message' => 'Status RSVP wajib diisi.'], 400);
             }
 
             $guest->update([
@@ -330,10 +354,15 @@ class GuestController extends Controller
     {
         $user = Auth::user();
         try {
-            $uniqueToken = $request->input('uniqueToken');
+            $uniqueToken = trim((string) $request->input('uniqueToken'));
 
             if (!$uniqueToken) {
                 return response()->json(['status' => 'error', 'message' => 'Token QR Code wajib diisi.'], 400);
+            }
+
+            // Extract token if a full URL was scanned, e.g. https://.../u/slug?to=TOKEN
+            if (preg_match('/[?&]to=([^&#]+)/', $uniqueToken, $matches)) {
+                $uniqueToken = $matches[1];
             }
 
             $wedding = Wedding::where('user_id', $user->id)->first();

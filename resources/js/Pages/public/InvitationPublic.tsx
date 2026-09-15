@@ -152,14 +152,12 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     // Handle RSVP Submit
     const handleRsvpSubmit = async (rsvpStatus: string, message: string) => {
         try {
-            const guestTokenParam = guestToken || 'anonymous';
-            const res = await api.post(
-                `/guests/public/rsvp/${wedding.id}/${guestTokenParam}`,
-                {
-                    rsvpStatus,
-                    message,
-                },
-            );
+            const res = await api.post('/guests/public/rsvp', {
+                uniqueToken: guestToken,
+                rsvpStatus,
+                message,
+                weddingId: wedding?.id,
+            });
 
             if (res.data.status === 'success') {
                 toast.success('Konfirmasi kehadiran berhasil dikirim.');
