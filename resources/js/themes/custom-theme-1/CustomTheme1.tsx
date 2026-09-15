@@ -601,7 +601,7 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
             {/* ============================================================== */}
             {/* 2. RIGHT PANEL (SCROLLABLE MOBILE INVITATION)                  */}
             {/* ============================================================== */}
-            <div className="relative h-screen w-full overflow-hidden bg-[#FAF3EC] lg:w-[30%]">
+            <div className="relative h-screen h-[100dvh] w-full overflow-hidden bg-[#FAF3EC] lg:w-[30%]">
                 {/* Opening Cover - positioned inside right panel so left panel stays visible on desktop */}
                 <AnimatePresence>
                     {!isOpened && onOpen && (
@@ -3161,83 +3161,99 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                 {/* ============================================================== */}
                 {isOpened && (
                     <>
-                        {/* MUSIC BUTTON */}
-                        <button
-                            onClick={() => setIsPlayingMusic(!isPlayingMusic)}
-                            className="absolute bottom-20 left-6 z-[99] flex h-12 w-12 items-center justify-center rounded-full border-[1.5px] border-[#C9A84C]/40 bg-[#3A0511] shadow-[0_4px_20px_-5px_rgba(58,5,17,0.5)] transition-all duration-300 hover:scale-105 active:scale-95"
-                            title="Toggle Music"
+                        {/* LEFT FLOATING CONTROLS: E-Wallet/Kado (top) + Music (bottom) */}
+                        <div
+                            className="absolute left-4 z-[99] flex flex-col items-center gap-3 sm:left-6"
+                            style={{
+                                bottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))',
+                            }}
                         >
-                            <div
-                                className={`flex h-full w-full items-center justify-center ${isPlayingMusic ? 'animate-[spin_4s_linear_infinite]' : ''}`}
-                            >
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    className="h-[22px] w-[22px] text-[#C9A84C] opacity-90"
+                            {/* QRIS / E-WALLET BUTTON */}
+                            {(customStyle.qrisUrl || customStyle.ewalletNumber) && (
+                                <button
+                                    onClick={() => setIsQrisModalOpen(true)}
+                                    className="rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                                    title={customStyle.ewalletName || "Kado Digital / Angpao"}
                                 >
-                                    <circle
-                                        cx="12"
-                                        cy="12"
-                                        r="11"
-                                        stroke="currentColor"
-                                        strokeWidth="1.5"
-                                    />
-                                    <circle
-                                        cx="12"
-                                        cy="12"
-                                        r="3"
-                                        stroke="currentColor"
-                                        strokeWidth="1.5"
-                                    />
-                                    <path
-                                        d="M12 9a3 3 0 0 0 0 6"
-                                        stroke="currentColor"
-                                        strokeWidth="1.5"
-                                    />
-                                </svg>
-                            </div>
-                            {/* Pause/Stop indicator overlay */}
-                            {!isPlayingMusic && (
-                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-[0.5px]">
-                                    <Play
-                                        size={16}
-                                        className="ml-0.5 text-white"
-                                        fill="white"
-                                    />
-                                </div>
+                                    <CreditCard size={20} />
+                                </button>
                             )}
-                        </button>
 
-                        {/* QRIS / E-WALLET BUTTON */}
-                        {(customStyle.qrisUrl || customStyle.ewalletNumber) && (
+                            {/* MUSIC BUTTON (MENTOK BAWAH / DI ATAS NAVBAR) */}
                             <button
-                                onClick={() => setIsQrisModalOpen(true)}
-                                className="absolute bottom-36 left-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                                title={customStyle.ewalletName || "Kado Digital / Angpao"}
+                                onClick={() => setIsPlayingMusic(!isPlayingMusic)}
+                                className="relative flex h-12 w-12 items-center justify-center rounded-full border-[1.5px] border-[#C9A84C]/40 bg-[#3A0511] shadow-[0_4px_20px_-5px_rgba(58,5,17,0.5)] transition-all duration-300 hover:scale-105 active:scale-95"
+                                title="Toggle Music"
                             >
-                                <CreditCard size={20} />
+                                <div
+                                    className={`flex h-full w-full items-center justify-center ${isPlayingMusic ? 'animate-[spin_4s_linear_infinite]' : ''}`}
+                                >
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        className="h-[22px] w-[22px] text-[#C9A84C] opacity-90"
+                                    >
+                                        <circle
+                                            cx="12"
+                                            cy="12"
+                                            r="11"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                        />
+                                        <circle
+                                            cx="12"
+                                            cy="12"
+                                            r="3"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                        />
+                                        <path
+                                            d="M12 9a3 3 0 0 0 0 6"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                        />
+                                    </svg>
+                                </div>
+                                {/* Pause/Stop indicator overlay */}
+                                {!isPlayingMusic && (
+                                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-[0.5px]">
+                                        <Play
+                                            size={16}
+                                            className="ml-0.5 text-white"
+                                            fill="white"
+                                        />
+                                    </div>
+                                )}
                             </button>
-                        )}
+                        </div>
 
-                        {/* A. QR CHECK-IN SCROLLER ACCESS BUTTON */}
-                        {(guestName || guestToken) && (
-                            <button
-                                onClick={() => setIsQrModalOpen(true)}
-                                className="absolute bottom-36 right-6 z-[99] rounded-full border border-[#C9A84C]/35 bg-[#6B1D2F] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                                title="QR Kehadiran Tamu"
-                            >
-                                <QrCode size={20} />
-                            </button>
-                        )}
-
-                        {/* B. NAVIGATION MENU OVERLAY BURGER TOGGLE BUTTON */}
-                        <button
-                            onClick={() => setIsMenuOpen(true)}
-                            className="absolute bottom-20 right-6 z-[99] rounded-full border border-sand/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
-                            title="Menu"
+                        {/* RIGHT FLOATING CONTROLS: QR Check-in (top) + Menu (bottom) */}
+                        <div
+                            className="absolute right-4 z-[99] flex flex-col items-center gap-3 sm:right-6"
+                            style={{
+                                bottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))',
+                            }}
                         >
-                            <Menu size={20} />
-                        </button>
+                            {/* A. QR CHECK-IN SCROLLER ACCESS BUTTON */}
+                            {(guestName || guestToken) && (
+                                <button
+                                    onClick={() => setIsQrModalOpen(true)}
+                                    className="rounded-full border border-[#C9A84C]/35 bg-[#6B1D2F] p-3.5 text-white shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                                    title="QR Kehadiran Tamu"
+                                >
+                                    <QrCode size={20} />
+                                </button>
+                            )}
+
+                            {/* B. NAVIGATION MENU OVERLAY BURGER TOGGLE BUTTON (MENTOK BAWAH / DI ATAS NAVBAR) */}
+                            <button
+                                onClick={() => setIsMenuOpen(true)}
+                                className="rounded-full border border-sand/35 bg-white p-3.5 text-[#6B1D2F] shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                                title="Menu"
+                            >
+                                <Menu size={20} />
+                            </button>
+                        </div>
                     </>
                 )}
 
@@ -3378,7 +3394,7 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                             exit={{ opacity: 0 }}
                         >
                             <motion.div
-                                className="relative w-full max-w-sm space-y-6 rounded-3xl border border-sand/40 bg-white p-6 text-center shadow-2xl"
+                                className="relative w-full max-w-sm space-y-4 rounded-3xl border border-sand/40 bg-white p-6 text-center shadow-2xl"
                                 initial={{ scale: 0.9, y: 20 }}
                                 animate={{ scale: 1, y: 0 }}
                                 exit={{ scale: 0.9, y: 20 }}
@@ -3398,28 +3414,28 @@ export const CustomTheme1: React.FC<CustomTheme1Props> = ({
                                     >
                                         Akses Masuk
                                     </h3>
-                                    <p className="mx-auto max-w-xs text-[2.4cqw] leading-relaxed text-gray-500">
+                                    <p className="mx-auto max-w-[260px] text-xs leading-relaxed text-gray-500">
                                         Tunjukkan QR Code ini kepada petugas
                                         penerima tamu di lokasi acara untuk
                                         check-in kehadiran digital.
                                     </p>
                                 </div>
 
-                                {/* Real QR Code */}
+                                {/* Real QR Code (Enlarged) */}
                                 <div
-                                    className="relative mx-auto flex h-44 w-44 items-center justify-center rounded-2xl border-2 bg-white p-3 shadow-inner"
-                                    style={{ borderColor: `${primaryColor}20` }}
+                                    className="relative mx-auto flex h-56 w-56 items-center justify-center rounded-2xl border-2 bg-white p-2.5 shadow-inner"
+                                    style={{ borderColor: `${primaryColor}25` }}
                                 >
                                     {guestToken ? (
                                         <QRCodeSVG
                                             value={guestToken}
-                                            size={150}
+                                            size={204}
                                             level="H"
                                             includeMargin={true}
                                         />
                                     ) : (
                                         <div className="flex flex-col items-center justify-center p-2 text-center text-xs text-gray-400">
-                                            <QrCode size={40} className="mb-2 text-gray-300" />
+                                            <QrCode size={48} className="mb-2 text-gray-300" />
                                             <span>QR Code tersedia via link personal tamu</span>
                                         </div>
                                     )}
