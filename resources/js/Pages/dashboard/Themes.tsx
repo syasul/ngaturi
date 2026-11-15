@@ -203,12 +203,14 @@ export const Themes: React.FC = () => {
                                     <p className="mt-1 text-xs text-charcoal/50">
                                         Cocok untuk konsep pernikahan{' '}
                                         {theme.id === 'basic-1'
-                                            ? 'minimalis modern & elegan'
-                                            : theme.id === 'elegant'
-                                              ? 'mewah klasik'
-                                              : theme.id === 'rustic'
-                                                ? 'natural kayu'
-                                                : 'minimalis modern'}
+                                            ? 'minimalis botanical & sage'
+                                            : theme.id === 'basic-2'
+                                              ? 'bohemian terracotta & warm sunset'
+                                              : theme.id === 'elegant'
+                                                ? 'mewah klasik'
+                                                : theme.id === 'rustic'
+                                                  ? 'natural kayu'
+                                                  : 'minimalis modern'}
                                         .
                                     </p>
 

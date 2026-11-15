@@ -22,6 +22,7 @@ return new class extends Migration
         // Standard predefined codes for consistent URLs across all environments
         $knownCodes = [
             'basic-1' => 'tv6akl',
+            'basic-2' => 'b2x8k1',
             'theme-1' => 'emikvq',
             'theme-2' => 't2ltgr',
             'custom-theme-1' => 'rgudhs',
@@ -50,6 +51,27 @@ return new class extends Migration
                 'name' => 'Minimalist Sage',
                 'code' => $knownCodes['basic-1'],
                 'thumbnail_url' => '/assets/wedding/couple-foliage.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        }
+
+        // Ensure basic-2 theme exists and is active
+        $basic2 = Theme::find('basic-2');
+        if (!$basic2) {
+            Theme::create([
+                'id' => 'basic-2',
+                'name' => 'Terracotta Bloom',
+                'code' => $knownCodes['basic-2'],
+                'thumbnail_url' => '/assets/wedding/couple-rustic.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        } else {
+            $basic2->update([
+                'name' => 'Terracotta Bloom',
+                'code' => $knownCodes['basic-2'],
+                'thumbnail_url' => '/assets/wedding/couple-rustic.png',
                 'is_active' => true,
                 'package_level' => 'BASIC',
             ]);

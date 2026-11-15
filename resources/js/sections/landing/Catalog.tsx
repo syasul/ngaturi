@@ -24,6 +24,18 @@ export const Catalog: React.FC = () => {
             accent: 'rustic' as const,
         },
         {
+            id: 'basic-2',
+            demoTier: 'b',
+            demoCode: 'b2x8k1',
+            name: 'Terracotta Bloom',
+            tag: 'BASIC',
+            color: 'bg-[#FDF6F0] border-[#D97D54]',
+            textColor: 'text-[#8F3D24]',
+            description:
+                'Nuansa hangat terracotta dan boho sunset dengan polaroid galeri, lengkungan estetik, dan navigasi modern.',
+            accent: 'rustic' as const,
+        },
+        {
             id: 'theme-1',
             demoTier: 'p',
             demoCode: 'emikvq',

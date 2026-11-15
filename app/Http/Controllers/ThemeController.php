@@ -103,6 +103,7 @@ class ThemeController extends Controller
 
         $knownCodes = [
             'tv6akl' => 'basic-1',
+            'b2x8k1' => 'basic-2',
             'emikvq' => 'theme-1',
             't2ltgr' => 'theme-2',
             'rgudhs' => 'custom-theme-1',
@@ -159,6 +160,45 @@ class ThemeController extends Controller
                 $theme->thumbnail_url = '/assets/wedding/couple-foliage.png';
                 $theme->is_active = true;
                 $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 5. Auto-healing for basic-2 if requested
+        if (!$theme && in_array($cleanCode, ['b2x8k1', 'basic-2', 'basic2', 'b-2'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-2'],
+                    [
+                        'name' => 'Terracotta Bloom',
+                        'code' => 'b2x8k1',
+                        'thumbnail_url' => '/assets/wedding/couple-rustic.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'b2x8k1';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                // In-memory fallback
+                $theme = new Theme();
+                $theme->id = 'basic-2';
+                $theme->name = 'Terracotta Bloom';
+                $theme->code = 'b2x8k1';
+                $theme->thumbnail_url = '/assets/wedding/couple-rustic.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
+        }
+
+        // Ensure theme has its code set even if legacy db row had empty code
+        if ($theme && empty($theme->code)) {
+            $flipped = array_flip($knownCodes);
+            if (isset($flipped[$theme->id])) {
+                $theme->code = $flipped[$theme->id];
+            } else {
+                $theme->code = $cleanCode;
             }
         }
 
