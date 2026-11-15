@@ -1,5 +1,8 @@
 import {
+    Copy,
     Edit3,
+    ExternalLink,
+    Eye,
     Image as ImageIcon,
     Loader2,
     Plus,
@@ -13,10 +16,13 @@ import api from '../../lib/api';
 
 interface Theme {
     id: string;
+    code?: string;
+    tierCode?: string;
+    demoUrl?: string;
     name: string;
     thumbnailUrl: string | null;
     isActive: boolean;
-    packageLevel: 'BASIC' | 'PREMIUM';
+    packageLevel: 'BASIC' | 'PREMIUM' | 'CUSTOM';
     usersCount: number;
 }
 
@@ -32,8 +38,9 @@ export const AdminThemes: React.FC = () => {
     // Form Fields
     const [name, setName] = useState('');
     const [slugId, setSlugId] = useState(''); // theme id (e.g. rustic)
+    const [code, setCode] = useState(''); // random demo code
     const [thumbnailUrl, setThumbnailUrl] = useState('');
-    const [packageLevel, setPackageLevel] = useState<'BASIC' | 'PREMIUM'>(
+    const [packageLevel, setPackageLevel] = useState<'BASIC' | 'PREMIUM' | 'CUSTOM'>(
         'BASIC',
     );
     const [isActive, setIsActive] = useState(true);
@@ -60,6 +67,7 @@ export const AdminThemes: React.FC = () => {
         setSelectedThemeId(null);
         setName('');
         setSlugId('');
+        setCode('');
         setThumbnailUrl('');
         setPackageLevel('BASIC');
         setIsActive(true);
@@ -71,6 +79,7 @@ export const AdminThemes: React.FC = () => {
         setSelectedThemeId(theme.id);
         setName(theme.name);
         setSlugId(theme.id);
+        setCode(theme.code || '');
         setThumbnailUrl(theme.thumbnailUrl || '');
         setPackageLevel(theme.packageLevel);
         setIsActive(theme.isActive);
@@ -114,6 +123,7 @@ export const AdminThemes: React.FC = () => {
         setSaving(true);
         const payload = {
             id: slugId,
+            code,
             name,
             thumbnailUrl,
             packageLevel,
@@ -253,12 +263,36 @@ export const AdminThemes: React.FC = () => {
                             {/* Title & Info */}
                             <div className="flex flex-1 flex-col justify-between space-y-4 p-5">
                                 <div>
-                                    <h3 className="text-sm font-bold text-white">
-                                        {t.name}
-                                    </h3>
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-sm font-bold text-white">
+                                            {t.name}
+                                        </h3>
+                                        <span className="font-mono text-[10px] text-amber-500/80">
+                                            Code: {t.code || '-'}
+                                        </span>
+                                    </div>
                                     <p className="font-mono text-xs text-slate-500">
                                         ID: {t.id}
                                     </p>
+
+                                    {/* Demo URL Bar */}
+                                    <div className="mt-3 flex items-center justify-between rounded-lg bg-slate-950 p-2 text-[10px] font-mono text-slate-400">
+                                        <span className="truncate">
+                                            /demo/{t.tierCode || 'b'}/{t.code || t.id}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const url = t.demoUrl || `https://ngaturi.inxdvi.com/demo/${t.tierCode || 'b'}/${t.code || t.id}`;
+                                                navigator.clipboard.writeText(url);
+                                                toast.success('Link demo disalin!');
+                                            }}
+                                            className="ml-1 cursor-pointer text-amber-500 hover:text-amber-400"
+                                            title="Salin link demo"
+                                        >
+                                            <Copy size={12} />
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="flex items-center justify-between border-t border-slate-800/60 pt-4">
@@ -289,6 +323,15 @@ export const AdminThemes: React.FC = () => {
 
                                     {/* Actions */}
                                     <div className="flex gap-2">
+                                        <a
+                                            href={`/demo/${t.tierCode || 'b'}/${t.code || t.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="cursor-pointer rounded-lg bg-slate-800 p-1.5 text-slate-300 transition-all hover:bg-slate-700 hover:text-white"
+                                            title="Lihat Live Demo"
+                                        >
+                                            <Eye size={14} />
+                                        </a>
                                         <button
                                             onClick={() => openEditDrawer(t)}
                                             className="cursor-pointer rounded-lg bg-slate-800 p-1.5 text-slate-300 transition-all hover:bg-slate-700 hover:text-white"
@@ -372,6 +415,25 @@ export const AdminThemes: React.FC = () => {
                                     />
                                 </div>
 
+                                {/* Code (Demo URL Random Code) */}
+                                <div>
+                                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                                        Kode Demo Acak (URL Slug)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={code}
+                                        onChange={(e) =>
+                                            setCode(e.target.value)
+                                        }
+                                        placeholder="e.g. b1k9a2 (kosongkan untuk auto-generate)"
+                                        className="block w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm font-mono text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                                    />
+                                    <span className="mt-1 block text-[10px] text-slate-500">
+                                        Digunakan pada URL demo: ngaturi.inxdvi.com/demo/(tier)/[kode]
+                                    </span>
+                                </div>
+
                                 {/* Package Level */}
                                 <div>
                                     <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400">
@@ -387,10 +449,13 @@ export const AdminThemes: React.FC = () => {
                                         className="block w-full cursor-pointer rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-500"
                                     >
                                         <option value="BASIC">
-                                            BASIC (Standard)
+                                            BASIC (b)
                                         </option>
                                         <option value="PREMIUM">
-                                            PREMIUM (Exclusive)
+                                            PREMIUM (p)
+                                        </option>
+                                        <option value="CUSTOM">
+                                            CUSTOM (c)
                                         </option>
                                     </select>
                                 </div>

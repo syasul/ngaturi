@@ -12,6 +12,7 @@ import {
 } from './samples/SampleDesignTheme';
 import Theme1 from './theme-1/Theme1';
 import CustomTheme1 from './custom-theme-1/CustomTheme1';
+import BasicTheme1 from './basic-1/BasicTheme1';
 
 const Theme2 = React.lazy(() => import('./theme-2/Theme2'));
 const Theme3 = React.lazy(() => import('./theme-3/Theme3'));
@@ -50,9 +51,25 @@ export const ThemeRouter: React.FC<ThemeRouterProps> = ({
             !normalizedId.includes('theme-3') &&
             !normalizedId.includes('premium-10') &&
             !normalizedId.includes('burgundy-bloom') &&
-            !normalizedId.includes('custom-theme-1'));
+            !normalizedId.includes('custom-theme-1') &&
+            !normalizedId.includes('basic'));
 
     const renderTheme = () => {
+        if (
+            normalizedId.includes('basic-1') ||
+            normalizedId.includes('basic_1') ||
+            normalizedId.includes('basic')
+        ) {
+            return (
+                <BasicTheme1
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
         if (normalizedId.includes('rustic')) {
             return <RusticTheme {...props} />;
         }

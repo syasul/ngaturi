@@ -1,4 +1,4 @@
-import { Eye, Smartphone } from 'lucide-react';
+import { ExternalLink, Eye, Smartphone } from 'lucide-react';
 import React, { useState } from 'react';
 import Badge from '../../components/ui/Badge';
 import Card from '../../components/ui/Card';
@@ -8,37 +8,44 @@ import TiltCard from '../../components/ui/TiltCard';
 export const Catalog: React.FC = () => {
     const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
     const [selectedThemeName, setSelectedThemeName] = useState<string>('');
+    const [selectedThemeDemoUrl, setSelectedThemeDemoUrl] = useState<string>('');
 
     const themes = [
         {
-            id: 'classic-royal',
-            name: 'Classic Royal',
+            id: 'basic-1',
+            demoTier: 'b',
+            demoCode: 'tv6akl',
+            name: 'Minimalist Sage',
+            tag: 'BASIC',
+            color: 'bg-[#F2F6F3] border-[#7F9F8B]',
+            textColor: 'text-[#2D4F3E]',
+            description:
+                'Desain minimalis modern bernuansa sage green & warm sand yang bersih, menenangkan, dan elegan.',
+            accent: 'rustic' as const,
+        },
+        {
+            id: 'theme-1',
+            demoTier: 'p',
+            demoCode: 'emikvq',
+            name: 'Burgundy Bloom',
+            tag: 'PREMIUM',
+            color: 'bg-[#3A0511] border-[#C9A84C]',
+            textColor: 'text-[#FAF3EC]',
+            description:
+                'Desain royal burgundy mewah dengan aksen emas berkelas dan layout responsif eksklusif.',
+            accent: 'gold' as const,
+        },
+        {
+            id: 'theme-2',
+            demoTier: 'p',
+            demoCode: 't2ltgr',
+            name: 'Premium 10 Animasi',
             tag: 'PREMIUM',
             color: 'bg-slate-900 border-gold-400',
             textColor: 'text-gold-200',
             description:
-                'Desain royal mewah dengan aksen emas yang anggun dan latar belakang gelap elegan.',
+                'Template sinematik dengan 10 animasi visual memukau dan pengalaman interaktif istimewa.',
             accent: 'gold' as const,
-        },
-        {
-            id: 'modern-foliage',
-            name: 'Modern Foliage',
-            tag: 'PREMIUM',
-            color: 'bg-[#f4f7f5] border-[#8fa89b]',
-            textColor: 'text-[#2d4030]',
-            description:
-                'Tampilan bersih, modern, dan minimalis berhias ilustrasi daun segar sage green.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'rustic-autumn',
-            name: 'Rustic Autumn',
-            tag: 'BASIC',
-            color: 'bg-[#faf6f0] border-[#d4956a]',
-            textColor: 'text-[#5c3d2e]',
-            description:
-                'Tema hangat berwarna terracotta, melambangkan kebersamaan alamiah yang bersahaja.',
-            accent: 'cream' as const,
         },
     ];
 
@@ -130,6 +137,7 @@ export const Catalog: React.FC = () => {
                                     onClick={() => {
                                         setSelectedTheme(theme.id);
                                         setSelectedThemeName(theme.name);
+                                        setSelectedThemeDemoUrl(`/demo/${theme.demoTier}/${theme.demoCode}`);
                                     }}
                                     className="shadow-xs inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-gold-500 py-3 font-poppins text-sm font-semibold text-gold-600 transition-all duration-300 hover:bg-gold-500 hover:text-white hover:shadow-md"
                                 >
@@ -153,9 +161,9 @@ export const Catalog: React.FC = () => {
                         <div className="absolute left-1/2 top-2.5 z-30 flex h-4 w-20 -translate-x-1/2 items-center justify-center rounded-full bg-charcoal">
                             <span className="h-1.5 w-1.5 rounded-full bg-gray-900" />
                         </div>
-                        {selectedTheme && (
+                        {selectedThemeDemoUrl && (
                             <iframe
-                                src={`/theme-preview/${selectedTheme}`}
+                                src={selectedThemeDemoUrl}
                                 className="h-full w-full overflow-hidden rounded-2xl border-0"
                                 style={{
                                     scrollbarWidth: 'none',
@@ -194,6 +202,20 @@ export const Catalog: React.FC = () => {
                                 arah lokasi.
                             </p>
                         </div>
+
+                        {selectedThemeDemoUrl && (
+                            <div className="mt-6 flex flex-wrap gap-3">
+                                <a
+                                    href={selectedThemeDemoUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-full bg-gold-600 px-5 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-gold-700"
+                                >
+                                    <ExternalLink size={14} />
+                                    <span>Buka Demo Layar Penuh</span>
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </div>
             </Modal>

@@ -476,6 +476,7 @@ class AdminController extends Controller
             $name = $request->input('name');
             $thumbnailUrl = $request->input('thumbnailUrl');
             $packageLevel = $request->input('packageLevel');
+            $code = $request->input('code');
 
             if (!$id || !$name) {
                 return response()->json(['status' => 'error', 'message' => 'ID dan Nama tema wajib diisi.'], 400);
@@ -483,6 +484,7 @@ class AdminController extends Controller
 
             Theme::create([
                 'id' => preg_replace('/[^a-z0-9-]/', '', strtolower($id)),
+                'code' => $code ? strtolower(trim($code)) : Theme::generateUniqueCode(),
                 'name' => $name,
                 'thumbnail_url' => $thumbnailUrl ?: '',
                 'package_level' => $packageLevel ?: 'BASIC',
@@ -504,12 +506,18 @@ class AdminController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Tema tidak ditemukan.'], 404);
             }
 
-            $theme->update([
+            $updateData = [
                 'name' => $request->input('name'),
                 'thumbnail_url' => $request->input('thumbnailUrl'),
                 'package_level' => $request->input('packageLevel'),
                 'is_active' => $request->input('isActive'),
-            ]);
+            ];
+
+            if ($request->has('code') && !empty($request->input('code'))) {
+                $updateData['code'] = strtolower(trim($request->input('code')));
+            }
+
+            $theme->update($updateData);
 
             return response()->json(['status' => 'success', 'message' => 'Tema berhasil diperbarui.']);
         } catch (\Exception $e) {

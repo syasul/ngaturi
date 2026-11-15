@@ -53,18 +53,21 @@ class DatabaseSeeder extends Seeder
         );
 
         // 2. Seed Themes
-        Theme::upsert([
-            ['id' => 'elegant', 'name' => 'Elegant Gold', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC'],
-            ['id' => 'rustic', 'name' => 'Rustic Bohemian', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC'],
-            ['id' => 'modern', 'name' => 'Modern Minimalist', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM'],
-            ['id' => 'royal-yogyakarta', 'name' => 'Royal Yogyakarta', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM'],
-            ['id' => 'botanical-minimal', 'name' => 'Botanical Minimal', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC'],
-            ['id' => 'editorial-mono', 'name' => 'Editorial Mono', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM'],
-            ['id' => 'theme-1', 'name' => 'Burgundy Bloom', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM'],
-            ['id' => 'custom-theme-1', 'name' => 'Custom Theme 1', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'CUSTOM'],
-            ['id' => 'theme-2', 'name' => 'Premium 10 Animasi', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM'],
-            ['id' => 'theme-3', 'name' => 'Burgundy Bloom V2', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'PREMIUM'],
-        ], ['id'], ['name', 'thumbnail_url', 'is_active', 'package_level']);
+        $themesSeed = [
+            ['id' => 'basic-1', 'name' => 'Minimalist Sage', 'thumbnail_url' => '/assets/wedding/couple-foliage.png', 'is_active' => true, 'package_level' => 'BASIC', 'code' => 'b1k9a2'],
+            ['id' => 'elegant', 'name' => 'Elegant Gold', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC', 'code' => 'e8f1a2'],
+            ['id' => 'rustic', 'name' => 'Rustic Bohemian', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC', 'code' => 'r3k7b5'],
+            ['id' => 'modern', 'name' => 'Modern Minimalist', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM', 'code' => 'm9x4p1'],
+            ['id' => 'royal-yogyakarta', 'name' => 'Royal Yogyakarta', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM', 'code' => 'ry7q2w'],
+            ['id' => 'botanical-minimal', 'name' => 'Botanical Minimal', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC', 'code' => 'bm5k8z'],
+            ['id' => 'editorial-mono', 'name' => 'Editorial Mono', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM', 'code' => 'em3t9y'],
+            ['id' => 'theme-1', 'name' => 'Burgundy Bloom', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM', 'code' => 'p4m9k2'],
+            ['id' => 'custom-theme-1', 'name' => 'Custom Theme 1', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'CUSTOM', 'code' => 'c9z3q4'],
+            ['id' => 'theme-2', 'name' => 'Premium 10 Animasi', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM', 'code' => 'p8x1n6'],
+            ['id' => 'theme-3', 'name' => 'Burgundy Bloom V2', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'PREMIUM', 'code' => 'p2w5j8'],
+        ];
+
+        Theme::upsert($themesSeed, ['id'], ['name', 'thumbnail_url', 'is_active', 'package_level', 'code']);
 
         // 2b. Seed Music
         $tracks = [

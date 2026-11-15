@@ -1,4 +1,4 @@
-import { ArrowRight, Check, ExternalLink, Lock, Palette } from 'lucide-react';
+import { ArrowRight, Check, Copy, ExternalLink, Eye, Lock, Palette } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -150,8 +150,8 @@ export const Themes: React.FC = () => {
                                       : 'border-sand hover:border-gold-500'
                             }`}
                         >
-                            {/* Mock theme thumbnail cover */}
-                            <div className="relative flex h-44 flex-col items-center justify-center bg-sand/20 p-4 text-center">
+                            {/* Theme thumbnail cover */}
+                            <div className="relative flex h-44 overflow-hidden items-center justify-center bg-sand/20 text-center">
                                 {isLocked && (
                                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/15">
                                         <div className="flex items-center gap-1.5 rounded-full bg-white/95 p-3 text-xs font-semibold text-charcoal shadow-lg">
@@ -161,16 +161,26 @@ export const Themes: React.FC = () => {
                                     </div>
                                 )}
 
-                                <Palette
-                                    className="mb-2 text-gold-500/40"
-                                    size={32}
-                                />
-                                <span className="font-sans text-xl font-bold tracking-wide text-gold-800">
-                                    {theme.name}
-                                </span>
-                                <span className="mt-1 text-[10px] text-charcoal/40">
-                                    Ngaturi Premium Layout
-                                </span>
+                                {theme.thumbnailUrl ? (
+                                    <img
+                                        src={theme.thumbnailUrl}
+                                        alt={theme.name}
+                                        className="h-full w-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center p-4">
+                                        <Palette
+                                            className="mb-2 text-gold-500/40"
+                                            size={32}
+                                        />
+                                        <span className="font-sans text-xl font-bold tracking-wide text-gold-800">
+                                            {theme.name}
+                                        </span>
+                                        <span className="mt-1 text-[10px] text-charcoal/40">
+                                            Ngaturi Layout
+                                        </span>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Theme description details */}
@@ -192,16 +202,48 @@ export const Themes: React.FC = () => {
                                     </div>
                                     <p className="mt-1 text-xs text-charcoal/50">
                                         Cocok untuk konsep pernikahan{' '}
-                                        {theme.id === 'elegant'
-                                            ? 'mewah klasik'
-                                            : theme.id === 'rustic'
-                                              ? 'natural kayu'
-                                              : 'minimalis modern'}
+                                        {theme.id === 'basic-1'
+                                            ? 'minimalis modern & elegan'
+                                            : theme.id === 'elegant'
+                                              ? 'mewah klasik'
+                                              : theme.id === 'rustic'
+                                                ? 'natural kayu'
+                                                : 'minimalis modern'}
                                         .
                                     </p>
+
+                                    {/* Demo URL preview */}
+                                    <div className="mt-3 flex items-center justify-between rounded-lg bg-neutral-50 px-2.5 py-1.5 text-[10px] font-mono text-charcoal/60">
+                                        <span className="truncate">
+                                            /demo/{theme.tierCode || 'b'}/{theme.code || theme.id}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                const url = theme.demoUrl || `https://ngaturi.inxdvi.com/demo/${theme.tierCode || 'b'}/${theme.code || theme.id}`;
+                                                navigator.clipboard.writeText(url);
+                                                toast.success('Link demo berhasil disalin!');
+                                            }}
+                                            className="ml-1 cursor-pointer text-gold-600 hover:text-gold-700"
+                                            title="Salin link demo"
+                                        >
+                                            <Copy size={11} />
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="flex gap-2">
+                                    <a
+                                        href={`/demo/${theme.tierCode || 'b'}/${theme.code || theme.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-gold-500/40 bg-white px-3 py-2 text-xs font-semibold text-gold-700 shadow-xs hover:bg-gold-500/10 transition"
+                                    >
+                                        <Eye size={13} />
+                                        <span>Demo</span>
+                                    </a>
+
                                     <Button
                                         variant={
                                             isSelected ? 'outline' : 'primary'
