@@ -208,11 +208,15 @@ export const Themes: React.FC = () => {
                                               ? 'bohemian terracotta & warm sunset'
                                               : theme.id === 'basic-3'
                                                 ? 'romantis dusty rose & floral blush'
-                                                : theme.id === 'elegant'
-                                                  ? 'mewah klasik'
-                                                  : theme.id === 'rustic'
-                                                    ? 'natural kayu'
-                                                    : 'minimalis modern'}
+                                                : theme.id === 'basic-4'
+                                                  ? 'monokrom editorial & ivory noir'
+                                                  : theme.id === 'basic-5'
+                                                    ? 'sejuk dusty ocean blue & coastal gold'
+                                                    : theme.id === 'elegant'
+                                                      ? 'mewah klasik'
+                                                      : theme.id === 'rustic'
+                                                        ? 'natural kayu'
+                                                        : 'minimalis modern'}
                                         .
                                     </p>
 

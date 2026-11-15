@@ -48,6 +48,30 @@ export const Catalog: React.FC = () => {
             accent: 'rustic' as const,
         },
         {
+            id: 'basic-4',
+            demoTier: 'b',
+            demoCode: 'b4k8n1',
+            name: 'Classic Ivory Noir',
+            tag: 'BASIC',
+            color: 'bg-[#FAF9F5] border-neutral-300',
+            textColor: 'text-[#18181B]',
+            description:
+                'Desain monokrom modern editorial bernuansa warm ivory dan aksen emas sampanye yang elegan & abadi.',
+            accent: 'rustic' as const,
+        },
+        {
+            id: 'basic-5',
+            demoTier: 'b',
+            demoCode: 'b5w9p3',
+            name: 'Ocean Breeze',
+            tag: 'BASIC',
+            color: 'bg-[#F3F7FA] border-[#5B82A1]',
+            textColor: 'text-[#244B66]',
+            description:
+                'Nuansa sejuk dusty ocean blue & pasir pantai dengan ornamen ombak estetik dan detail keemasan anggun.',
+            accent: 'rustic' as const,
+        },
+        {
             id: 'theme-1',
             demoTier: 'p',
             demoCode: 'emikvq',

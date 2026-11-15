@@ -24,6 +24,8 @@ return new class extends Migration
             'basic-1' => 'tv6akl',
             'basic-2' => 'b2x8k1',
             'basic-3' => 'b3v7x2',
+            'basic-4' => 'b4k8n1',
+            'basic-5' => 'b5w9p3',
             'theme-1' => 'emikvq',
             'theme-2' => 't2ltgr',
             'custom-theme-1' => 'rgudhs',
@@ -94,6 +96,48 @@ return new class extends Migration
                 'name' => 'Dusty Rose',
                 'code' => $knownCodes['basic-3'],
                 'thumbnail_url' => '/assets/wedding/hero-floral.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        }
+
+        // Ensure basic-4 theme exists and is active
+        $basic4 = Theme::find('basic-4');
+        if (!$basic4) {
+            Theme::create([
+                'id' => 'basic-4',
+                'name' => 'Classic Ivory Noir',
+                'code' => $knownCodes['basic-4'],
+                'thumbnail_url' => '/assets/wedding/couple-royal.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        } else {
+            $basic4->update([
+                'name' => 'Classic Ivory Noir',
+                'code' => $knownCodes['basic-4'],
+                'thumbnail_url' => '/assets/wedding/couple-royal.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        }
+
+        // Ensure basic-5 theme exists and is active
+        $basic5 = Theme::find('basic-5');
+        if (!$basic5) {
+            Theme::create([
+                'id' => 'basic-5',
+                'name' => 'Ocean Breeze',
+                'code' => $knownCodes['basic-5'],
+                'thumbnail_url' => '/assets/wedding/couple-foliage.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        } else {
+            $basic5->update([
+                'name' => 'Ocean Breeze',
+                'code' => $knownCodes['basic-5'],
+                'thumbnail_url' => '/assets/wedding/couple-foliage.png',
                 'is_active' => true,
                 'package_level' => 'BASIC',
             ]);

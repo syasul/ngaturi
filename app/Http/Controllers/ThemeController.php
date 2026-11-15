@@ -105,6 +105,8 @@ class ThemeController extends Controller
             'tv6akl' => 'basic-1',
             'b2x8k1' => 'basic-2',
             'b3v7x2' => 'basic-3',
+            'b4k8n1' => 'basic-4',
+            'b5w9p3' => 'basic-5',
             'emikvq' => 'theme-1',
             't2ltgr' => 'theme-2',
             'rgudhs' => 'custom-theme-1',
@@ -217,6 +219,64 @@ class ThemeController extends Controller
                 $theme->name = 'Dusty Rose';
                 $theme->code = 'b3v7x2';
                 $theme->thumbnail_url = '/assets/wedding/hero-floral.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 7. Auto-healing for basic-4 if requested
+        if (!$theme && in_array($cleanCode, ['b4k8n1', 'basic-4', 'basic4', 'b-4'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-4'],
+                    [
+                        'name' => 'Classic Ivory Noir',
+                        'code' => 'b4k8n1',
+                        'thumbnail_url' => '/assets/wedding/couple-royal.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'b4k8n1';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                // In-memory fallback
+                $theme = new Theme();
+                $theme->id = 'basic-4';
+                $theme->name = 'Classic Ivory Noir';
+                $theme->code = 'b4k8n1';
+                $theme->thumbnail_url = '/assets/wedding/couple-royal.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 8. Auto-healing for basic-5 if requested
+        if (!$theme && in_array($cleanCode, ['b5w9p3', 'basic-5', 'basic5', 'b-5'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-5'],
+                    [
+                        'name' => 'Ocean Breeze',
+                        'code' => 'b5w9p3',
+                        'thumbnail_url' => '/assets/wedding/couple-foliage.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'b5w9p3';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                // In-memory fallback
+                $theme = new Theme();
+                $theme->id = 'basic-5';
+                $theme->name = 'Ocean Breeze';
+                $theme->code = 'b5w9p3';
+                $theme->thumbnail_url = '/assets/wedding/couple-foliage.png';
                 $theme->is_active = true;
                 $theme->package_level = 'BASIC';
             }
