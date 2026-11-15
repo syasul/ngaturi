@@ -9,9 +9,7 @@ import {
     Heart,
     MapPin,
     MessageCircle,
-    Music as MusicIcon,
     Sparkles,
-    Users,
     Volume2,
     VolumeX,
     X,
@@ -19,6 +17,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import type { ThemeProps } from '../elegant/ElegantTheme';
 
+// Custom Botanical & Social Icons
 const InstagramIcon = ({ size = 13 }: { size?: number }) => (
     <svg
         viewBox="0 0 24 24"
@@ -33,6 +32,153 @@ const InstagramIcon = ({ size = 13 }: { size?: number }) => (
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
         <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
         <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+);
+
+// Botanical Corner Flourish
+const BotanicalCorner: React.FC<{
+    position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+    color?: string;
+    size?: number;
+    className?: string;
+}> = ({ position, color = '#2D4F3E', size = 64, className = '' }) => {
+    const transforms = {
+        'top-left': '',
+        'top-right': 'scale(-1, 1)',
+        'bottom-left': 'scale(1, -1)',
+        'bottom-right': 'scale(-1, -1)',
+    };
+
+    return (
+        <svg
+            width={size}
+            height={size}
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className={`pointer-events-none absolute select-none ${className}`}
+            style={{ transform: transforms[position] }}
+        >
+            <path
+                d="M10 90 C10 50 35 25 75 15 C85 12 95 10 95 10 C95 10 92 20 90 30 C80 68 55 90 10 90 Z"
+                fill={color}
+                fillOpacity="0.12"
+            />
+            <path
+                d="M5 95 C5 45 40 10 95 5 M95 5 C75 25 65 55 60 90 M95 5 C60 15 25 45 10 90"
+                stroke={color}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeOpacity="0.5"
+            />
+            {/* Leaves */}
+            <path
+                d="M40 38 C32 28 35 15 45 18 C55 21 50 34 40 38 Z"
+                fill={color}
+                fillOpacity="0.35"
+            />
+            <path
+                d="M62 25 C60 14 70 8 78 14 C86 20 74 30 62 25 Z"
+                fill={color}
+                fillOpacity="0.4"
+            />
+            <path
+                d="M25 60 C15 52 14 38 25 40 C36 42 33 56 25 60 Z"
+                fill={color}
+                fillOpacity="0.3"
+            />
+            <path
+                d="M22 78 C12 70 16 58 26 62 C36 66 30 78 22 78 Z"
+                fill={color}
+                fillOpacity="0.35"
+            />
+            <circle cx="95" cy="5" r="3" fill={color} fillOpacity="0.6" />
+        </svg>
+    );
+};
+
+// Symmetrical Floral Divider
+const BotanicalDivider: React.FC<{ color?: string; className?: string }> = ({
+    color = '#2D4F3E',
+    className = '',
+}) => (
+    <div
+        className={`flex items-center justify-center gap-3 select-none py-3 ${className}`}
+    >
+        <div
+            className="h-[1px] w-16 sm:w-24 opacity-30"
+            style={{
+                background: `linear-gradient(to right, transparent, ${color})`,
+            }}
+        />
+        <svg
+            width="28"
+            height="20"
+            viewBox="0 0 40 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="shrink-0"
+        >
+            <path
+                d="M20 2 C16 8 8 10 2 12 C8 14 16 16 20 22 C24 16 32 14 38 12 C32 10 24 8 20 2 Z"
+                fill={color}
+                fillOpacity="0.4"
+            />
+            <circle cx="20" cy="12" r="2.5" fill={color} />
+            <circle cx="10" cy="12" r="1.5" fill={color} fillOpacity="0.5" />
+            <circle cx="30" cy="12" r="1.5" fill={color} fillOpacity="0.5" />
+        </svg>
+        <div
+            className="h-[1px] w-16 sm:w-24 opacity-30"
+            style={{
+                background: `linear-gradient(to left, transparent, ${color})`,
+            }}
+        />
+    </div>
+);
+
+// Leaf Branch Wreath Top Header
+const BotanicalHeaderFlourish: React.FC<{
+    color?: string;
+    className?: string;
+}> = ({ color = '#C2A676', className = '' }) => (
+    <svg
+        width="110"
+        height="28"
+        viewBox="0 0 140 32"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={`mx-auto select-none ${className}`}
+    >
+        <path
+            d="M10 16 C40 16 55 12 70 4 C85 12 100 16 130 16"
+            stroke={color}
+            strokeWidth="1.25"
+            strokeLinecap="round"
+        />
+        <circle cx="70" cy="4" r="2.5" fill={color} />
+        {/* Left leaves */}
+        <path
+            d="M30 15 C26 10 32 6 36 10 C40 14 35 18 30 15 Z"
+            fill={color}
+            fillOpacity="0.6"
+        />
+        <path
+            d="M50 14 C48 8 55 5 58 9 C61 13 55 17 50 14 Z"
+            fill={color}
+            fillOpacity="0.6"
+        />
+        {/* Right leaves */}
+        <path
+            d="M110 15 C114 10 108 6 104 10 C100 14 105 18 110 15 Z"
+            fill={color}
+            fillOpacity="0.6"
+        />
+        <path
+            d="M90 14 C92 8 85 5 82 9 C79 13 85 17 90 14 Z"
+            fill={color}
+            fillOpacity="0.6"
+        />
     </svg>
 );
 
@@ -105,7 +251,7 @@ const CountdownBlock = ({ targetDate }: { targetDate: string }) => {
             {items.map((item, i) => (
                 <div
                     key={i}
-                    className="flex flex-col items-center justify-center rounded-2xl border border-[#2D4F3E]/15 bg-white/80 p-3 shadow-xs backdrop-blur-xs"
+                    className="relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border border-[#2D4F3E]/20 bg-white/90 p-3 shadow-xs backdrop-blur-xs"
                 >
                     <span
                         className="text-2xl sm:text-3xl font-bold text-[#2D4F3E]"
@@ -113,9 +259,10 @@ const CountdownBlock = ({ targetDate }: { targetDate: string }) => {
                     >
                         {String(item.val).padStart(2, '0')}
                     </span>
-                    <span className="mt-1 text-[9px] font-semibold tracking-wider text-[#5F6E64]">
+                    <span className="mt-1 text-[9px] font-bold tracking-wider text-[#5F6E64]">
                         {item.label}
                     </span>
+                    <div className="pointer-events-none absolute -bottom-2 -right-2 h-6 w-6 rounded-full bg-[#2D4F3E]/5" />
                 </div>
             ))}
         </div>
@@ -155,6 +302,12 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
     const showGift = sections.showGift !== false;
     const showRsvp = sections.showRsvp !== false;
     const showWishes = sections.showWishes !== false;
+
+    // Neutral elegant demo couple names
+    const groomNickname = groom.nickname || 'Arya';
+    const brideNickname = bride.nickname || 'Nabila';
+    const groomFullName = groom.name || 'Arya Pratama, S.T.';
+    const brideFullName = bride.name || 'Nabila Putri Larasati, S.I.Kom';
 
     // Dates
     const akadDate = schedules.akad?.date || '2026-10-24';
@@ -256,27 +409,12 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
         }
     };
 
-    const scrollTo = (id: string) => {
-        const el = document.getElementById(id);
-        const container = document.getElementById('basic-scroll-container');
-        if (el && container) {
-            const containerTop = container.getBoundingClientRect().top;
-            const elTop = el.getBoundingClientRect().top;
-            container.scrollTo({
-                top: container.scrollTop + elTop - containerTop,
-                behavior: 'smooth',
-            });
-        } else if (el) {
-            el.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
     const createGoogleCalendarUrl = () => {
         const title = encodeURIComponent(
-            `Pernikahan ${groom.nickname || 'Ilyas'} & ${bride.nickname || 'Iftitah'}`,
+            `Pernikahan ${groomNickname} & ${brideNickname}`,
         );
         const details = encodeURIComponent(
-            `Undangan Pernikahan Suci ${groom.name || 'Groom'} & ${bride.name || 'Bride'}`,
+            `Undangan Pernikahan Suci ${groomFullName} & ${brideFullName}`,
         );
         const location = encodeURIComponent(
             schedules.resepsi?.venue || schedules.akad?.venue || 'Lokasi Acara',
@@ -291,51 +429,66 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
             style={{ colorScheme: 'only light' }}
         >
             {/* ============================================================== */}
-            {/* DESKTOP LEFT PANEL (STICKY ELEGANT COVER)                      */}
+            {/* DESKTOP LEFT PANEL (STICKY LUXURY BOTANICAL SHOWCASE)          */}
             {/* ============================================================== */}
-            <div className="relative sticky left-0 top-0 hidden h-screen w-[65%] select-none flex-col justify-between overflow-hidden bg-[#1D3529] p-14 text-white lg:flex">
-                {/* Decorative botanical borders */}
-                <div className="absolute left-6 top-6 h-12 w-12 border-l border-t border-[#C2A676]/60" />
-                <div className="absolute right-6 top-6 h-12 w-12 border-r border-t border-[#C2A676]/60" />
-                <div className="absolute bottom-6 left-6 h-12 w-12 border-b border-l border-[#C2A676]/60" />
-                <div className="absolute bottom-6 right-6 h-12 w-12 border-b border-r border-[#C2A676]/60" />
+            <div className="relative sticky left-0 top-0 hidden h-screen w-[65%] select-none flex-col justify-between overflow-hidden bg-[#183124] p-14 text-white lg:flex">
+                {/* Background Floral Watermark Pattern */}
+                <div
+                    className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-10"
+                    style={{
+                        backgroundImage: "url('/assets/wedding/hero-floral.png')",
+                    }}
+                />
 
-                <div className="relative z-10 space-y-3">
+                {/* Corner Botanical Filigrees */}
+                <BotanicalCorner position="top-left" color="#C2A676" size={80} className="left-6 top-6" />
+                <BotanicalCorner position="top-right" color="#C2A676" size={80} className="right-6 top-6" />
+                <BotanicalCorner position="bottom-left" color="#C2A676" size={80} className="bottom-6 left-6" />
+                <BotanicalCorner position="bottom-right" color="#C2A676" size={80} className="bottom-6 right-6" />
+
+                <div className="relative z-10 space-y-2">
+                    <BotanicalHeaderFlourish color="#C2A676" className="!mx-0" />
                     <span className="block text-[11px] font-bold uppercase tracking-[0.3em] text-[#C2A676]">
                         WALIMATUL 'URS
                     </span>
-                    <div className="h-[1px] w-12 bg-[#C2A676]/60" />
+                    <div className="h-[1px] w-14 bg-[#C2A676]/60" />
                 </div>
 
                 <div className="relative z-10 my-auto space-y-6">
-                    <div className="relative mx-auto h-64 w-48 overflow-hidden rounded-t-full border border-[#C2A676]/40 shadow-2xl">
+                    {/* Arch Photo with Botanical Frame */}
+                    <div className="relative mx-auto h-72 w-52 overflow-hidden rounded-t-full border-2 border-[#C2A676]/60 p-1 shadow-2xl">
                         <img
                             src={resolveImageUrl(
                                 bride.photo || groom.photo,
                                 '/assets/wedding/couple-foliage.png',
                             )}
                             alt="Mempelai"
-                            className="h-full w-full object-cover"
+                            className="h-full w-full rounded-t-full object-cover"
                         />
+                        <div className="pointer-events-none absolute inset-0 rounded-t-full border border-white/20" />
                     </div>
-                    <div className="text-center">
+
+                    <div className="text-center space-y-2">
+                        <BotanicalDivider color="#C2A676" />
                         <h1
                             className="text-6xl font-normal italic tracking-wide text-[#FAF7F2]"
                             style={{ fontFamily: "'Dancing Script', cursive" }}
                         >
-                            {groom.nickname || 'Ilyas'} &{' '}
-                            {bride.nickname || 'Iftitah'}
+                            {groomNickname} & {brideNickname}
                         </h1>
-                        <p className="mt-3 font-sans text-xs font-semibold uppercase tracking-[0.25em] text-[#C2A676]">
+                        <p className="mt-2 font-sans text-xs font-semibold uppercase tracking-[0.25em] text-[#C2A676]">
                             {formatDate(primaryDate)}
                         </p>
                     </div>
                 </div>
 
-                <div className="relative z-10 text-left">
-                    <p className="text-[11px] uppercase tracking-widest text-[#FAF7F2]/60">
-                        Ngaturi Minimalist Invitation
-                    </p>
+                <div className="relative z-10 flex items-center justify-between border-t border-[#C2A676]/20 pt-4 text-[11px] text-[#FAF7F2]/60">
+                    <span className="uppercase tracking-widest">
+                        Ngaturi Minimalist Sage Theme
+                    </span>
+                    <span className="font-serif italic text-[#C2A676]">
+                        The Wedding of {groomNickname} & {brideNickname}
+                    </span>
                 </div>
             </div>
 
@@ -351,7 +504,7 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                     <button
                         onClick={() => setIsPlayingMusic(!isPlayingMusic)}
                         aria-label="Toggle Music"
-                        className="fixed right-5 top-5 z-40 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-[#2D4F3E]/20 bg-white/90 text-[#2D4F3E] shadow-lg backdrop-blur-md transition-all hover:scale-105"
+                        className="fixed right-5 top-5 z-40 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-[#2D4F3E]/20 bg-white/95 text-[#2D4F3E] shadow-xl backdrop-blur-md transition-all hover:scale-105"
                     >
                         {isPlayingMusic ? (
                             <Volume2 size={18} className="animate-pulse" />
@@ -361,21 +514,35 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                     </button>
                 )}
 
+                {/* Subtle Botanical Background Pattern */}
+                <div
+                    className="pointer-events-none fixed inset-0 opacity-[0.035]"
+                    style={{
+                        backgroundImage: "url('/assets/wedding/hero-floral.png')",
+                        backgroundRepeat: 'repeat',
+                        backgroundSize: '360px',
+                    }}
+                />
+
                 {/* 1. HERO COVER SECTION */}
                 <section
                     id="section-cover"
-                    className="relative flex min-h-[92vh] flex-col items-center justify-between px-6 py-12 text-center"
+                    className="relative flex min-h-[95vh] flex-col items-center justify-between px-6 py-10 text-center"
                 >
+                    {/* Corner Ornaments */}
+                    <BotanicalCorner position="top-left" color="#2D4F3E" size={54} className="left-2 top-2" />
+                    <BotanicalCorner position="top-right" color="#2D4F3E" size={54} className="right-2 top-2" />
+
                     <div className="space-y-2 pt-4">
+                        <BotanicalHeaderFlourish color="#2D4F3E" />
                         <span className="block text-[10px] font-bold uppercase tracking-[0.25em] text-[#2D4F3E]/80">
                             THE WEDDING CELEBRATION OF
                         </span>
-                        <div className="mx-auto h-[1px] w-8 bg-[#2D4F3E]/40" />
                     </div>
 
-                    <div className="my-6 space-y-6">
-                        {/* Couple Photo Arch */}
-                        <div className="relative mx-auto aspect-[3/4] w-52 overflow-hidden rounded-t-full border-4 border-white shadow-xl">
+                    <div className="my-6 space-y-5">
+                        {/* Couple Photo Arch with Foliage Wreath */}
+                        <div className="relative mx-auto aspect-[3/4] w-56 overflow-hidden rounded-t-full border-4 border-white shadow-2xl">
                             <img
                                 src={resolveImageUrl(
                                     bride.photo || groom.photo,
@@ -384,17 +551,19 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                 alt="Couple"
                                 className="h-full w-full object-cover"
                             />
+                            {/* Inner Gold Border Ring */}
+                            <div className="pointer-events-none absolute inset-1.5 rounded-t-full border border-[#C2A676]/40" />
                         </div>
 
                         <div>
+                            <BotanicalDivider color="#2D4F3E" className="!py-1" />
                             <h2
                                 className="text-4xl sm:text-5xl font-normal italic text-[#2D4F3E]"
                                 style={{
                                     fontFamily: "'Dancing Script', cursive",
                                 }}
                             >
-                                {groom.nickname || 'Ilyas'} &{' '}
-                                {bride.nickname || 'Iftitah'}
+                                {groomNickname} & {brideNickname}
                             </h2>
                             <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-[#5F6E64]">
                                 {formatDate(primaryDate)}
@@ -407,22 +576,28 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                             href={createGoogleCalendarUrl()}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#2D4F3E]/30 bg-white/80 py-3 text-xs font-semibold text-[#2D4F3E] shadow-xs backdrop-blur-xs transition hover:bg-[#2D4F3E] hover:text-white"
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#2D4F3E]/30 bg-white/90 py-3 text-xs font-semibold text-[#2D4F3E] shadow-sm backdrop-blur-xs transition hover:bg-[#2D4F3E] hover:text-white"
                         >
                             <CalendarIcon size={14} />
-                            <span>Simpan ke Kalender</span>
+                            <span>Simpan ke Google Calendar</span>
                         </a>
                     </div>
                 </section>
 
                 {/* 2. AYAT / QUOTE SECTION */}
                 {showQuotes && (
-                    <section className="relative px-6 py-12 text-center">
-                        <div className="mx-auto max-w-md rounded-3xl border border-[#2D4F3E]/10 bg-white/70 p-6 shadow-sm backdrop-blur-xs">
-                            <Heart
-                                size={22}
-                                className="mx-auto mb-3 text-[#2D4F3E]/70"
+                    <section className="relative px-6 py-10 text-center">
+                        <div className="relative mx-auto max-w-md overflow-hidden rounded-3xl border border-[#2D4F3E]/15 bg-white/80 p-6 shadow-sm backdrop-blur-xs">
+                            <BotanicalCorner position="top-left" color="#2D4F3E" size={40} className="left-1 top-1" />
+                            <BotanicalCorner position="bottom-right" color="#2D4F3E" size={40} className="bottom-1 right-1" />
+
+                            {/* Bismillah Calligraphy Ornament */}
+                            <img
+                                src="/assets/theme_1/bismillah.webp"
+                                alt="Bismillah"
+                                className="mx-auto mb-3 h-8 object-contain opacity-80"
                             />
+
                             <p
                                 className="text-xs leading-relaxed italic text-[#2D4F3E]"
                                 style={{
@@ -433,9 +608,13 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                 "{quotes.text ||
                                     'Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.'}"
                             </p>
-                            <span className="mt-3 block text-[10px] font-bold uppercase tracking-wider text-[#5F6E64]">
-                                {quotes.source || 'QS. Ar-Rum : 21'}
-                            </span>
+                            <div className="mt-3 flex items-center justify-center gap-2">
+                                <div className="h-[1px] w-8 bg-[#2D4F3E]/30" />
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5F6E64]">
+                                    {quotes.source || 'QS. Ar-Rum : 21'}
+                                </span>
+                                <div className="h-[1px] w-8 bg-[#2D4F3E]/30" />
+                            </div>
                         </div>
                     </section>
                 )}
@@ -443,9 +622,10 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                 {/* 3. MEMPELAI (BRIDE & GROOM PROFILES) */}
                 <section
                     id="section-couple"
-                    className="relative space-y-10 px-6 py-12"
+                    className="relative space-y-10 px-6 py-10"
                 >
                     <div className="text-center">
+                        <BotanicalHeaderFlourish color="#2D4F3E" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2D4F3E]">
                             PASANGAN MEMPELAI
                         </span>
@@ -465,14 +645,17 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                     </div>
 
                     {/* Groom Card */}
-                    <div className="rounded-3xl border border-[#2D4F3E]/10 bg-white p-6 text-center shadow-sm">
-                        <div className="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full border-2 border-[#2D4F3E]/30 p-1 shadow-md">
+                    <div className="relative overflow-hidden rounded-3xl border border-[#2D4F3E]/15 bg-white p-6 text-center shadow-sm">
+                        <BotanicalCorner position="top-left" color="#2D4F3E" size={38} className="left-1 top-1" />
+                        <BotanicalCorner position="top-right" color="#2D4F3E" size={38} className="right-1 top-1" />
+
+                        <div className="relative mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full border-2 border-[#2D4F3E]/30 p-1 shadow-md">
                             <img
                                 src={resolveImageUrl(
                                     groom.photo,
                                     '/assets/theme_1/foto-mempelai-pria.webp',
                                 )}
-                                alt={groom.name || 'Groom'}
+                                alt={groomFullName}
                                 className="h-full w-full rounded-full object-cover"
                             />
                         </div>
@@ -482,46 +665,42 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                 fontFamily: "'Cormorant Garamond', serif",
                             }}
                         >
-                            {groom.name || 'Raden Bagus Ilyas, S.Kom'}
+                            {groomFullName}
                         </h4>
                         <p className="mt-1 text-xs text-[#5F6E64]">
                             {groom.parents ||
-                                'Putra pertama dari Bpk. Ir. H. Ahmad Santoso & Ibu Hj. Siti Rohmah'}
+                                'Putra pertama dari Bpk. Ir. H. Bambang Pratama & Ibu Hj. Rina Wulandari'}
                         </p>
                         {groom.ig && (
                             <a
                                 href={`https://instagram.com/${groom.ig.replace('@', '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-[#2D4F3E] hover:underline"
+                                className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-[#2D4F3E]/20 bg-[#FAF7F2] px-3 py-1 text-[11px] font-medium text-[#2D4F3E] hover:bg-[#2D4F3E] hover:text-white transition"
                             >
-                                <InstagramIcon size={13} />
+                                <InstagramIcon size={12} />
                                 <span>{groom.ig}</span>
                             </a>
                         )}
                     </div>
 
-                    {/* Divider symbol */}
-                    <div className="flex items-center justify-center gap-3 text-[#2D4F3E]/40">
-                        <div className="h-[1px] w-12 bg-current" />
-                        <span
-                            className="text-2xl font-normal italic"
-                            style={{ fontFamily: "'Dancing Script', cursive" }}
-                        >
-                            &
-                        </span>
-                        <div className="h-[1px] w-12 bg-current" />
+                    {/* Ornate Divider symbol */}
+                    <div className="flex items-center justify-center gap-3 text-[#2D4F3E]/60">
+                        <BotanicalDivider color="#2D4F3E" />
                     </div>
 
                     {/* Bride Card */}
-                    <div className="rounded-3xl border border-[#2D4F3E]/10 bg-white p-6 text-center shadow-sm">
-                        <div className="mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full border-2 border-[#2D4F3E]/30 p-1 shadow-md">
+                    <div className="relative overflow-hidden rounded-3xl border border-[#2D4F3E]/15 bg-white p-6 text-center shadow-sm">
+                        <BotanicalCorner position="top-left" color="#2D4F3E" size={38} className="left-1 top-1" />
+                        <BotanicalCorner position="top-right" color="#2D4F3E" size={38} className="right-1 top-1" />
+
+                        <div className="relative mx-auto mb-4 h-32 w-32 overflow-hidden rounded-full border-2 border-[#2D4F3E]/30 p-1 shadow-md">
                             <img
                                 src={resolveImageUrl(
                                     bride.photo,
                                     '/assets/theme_1/foto-mempelai-cewe.webp',
                                 )}
-                                alt={bride.name || 'Bride'}
+                                alt={brideFullName}
                                 className="h-full w-full rounded-full object-cover"
                             />
                         </div>
@@ -531,20 +710,20 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                 fontFamily: "'Cormorant Garamond', serif",
                             }}
                         >
-                            {bride.name || 'Iftitah Nurul Beauty, S.Pd'}
+                            {brideFullName}
                         </h4>
                         <p className="mt-1 text-xs text-[#5F6E64]">
                             {bride.parents ||
-                                'Putri kedua dari Bpk. Drs. H. Bambang Wijaya & Ibu Hj. Nur Aini'}
+                                'Putri kedua dari Bpk. Drs. H. Hendra Setiawan & Ibu Hj. Dewi Anggraini'}
                         </p>
                         {bride.ig && (
                             <a
                                 href={`https://instagram.com/${bride.ig.replace('@', '')}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-[#2D4F3E] hover:underline"
+                                className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-[#2D4F3E]/20 bg-[#FAF7F2] px-3 py-1 text-[11px] font-medium text-[#2D4F3E] hover:bg-[#2D4F3E] hover:text-white transition"
                             >
-                                <InstagramIcon size={13} />
+                                <InstagramIcon size={12} />
                                 <span>{bride.ig}</span>
                             </a>
                         )}
@@ -552,8 +731,11 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                 </section>
 
                 {/* 4. COUNTDOWN & SAVE THE DATE */}
-                <section className="relative px-6 py-8">
-                    <div className="rounded-3xl border border-[#2D4F3E]/15 bg-white/70 p-6 text-center shadow-sm backdrop-blur-xs">
+                <section className="relative px-6 py-6">
+                    <div className="relative overflow-hidden rounded-3xl border border-[#2D4F3E]/15 bg-white/80 p-6 text-center shadow-sm backdrop-blur-xs">
+                        <BotanicalCorner position="top-left" color="#C2A676" size={36} className="left-1 top-1" />
+                        <BotanicalCorner position="bottom-right" color="#C2A676" size={36} className="bottom-1 right-1" />
+
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2D4F3E]">
                             MENGHITUNG HARI
                         </span>
@@ -574,9 +756,10 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                 {/* 5. ACARA PERNIKAHAN (EVENTS SCHEDULE) */}
                 <section
                     id="section-event"
-                    className="relative space-y-6 px-6 py-12"
+                    className="relative space-y-6 px-6 py-10"
                 >
                     <div className="text-center">
+                        <BotanicalHeaderFlourish color="#2D4F3E" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2D4F3E]">
                             WAKTU & TEMPAT
                         </span>
@@ -591,7 +774,9 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                     </div>
 
                     {/* Akad Card */}
-                    <div className="rounded-3xl border border-[#2D4F3E]/10 bg-white p-6 shadow-sm">
+                    <div className="relative overflow-hidden rounded-3xl border border-[#2D4F3E]/15 bg-white p-6 shadow-sm">
+                        <BotanicalCorner position="top-right" color="#2D4F3E" size={42} className="right-1 top-1" />
+
                         <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#2D4F3E]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#2D4F3E]">
                             <Sparkles size={12} />
                             <span>Akad Nikah</span>
@@ -627,7 +812,7 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                 href={schedules.akad.maps}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#2D4F3E] py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-[#1D3529]"
+                                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#2D4F3E] py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-[#183124]"
                             >
                                 <MapPin size={13} />
                                 <span>Petunjuk Lokasi (Google Maps)</span>
@@ -636,7 +821,9 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                     </div>
 
                     {/* Resepsi Card */}
-                    <div className="rounded-3xl border border-[#2D4F3E]/10 bg-white p-6 shadow-sm">
+                    <div className="relative overflow-hidden rounded-3xl border border-[#2D4F3E]/15 bg-white p-6 shadow-sm">
+                        <BotanicalCorner position="top-right" color="#C2A676" size={42} className="right-1 top-1" />
+
                         <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C2A676]/20 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#2D4F3E]">
                             <Heart size={12} />
                             <span>Resepsi Pernikahan</span>
@@ -673,7 +860,7 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                 href={schedules.resepsi.maps}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#2D4F3E] py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-[#1D3529]"
+                                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#2D4F3E] py-2.5 text-xs font-semibold text-white shadow-xs transition hover:bg-[#183124]"
                             >
                                 <MapPin size={13} />
                                 <span>Petunjuk Lokasi (Google Maps)</span>
@@ -684,8 +871,9 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
 
                 {/* 6. CERITA CINTA (LOVE STORY) */}
                 {showStory && stories.length > 0 && (
-                    <section id="section-story" className="relative px-6 py-12">
+                    <section id="section-story" className="relative px-6 py-10">
                         <div className="text-center">
+                            <BotanicalHeaderFlourish color="#2D4F3E" />
                             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2D4F3E]">
                                 KISAH KAMI
                             </span>
@@ -722,9 +910,10 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                 {showGallery && displayPhotos.length > 0 && (
                     <section
                         id="section-gallery"
-                        className="relative px-6 py-12"
+                        className="relative px-6 py-10"
                     >
                         <div className="text-center">
+                            <BotanicalHeaderFlourish color="#2D4F3E" />
                             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2D4F3E]">
                                 MOMEN INDAH
                             </span>
@@ -762,8 +951,11 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
 
                 {/* 8. TANDA KASIH / HADIAH (GIFT SECTION) */}
                 {showGift && (
-                    <section id="section-gift" className="relative px-6 py-12">
-                        <div className="rounded-3xl border border-[#2D4F3E]/10 bg-white p-6 shadow-sm text-center">
+                    <section id="section-gift" className="relative px-6 py-10">
+                        <div className="relative overflow-hidden rounded-3xl border border-[#2D4F3E]/15 bg-white p-6 shadow-sm text-center">
+                            <BotanicalCorner position="top-left" color="#C2A676" size={38} className="left-1 top-1" />
+                            <BotanicalCorner position="bottom-right" color="#C2A676" size={38} className="bottom-1 right-1" />
+
                             <Gift
                                 size={24}
                                 className="mx-auto mb-2 text-[#2D4F3E]"
@@ -819,7 +1011,7 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                             {groom.accountNumber}
                                         </p>
                                         <p className="mt-0.5 text-[11px] text-[#5F6E64]">
-                                            a.n {groom.accountHolder || groom.name}
+                                            a.n {groom.accountHolder || groomFullName}
                                         </p>
                                     </div>
                                 )}
@@ -857,7 +1049,7 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                             {bride.accountNumber}
                                         </p>
                                         <p className="mt-0.5 text-[11px] text-[#5F6E64]">
-                                            a.n {bride.accountHolder || bride.name}
+                                            a.n {bride.accountHolder || brideFullName}
                                         </p>
                                     </div>
                                 )}
@@ -902,8 +1094,10 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
 
                 {/* 9. KONFIRMASI KEHADIRAN (RSVP) */}
                 {showRsvp && (
-                    <section id="section-rsvp" className="relative px-6 py-12">
-                        <div className="rounded-3xl border border-[#2D4F3E]/10 bg-white p-6 shadow-sm text-left">
+                    <section id="section-rsvp" className="relative px-6 py-10">
+                        <div className="relative overflow-hidden rounded-3xl border border-[#2D4F3E]/15 bg-white p-6 shadow-sm text-left">
+                            <BotanicalCorner position="top-right" color="#2D4F3E" size={36} className="right-1 top-1" />
+
                             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2D4F3E]">
                                 RSVP
                             </span>
@@ -1017,7 +1211,7 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                     <button
                                         type="submit"
                                         disabled={rsvpLoading}
-                                        className="w-full cursor-pointer rounded-xl bg-[#2D4F3E] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-[#1D3529] disabled:opacity-50"
+                                        className="w-full cursor-pointer rounded-xl bg-[#2D4F3E] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-[#183124] disabled:opacity-50"
                                     >
                                         {rsvpLoading
                                             ? 'Mengirim...'
@@ -1033,9 +1227,11 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                 {showWishes && (
                     <section
                         id="section-wishes"
-                        className="relative px-6 py-12"
+                        className="relative px-6 py-10"
                     >
-                        <div className="rounded-3xl border border-[#2D4F3E]/10 bg-white p-6 shadow-sm text-left">
+                        <div className="relative overflow-hidden rounded-3xl border border-[#2D4F3E]/15 bg-white p-6 shadow-sm text-left">
+                            <BotanicalCorner position="top-right" color="#2D4F3E" size={36} className="right-1 top-1" />
+
                             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#2D4F3E]">
                                 BUKU TAMU
                             </span>
@@ -1076,7 +1272,7 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                                 <button
                                     type="submit"
                                     disabled={wishLoading}
-                                    className="w-full cursor-pointer rounded-xl bg-[#2D4F3E] py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-[#1D3529] disabled:opacity-50"
+                                    className="w-full cursor-pointer rounded-xl bg-[#2D4F3E] py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition hover:bg-[#183124] disabled:opacity-50"
                                 >
                                     {wishLoading ? 'Mengirim...' : 'Kirim Ucapan'}
                                 </button>
@@ -1113,7 +1309,8 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
 
                 {/* 11. CLOSING & THANK YOU NOTE */}
                 <section className="relative px-6 py-14 text-center">
-                    <p className="text-xs text-[#5F6E64] leading-relaxed">
+                    <BotanicalHeaderFlourish color="#2D4F3E" />
+                    <p className="mt-3 text-xs text-[#5F6E64] leading-relaxed">
                         Merupakan suatu kehormatan dan kebahagiaan bagi kami
                         apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan
                         doa restu kepada kedua mempelai.
@@ -1123,18 +1320,19 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                     </p>
                     <div className="mt-6">
                         <p
-                            className="text-3xl font-normal italic text-[#2D4F3E]"
+                            className="text-4xl font-normal italic text-[#2D4F3E]"
                             style={{ fontFamily: "'Dancing Script', cursive" }}
                         >
-                            {groom.nickname || 'Ilyas'} &{' '}
-                            {bride.nickname || 'Iftitah'}
+                            {groomNickname} & {brideNickname}
                         </p>
                         <p className="mt-1 text-[10px] uppercase tracking-widest text-[#5F6E64]">
                             Beserta Keluarga Besar
                         </p>
                     </div>
 
-                    <div className="mt-12 border-t border-[#2D4F3E]/15 pt-6 text-[10px] text-[#5F6E64]">
+                    <BotanicalDivider color="#2D4F3E" className="mt-6" />
+
+                    <div className="mt-8 border-t border-[#2D4F3E]/15 pt-6 text-[10px] text-[#5F6E64]">
                         <p>© {new Date().getFullYear()} Ngaturi Invitation • All Rights Reserved</p>
                     </div>
                 </section>
@@ -1149,41 +1347,50 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0, y: -40 }}
                         transition={{ duration: 0.6, ease: 'easeInOut' }}
-                        className="fixed inset-0 z-50 flex flex-col items-center justify-between overflow-hidden bg-[#1D3529] p-8 text-center text-white"
+                        className="fixed inset-0 z-50 flex flex-col items-center justify-between overflow-hidden bg-[#183124] p-8 text-center text-white"
                     >
-                        {/* Botanical corner borders */}
-                        <div className="absolute left-6 top-6 h-12 w-12 border-l border-t border-[#C2A676]/60" />
-                        <div className="absolute right-6 top-6 h-12 w-12 border-r border-t border-[#C2A676]/60" />
-                        <div className="absolute bottom-6 left-6 h-12 w-12 border-b border-l border-[#C2A676]/60" />
-                        <div className="absolute bottom-6 right-6 h-12 w-12 border-b border-r border-[#C2A676]/60" />
+                        {/* Background subtle watermark */}
+                        <div
+                            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-10"
+                            style={{
+                                backgroundImage: "url('/assets/wedding/hero-floral.png')",
+                            }}
+                        />
 
-                        <div className="space-y-2 pt-6">
+                        {/* Botanical corner borders */}
+                        <BotanicalCorner position="top-left" color="#C2A676" size={68} className="left-4 top-4" />
+                        <BotanicalCorner position="top-right" color="#C2A676" size={68} className="right-4 top-4" />
+                        <BotanicalCorner position="bottom-left" color="#C2A676" size={68} className="bottom-4 left-4" />
+                        <BotanicalCorner position="bottom-right" color="#C2A676" size={68} className="bottom-4 right-4" />
+
+                        <div className="relative z-10 space-y-2 pt-6">
+                            <BotanicalHeaderFlourish color="#C2A676" />
                             <span className="block text-[11px] font-bold uppercase tracking-[0.3em] text-[#C2A676]">
                                 UNDANGAN PERNIKAHAN
                             </span>
-                            <div className="mx-auto h-[1px] w-10 bg-[#C2A676]/60" />
                         </div>
 
-                        <div className="my-auto space-y-6">
-                            <div className="relative mx-auto h-48 w-36 overflow-hidden rounded-t-full border border-[#C2A676]/40 shadow-2xl">
+                        <div className="relative z-10 my-auto space-y-5">
+                            <div className="relative mx-auto h-52 w-40 overflow-hidden rounded-t-full border-2 border-[#C2A676]/60 p-1 shadow-2xl">
                                 <img
                                     src={resolveImageUrl(
                                         bride.photo || groom.photo,
                                         '/assets/wedding/couple-foliage.png',
                                     )}
                                     alt="Mempelai"
-                                    className="h-full w-full object-cover"
+                                    className="h-full w-full rounded-t-full object-cover"
                                 />
+                                <div className="pointer-events-none absolute inset-1.5 rounded-t-full border border-white/20" />
                             </div>
                             <div>
+                                <BotanicalDivider color="#C2A676" className="!py-1" />
                                 <h1
                                     className="text-4xl sm:text-5xl font-normal italic text-[#FAF7F2]"
                                     style={{
                                         fontFamily: "'Dancing Script', cursive",
                                     }}
                                 >
-                                    {groom.nickname || 'Ilyas'} &{' '}
-                                    {bride.nickname || 'Iftitah'}
+                                    {groomNickname} & {brideNickname}
                                 </h1>
                                 <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-[#C2A676]">
                                     {formatDate(primaryDate)}
@@ -1191,9 +1398,9 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
                             </div>
                         </div>
 
-                        <div className="w-full max-w-xs space-y-4 pb-6">
-                            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xs">
-                                <p className="text-[10px] font-medium uppercase tracking-wider text-[#FAF7F2]/70">
+                        <div className="relative z-10 w-full max-w-xs space-y-4 pb-6">
+                            <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-md">
+                                <p className="text-[10px] font-medium uppercase tracking-wider text-[#FAF7F2]/75">
                                     Kepada Yth. Bapak/Ibu/Saudara/i:
                                 </p>
                                 <p className="mt-1 text-base font-bold text-[#C2A676]">
@@ -1203,7 +1410,7 @@ export const BasicTheme1: React.FC<BasicThemeProps> = ({
 
                             <button
                                 onClick={onOpen}
-                                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#C2A676] py-3.5 text-xs font-bold uppercase tracking-widest text-[#1D3529] shadow-lg transition hover:scale-105 hover:bg-[#d4b98c]"
+                                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#C2A676] py-3.5 text-xs font-bold uppercase tracking-widest text-[#183124] shadow-xl transition hover:scale-105 hover:bg-[#d4b98c]"
                             >
                                 <Heart size={14} className="fill-current" />
                                 <span>Buka Undangan</span>
