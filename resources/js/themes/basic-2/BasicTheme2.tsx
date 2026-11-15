@@ -18,7 +18,7 @@ import {
     VolumeX,
     X,
 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { ThemeProps } from '../elegant/ElegantTheme';
 
 const fadeUp: Variants = {
@@ -339,9 +339,71 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
         }
     };
 
+    const [activeSection, setActiveSection] = useState<string>('section-cover');
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const container =
+            containerRef.current ||
+            document.getElementById('basic2-scroll-container');
+        if (!container) return;
+
+        const checkActiveSection = () => {
+            const containerRect = container.getBoundingClientRect();
+            const threshold = containerRect.top + containerRect.height * 0.35;
+
+            // If user scrolled to the bottom (within 80px), activate the last item ('section-rsvp')
+            if (
+                container.scrollTop + container.clientHeight >=
+                container.scrollHeight - 80
+            ) {
+                setActiveSection('section-rsvp');
+                return;
+            }
+
+            const checkpoints: { navId: string; elementId: string }[] = [
+                { navId: 'section-cover', elementId: 'section-cover' },
+                { navId: 'section-couple', elementId: 'section-couple' },
+                { navId: 'section-event', elementId: 'section-event' },
+                { navId: 'section-gallery', elementId: 'section-story' },
+                { navId: 'section-gallery', elementId: 'section-gallery' },
+                { navId: 'section-rsvp', elementId: 'section-gift' },
+                { navId: 'section-rsvp', elementId: 'section-rsvp' },
+                { navId: 'section-rsvp', elementId: 'section-wishes' },
+            ];
+
+            let active = 'section-cover';
+            for (const cp of checkpoints) {
+                const el = document.getElementById(cp.elementId);
+                if (el) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top <= threshold) {
+                        active = cp.navId;
+                    }
+                }
+            }
+
+            setActiveSection(active);
+        };
+
+        container.addEventListener('scroll', checkActiveSection, {
+            passive: true,
+        });
+        window.addEventListener('scroll', checkActiveSection, { passive: true });
+        checkActiveSection();
+
+        return () => {
+            container.removeEventListener('scroll', checkActiveSection);
+            window.removeEventListener('scroll', checkActiveSection);
+        };
+    }, [isOpened]);
+
     const scrollTo = (id: string) => {
+        setActiveSection(id);
         const el = document.getElementById(id);
-        const container = document.getElementById('basic2-scroll-container');
+        const container =
+            containerRef.current ||
+            document.getElementById('basic2-scroll-container');
         if (el && container) {
             const containerTop = container.getBoundingClientRect().top;
             const elTop = el.getBoundingClientRect().top;
@@ -433,6 +495,7 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
             {/* RIGHT PANEL / MAIN MOBILE INVITATION CONTENT                   */}
             {/* ============================================================== */}
             <div
+                ref={containerRef}
                 id="basic2-scroll-container"
                 className="relative h-screen w-full overflow-y-auto overflow-x-hidden bg-[#FBF7F2] pb-24 scroll-smooth lg:w-[35%]"
             >
@@ -1324,41 +1387,31 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
                 {/* 12. FLOATING BOTTOM NAVIGATION DOCK */}
                 <div className="fixed bottom-4 left-1/2 z-40 -translate-x-1/2 lg:left-auto lg:right-[17.5%] lg:translate-x-1/2">
                     <nav className="flex items-center gap-1 rounded-full border border-[#8F3D24]/20 bg-white/95 px-3 py-2 shadow-xl backdrop-blur-md">
-                        <button
-                            onClick={() => scrollTo('section-cover')}
-                            className="cursor-pointer rounded-full p-2 text-[#7D574E] hover:bg-[#8F3D24]/10 hover:text-[#8F3D24] transition"
-                            title="Cover"
-                        >
-                            <Heart size={15} />
-                        </button>
-                        <button
-                            onClick={() => scrollTo('section-couple')}
-                            className="cursor-pointer rounded-full p-2 text-[#7D574E] hover:bg-[#8F3D24]/10 hover:text-[#8F3D24] transition"
-                            title="Mempelai"
-                        >
-                            <User size={15} />
-                        </button>
-                        <button
-                            onClick={() => scrollTo('section-event')}
-                            className="cursor-pointer rounded-full p-2 text-[#7D574E] hover:bg-[#8F3D24]/10 hover:text-[#8F3D24] transition"
-                            title="Acara"
-                        >
-                            <CalendarIcon size={15} />
-                        </button>
-                        <button
-                            onClick={() => scrollTo('section-gallery')}
-                            className="cursor-pointer rounded-full p-2 text-[#7D574E] hover:bg-[#8F3D24]/10 hover:text-[#8F3D24] transition"
-                            title="Galeri"
-                        >
-                            <ImageIcon size={15} />
-                        </button>
-                        <button
-                            onClick={() => scrollTo('section-rsvp')}
-                            className="cursor-pointer rounded-full p-2 text-[#7D574E] hover:bg-[#8F3D24]/10 hover:text-[#8F3D24] transition"
-                            title="RSVP"
-                        >
-                            <MessageSquare size={15} />
-                        </button>
+                        {[
+                            { id: 'section-cover', label: 'Cover', icon: Heart },
+                            { id: 'section-couple', label: 'Mempelai', icon: User },
+                            { id: 'section-event', label: 'Acara', icon: CalendarIcon },
+                            { id: 'section-gallery', label: 'Galeri', icon: ImageIcon },
+                            { id: 'section-rsvp', label: 'RSVP', icon: MessageSquare },
+                        ].map((item) => {
+                            const IconComponent = item.icon;
+                            const isActive = activeSection === item.id;
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => scrollTo(item.id)}
+                                    className={`relative cursor-pointer rounded-full p-2.5 transition-all duration-300 ${
+                                        isActive
+                                            ? 'bg-[#8F3D24]/12 text-[#8F3D24] shadow-xs scale-105'
+                                            : 'text-[#7D574E] hover:bg-[#8F3D24]/8 hover:text-[#8F3D24]'
+                                    }`}
+                                    title={item.label}
+                                    aria-label={item.label}
+                                >
+                                    <IconComponent size={17} />
+                                </button>
+                            );
+                        })}
                     </nav>
                 </div>
             </div>
