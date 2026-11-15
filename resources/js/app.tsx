@@ -5,10 +5,15 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const rawAppName = import.meta.env.VITE_APP_NAME;
+const appName =
+    rawAppName && rawAppName !== 'Laravel' ? rawAppName : 'Ngaturi';
 
 createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    title: (title) =>
+        title
+            ? `${title} • ${appName}`
+            : `${appName} - Platform Undangan Pernikahan Digital`,
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.tsx`,

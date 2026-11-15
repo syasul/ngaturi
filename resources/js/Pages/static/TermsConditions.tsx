@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { ArrowLeft, Scale } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -7,6 +8,7 @@ import Navbar from '../../sections/landing/Navbar';
 export const TermsConditions: React.FC = () => {
     return (
         <div className="flex min-h-screen flex-col justify-between bg-cream font-sans text-charcoal">
+            <Head title="Syarat & Ketentuan" />
             <Navbar />
 
             <main className="mx-auto max-w-4xl flex-grow px-6 pb-20 pt-32">

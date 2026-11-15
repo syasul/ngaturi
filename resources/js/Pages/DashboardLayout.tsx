@@ -1,4 +1,4 @@
-import { Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     Bell,
@@ -19,9 +19,10 @@ import {
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
-export const DashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
-    children,
-}) => {
+export const DashboardLayout: React.FC<{
+    children?: React.ReactNode;
+    title?: string;
+}> = ({ children, title }) => {
     const { props, url } = usePage();
     const user = (props.auth as any)?.user;
     const pathname = url.split('?')[0];
@@ -43,7 +44,7 @@ export const DashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
     };
 
     const menuItems = [
-        { name: 'Dasboard', path: '/dashboard', icon: LayoutDashboard },
+        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
         {
             name: 'Data Pernikahan',
             path: '/dashboard/wedding-data',
@@ -61,6 +62,23 @@ export const DashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
         },
         { name: 'Pengaturan', path: '/dashboard/settings', icon: Settings },
     ];
+
+    const activeMenuItem = menuItems.find((item) =>
+        item.path === '/dashboard'
+            ? pathname === '/dashboard'
+            : pathname.startsWith(item.path),
+    );
+
+    const fallbackTitleMap: Record<string, string> = {
+        '/dashboard/checkout': 'Upgrade Paket Layanan',
+        '/dashboard/onboarding': 'Mulai Buat Undangan',
+    };
+
+    const currentTitle =
+        title ||
+        activeMenuItem?.name ||
+        fallbackTitleMap[pathname] ||
+        'Panel Kelola Mempelai';
 
     const getInitials = (name: string) => {
         return name
@@ -249,6 +267,7 @@ export const DashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
             {/* Main Content Area */}
             <div className="flex min-w-0 flex-1 flex-col">
                 {/* Top Header */}
+                <Head title={currentTitle} />
                 <header className="z-10 flex h-16 items-center justify-between border-b border-sand/40 bg-white px-4 md:px-6">
                     <div className="flex items-center gap-3">
                         {/* Mobile Menu Toggle */}
@@ -273,7 +292,7 @@ export const DashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
                             <Menu size={20} />
                         </button>
                         <h1 className="hidden font-sans text-lg font-bold text-charcoal sm:block">
-                            Panel Kelola Mempelai
+                            {currentTitle}
                         </h1>
                     </div>
 

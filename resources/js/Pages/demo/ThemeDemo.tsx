@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import {
     Check,
     ChevronDown,
@@ -132,6 +133,10 @@ export const ThemeDemo: React.FC<ThemeDemoProps> = ({
             className="relative min-h-screen w-full overflow-x-hidden font-sans"
             style={{ colorScheme: 'only light' }}
         >
+            <Head
+                title={`Demo ${theme?.name || 'Template'} (${theme?.packageLevel || 'Basic'})`}
+            />
+
             {/* Top Floating Demo Toolbar */}
             <div className="fixed top-4 left-1/2 z-50 -translate-x-1/2 w-[94%] max-w-2xl transition-all duration-300">
                 <div className="rounded-2xl border border-charcoal/10 bg-white/95 px-4 py-3 shadow-2xl backdrop-blur-md">

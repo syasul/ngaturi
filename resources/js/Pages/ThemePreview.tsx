@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import {
     AnimatePresence,
     type Variants,
@@ -954,8 +955,18 @@ export const ThemePreview: React.FC = () => {
     };
 
     // MAIN INVITATION
+    const themeDisplayName =
+        themeId === 'royal-yogyakarta'
+            ? 'Royal Yogyakarta'
+            : themeId === 'modern-foliage'
+              ? 'Modern Foliage'
+              : themeId === 'rustic-warm'
+                ? 'Rustic Warm'
+                : 'Classic Royal';
+
     return (
         <>
+            <Head title={`Preview Tema ${themeDisplayName} • ${coupleLabel}`} />
             <style>{`
         .font-serif {
           font-family: ${T.fontSerif} !important;

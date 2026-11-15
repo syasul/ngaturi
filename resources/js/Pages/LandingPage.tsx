@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import React from 'react';
 import Catalog from '../sections/landing/Catalog';
@@ -45,6 +46,7 @@ const AnimatedSection: React.FC<{ children: React.ReactNode; id?: string }> = ({
 export const LandingPage: React.FC = () => {
     return (
         <div className="relative min-h-screen overflow-hidden bg-white font-sans text-charcoal">
+            <Head title="Platform Undangan Pernikahan Digital Elegan & Eksklusif" />
             <Navbar />
             <main>
                 <Hero />

@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { ArrowLeft, MessageSquare, Phone, Send } from 'lucide-react';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -40,6 +41,7 @@ export const Contact: React.FC = () => {
 
     return (
         <div className="flex min-h-screen flex-col justify-between bg-cream font-sans text-charcoal">
+            <Head title="Hubungi Kami" />
             <Navbar />
 
             <main className="mx-auto w-full max-w-5xl flex-grow px-6 pb-20 pt-32">

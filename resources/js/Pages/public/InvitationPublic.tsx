@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { Clock, Heart } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -184,6 +185,7 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     if (loading) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#FAF7F2] font-sans">
+                <Head title="Membuka Undangan..." />
                 <div className="h-12 w-12 animate-spin rounded-full border-4 border-amber-500/30 border-t-amber-500" />
                 <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/60">
                     Membuka undangan digital...
@@ -196,6 +198,7 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     if (!wedding || wedding.status !== 'published') {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center bg-[#FAF7F2] p-6 text-center font-sans">
+                <Head title="Undangan Tidak Aktif" />
                 <Heart className="mb-4 animate-pulse text-red-300" size={48} />
                 <h2 className="font-sans text-2xl font-bold text-[#2C2C2C]">
                     Undangan Tidak Aktif
@@ -215,6 +218,7 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     if (isExpired) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center bg-[#FAF7F2] p-6 text-center font-sans">
+                <Head title="Undangan Telah Kedaluwarsa" />
                 <Clock
                     className="mb-4 animate-bounce text-neutral-400"
                     size={48}
@@ -250,8 +254,21 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
             !themeId.toLowerCase().includes('burgundy-bloom') &&
             !themeId.toLowerCase().includes('custom-theme-1'));
 
+    const groomName =
+        wedding.data?.groom?.nickname ||
+        wedding.data?.groom?.name ||
+        'Mempelai Pria';
+    const brideName =
+        wedding.data?.bride?.nickname ||
+        wedding.data?.bride?.name ||
+        'Mempelai Wanita';
+    const pageTitle = guest?.name
+        ? `Undangan Spesial untuk ${guest.name} • ${groomName} & ${brideName}`
+        : `Undangan Pernikahan ${groomName} & ${brideName}`;
+
     return (
         <div className="relative min-h-screen w-full overflow-x-hidden" style={{ colorScheme: 'only light' }}>
+            <Head title={pageTitle} />
             {/* Autoplay Music Player */}
             {wedding.data?.musicUrl && (
                 <MusicPlayer

@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { AlertCircle, ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ export const PaymentSuccess: React.FC = () => {
 
     return (
         <div className="flex min-h-[80vh] items-center justify-center px-4 py-12 font-sans">
+            <Head title="Pembayaran Berhasil" />
             <Card className="w-full max-w-md space-y-6 rounded-3xl border border-green-500/20 bg-green-500/5 p-8 text-center backdrop-blur-md">
                 <div className="inline-flex animate-bounce items-center justify-center rounded-full bg-green-500/20 p-3 text-green-400">
                     <CheckCircle2 size={48} />
@@ -54,6 +56,7 @@ export const PaymentPending: React.FC = () => {
 
     return (
         <div className="flex min-h-[80vh] items-center justify-center px-4 py-12 font-sans">
+            <Head title="Menunggu Pembayaran" />
             <Card className="w-full max-w-md space-y-6 rounded-3xl border border-amber-500/20 bg-amber-500/5 p-8 text-center backdrop-blur-md">
                 <div className="inline-flex animate-pulse items-center justify-center rounded-full bg-amber-500/20 p-3 text-amber-400">
                     <AlertCircle size={48} />
@@ -107,6 +110,7 @@ export const PaymentFailed: React.FC = () => {
 
     return (
         <div className="flex min-h-[80vh] items-center justify-center px-4 py-12 font-sans">
+            <Head title="Pembayaran Gagal" />
             <Card className="w-full max-w-md space-y-6 rounded-3xl border border-rose-500/20 bg-rose-500/5 p-8 text-center backdrop-blur-md">
                 <div className="inline-flex items-center justify-center rounded-full bg-rose-500/20 p-3 text-rose-400">
                     <XCircle size={48} />

@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { ArrowLeft, Compass, Palette } from 'lucide-react';
 import React from 'react';
 
@@ -9,6 +10,7 @@ interface ThemeNotFoundProps {
 export const ThemeNotFound: React.FC<ThemeNotFoundProps> = ({ tier, code }) => {
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-[#FAF7F2] p-6 text-center font-sans">
+            <Head title="Template Demo Tidak Ditemukan" />
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gold-500/10 text-gold-600">
                 <Palette size={32} />
             </div>

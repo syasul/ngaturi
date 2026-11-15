@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import {
     Activity,
@@ -39,6 +40,7 @@ export const Dashboard: React.FC = () => {
 
     return (
         <div className="relative flex min-h-screen flex-col overflow-hidden bg-cream font-sans">
+            <Head title="Dashboard Utama" />
             {/* Premium background abstract elements */}
             <div className="absolute right-0 top-0 h-96 w-96 -translate-y-1/3 translate-x-1/3 rounded-full bg-gold-50 opacity-50 blur-3xl" />
             <div className="absolute bottom-0 left-0 h-96 w-96 -translate-x-1/3 translate-y-1/3 rounded-full bg-rustic-100 opacity-30 blur-3xl" />

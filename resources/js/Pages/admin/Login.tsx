@@ -1,3 +1,4 @@
+import { Head } from '@inertiajs/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginInputSchema, type LoginInput } from '@wedding/shared';
 import { motion } from 'framer-motion';
@@ -62,6 +63,7 @@ export const AdminLogin: React.FC = () => {
 
     return (
         <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-slate-900 py-12 font-sans text-slate-100 sm:px-6 lg:px-8">
+            <Head title="Masuk Portal Admin" />
             {/* Premium dark abstract background */}
             <div className="absolute left-0 top-0 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-500/10 blur-3xl" />
             <div className="absolute bottom-0 right-0 h-96 w-96 translate-x-1/2 translate-y-1/2 rounded-full bg-blue-500/10 blur-3xl" />

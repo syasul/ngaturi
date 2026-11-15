@@ -14,12 +14,13 @@ import {
     X,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { toast } from 'sonner';
 
-export const AdminDashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
-    children,
-}) => {
+export const AdminDashboardLayout: React.FC<{
+    children?: React.ReactNode;
+    title?: string;
+}> = ({ children, title }) => {
     const { props, url } = usePage();
     const user = (props.auth as any)?.user;
     const pathname = url.split('?')[0];
@@ -104,6 +105,16 @@ export const AdminDashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
             icon: SettingsIcon,
         },
     ];
+
+    const activeMenuItem = menuItems.find((item) =>
+        item.path === '/admin'
+            ? pathname === '/admin'
+            : pathname.startsWith(item.path),
+    );
+
+    const currentTitle =
+        title ||
+        (activeMenuItem ? `${activeMenuItem.name} - Admin` : 'Administrator');
 
     return (
         <div className="flex h-screen overflow-hidden bg-slate-950 font-sans text-slate-100">
@@ -229,6 +240,7 @@ export const AdminDashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
 
             {/* Main Workspace */}
             <div className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+                <Head title={currentTitle} />
                 {/* Header bar */}
                 <header className="flex h-16 items-center justify-between border-b border-slate-900 bg-slate-900/50 px-6 lg:px-8">
                     <button
@@ -238,9 +250,12 @@ export const AdminDashboardLayout: React.FC<{ children?: React.ReactNode }> = ({
                         <Menu size={20} />
                     </button>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-sm font-bold text-white hidden sm:block">
+                            {currentTitle}
+                        </h1>
                         <span className="rounded-full border border-slate-700/50 bg-slate-800 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                            Mode: Production Admin
+                            Production Admin
                         </span>
                     </div>
 
