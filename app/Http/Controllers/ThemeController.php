@@ -104,6 +104,7 @@ class ThemeController extends Controller
         $knownCodes = [
             'tv6akl' => 'basic-1',
             'b2x8k1' => 'basic-2',
+            'b3v7x2' => 'basic-3',
             'emikvq' => 'theme-1',
             't2ltgr' => 'theme-2',
             'rgudhs' => 'custom-theme-1',
@@ -187,6 +188,35 @@ class ThemeController extends Controller
                 $theme->name = 'Terracotta Bloom';
                 $theme->code = 'b2x8k1';
                 $theme->thumbnail_url = '/assets/wedding/couple-rustic.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 6. Auto-healing for basic-3 if requested
+        if (!$theme && in_array($cleanCode, ['b3v7x2', 'basic-3', 'basic3', 'b-3'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-3'],
+                    [
+                        'name' => 'Dusty Rose',
+                        'code' => 'b3v7x2',
+                        'thumbnail_url' => '/assets/wedding/hero-floral.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'b3v7x2';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                // In-memory fallback
+                $theme = new Theme();
+                $theme->id = 'basic-3';
+                $theme->name = 'Dusty Rose';
+                $theme->code = 'b3v7x2';
+                $theme->thumbnail_url = '/assets/wedding/hero-floral.png';
                 $theme->is_active = true;
                 $theme->package_level = 'BASIC';
             }

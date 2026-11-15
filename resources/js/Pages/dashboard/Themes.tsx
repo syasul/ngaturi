@@ -206,11 +206,13 @@ export const Themes: React.FC = () => {
                                             ? 'minimalis botanical & sage'
                                             : theme.id === 'basic-2'
                                               ? 'bohemian terracotta & warm sunset'
-                                              : theme.id === 'elegant'
-                                                ? 'mewah klasik'
-                                                : theme.id === 'rustic'
-                                                  ? 'natural kayu'
-                                                  : 'minimalis modern'}
+                                              : theme.id === 'basic-3'
+                                                ? 'romantis dusty rose & floral blush'
+                                                : theme.id === 'elegant'
+                                                  ? 'mewah klasik'
+                                                  : theme.id === 'rustic'
+                                                    ? 'natural kayu'
+                                                    : 'minimalis modern'}
                                         .
                                     </p>
 

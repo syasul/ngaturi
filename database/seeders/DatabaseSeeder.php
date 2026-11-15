@@ -56,6 +56,7 @@ class DatabaseSeeder extends Seeder
         $themesSeed = [
             ['id' => 'basic-1', 'name' => 'Minimalist Sage', 'thumbnail_url' => '/assets/wedding/couple-foliage.png', 'is_active' => true, 'package_level' => 'BASIC', 'code' => 'tv6akl'],
             ['id' => 'basic-2', 'name' => 'Terracotta Bloom', 'thumbnail_url' => '/assets/wedding/couple-rustic.png', 'is_active' => true, 'package_level' => 'BASIC', 'code' => 'b2x8k1'],
+            ['id' => 'basic-3', 'name' => 'Dusty Rose', 'thumbnail_url' => '/assets/wedding/hero-floral.png', 'is_active' => true, 'package_level' => 'BASIC', 'code' => 'b3v7x2'],
             ['id' => 'elegant', 'name' => 'Elegant Gold', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC', 'code' => 'u6etuk'],
             ['id' => 'rustic', 'name' => 'Rustic Bohemian', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC', 'code' => 'c3j55t'],
             ['id' => 'modern', 'name' => 'Modern Minimalist', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM', 'code' => 'auildo'],

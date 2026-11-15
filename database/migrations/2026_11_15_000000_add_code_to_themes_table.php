@@ -23,6 +23,7 @@ return new class extends Migration
         $knownCodes = [
             'basic-1' => 'tv6akl',
             'basic-2' => 'b2x8k1',
+            'basic-3' => 'b3v7x2',
             'theme-1' => 'emikvq',
             'theme-2' => 't2ltgr',
             'custom-theme-1' => 'rgudhs',
@@ -72,6 +73,27 @@ return new class extends Migration
                 'name' => 'Terracotta Bloom',
                 'code' => $knownCodes['basic-2'],
                 'thumbnail_url' => '/assets/wedding/couple-rustic.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        }
+
+        // Ensure basic-3 theme exists and is active
+        $basic3 = Theme::find('basic-3');
+        if (!$basic3) {
+            Theme::create([
+                'id' => 'basic-3',
+                'name' => 'Dusty Rose',
+                'code' => $knownCodes['basic-3'],
+                'thumbnail_url' => '/assets/wedding/hero-floral.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        } else {
+            $basic3->update([
+                'name' => 'Dusty Rose',
+                'code' => $knownCodes['basic-3'],
+                'thumbnail_url' => '/assets/wedding/hero-floral.png',
                 'is_active' => true,
                 'package_level' => 'BASIC',
             ]);

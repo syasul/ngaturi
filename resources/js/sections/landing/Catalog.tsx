@@ -36,6 +36,18 @@ export const Catalog: React.FC = () => {
             accent: 'rustic' as const,
         },
         {
+            id: 'basic-3',
+            demoTier: 'b',
+            demoCode: 'b3v7x2',
+            name: 'Dusty Rose',
+            tag: 'BASIC',
+            color: 'bg-[#FDF8F8] border-[#D48B99]',
+            textColor: 'text-[#9E4A5B]',
+            description:
+                'Nuansa romantis dusty rose & blush porcelain dengan ornamen floral mawar, countdown mewah, dan bingkai anggun.',
+            accent: 'rustic' as const,
+        },
+        {
             id: 'theme-1',
             demoTier: 'p',
             demoCode: 'emikvq',
