@@ -95,19 +95,71 @@ class ThemeController extends Controller
     }
 
     /**
-     * Resolve theme by tier and code (or id fallback)
+     * Resolve theme by tier and code (or id fallback) with self-healing fallback
      */
     protected function resolveTheme($tier, $code)
     {
-        $tierCode = strtolower($tier);
         $cleanCode = strtolower(trim($code));
 
-        // 1. Try exact match by code
-        $theme = Theme::where('code', $cleanCode)->first();
+        $knownCodes = [
+            'tv6akl' => 'basic-1',
+            'emikvq' => 'theme-1',
+            't2ltgr' => 'theme-2',
+            'rgudhs' => 'custom-theme-1',
+            'u6etuk' => 'elegant',
+            'c3j55t' => 'rustic',
+            'auildo' => 'modern',
+            'mowx32' => 'royal-yogyakarta',
+            'bzuqtb' => 'botanical-minimal',
+            '94shhu' => 'editorial-mono',
+            'w616j1' => 'theme-3',
+        ];
+
+        // 1. Try exact match by code (if column exists)
+        try {
+            $theme = Theme::where('code', $cleanCode)->first();
+        } catch (\Throwable $e) {
+            $theme = null;
+        }
 
         // 2. Try match by theme id as fallback
         if (!$theme) {
             $theme = Theme::where('id', $cleanCode)->first();
+        }
+
+        // 3. Try match from predefined known codes
+        if (!$theme && isset($knownCodes[$cleanCode])) {
+            $themeId = $knownCodes[$cleanCode];
+            $theme = Theme::find($themeId);
+        }
+
+        // 4. Auto-healing for basic-1 if requested (e.g. migrate hasn't been run on server)
+        if (!$theme && in_array($cleanCode, ['tv6akl', 'basic-1', 'basic', 'b-1'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-1'],
+                    [
+                        'name' => 'Minimalist Sage',
+                        'code' => 'tv6akl',
+                        'thumbnail_url' => '/assets/wedding/couple-foliage.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'tv6akl';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                // In-memory fallback
+                $theme = new Theme();
+                $theme->id = 'basic-1';
+                $theme->name = 'Minimalist Sage';
+                $theme->code = 'tv6akl';
+                $theme->thumbnail_url = '/assets/wedding/couple-foliage.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
         }
 
         return $theme;
@@ -116,7 +168,7 @@ class ThemeController extends Controller
     /**
      * Generate rich, complete sample wedding data for demo preview
      */
-    protected function getSampleWeddingData(Theme $theme): array
+    protected function getSampleWeddingData($theme): array
     {
         $weddingData = [
             'groom' => [

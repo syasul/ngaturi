@@ -19,12 +19,52 @@ return new class extends Migration
             });
         }
 
-        // Generate unique random codes for all existing themes
+        // Standard predefined codes for consistent URLs across all environments
+        $knownCodes = [
+            'basic-1' => 'tv6akl',
+            'theme-1' => 'emikvq',
+            'theme-2' => 't2ltgr',
+            'custom-theme-1' => 'rgudhs',
+            'elegant' => 'u6etuk',
+            'rustic' => 'c3j55t',
+            'modern' => 'auildo',
+            'royal-yogyakarta' => 'mowx32',
+            'botanical-minimal' => 'bzuqtb',
+            'editorial-mono' => '94shhu',
+            'theme-3' => 'w616j1',
+        ];
+
+        // Ensure basic-1 theme exists and is active
+        $basic1 = Theme::find('basic-1');
+        if (!$basic1) {
+            Theme::create([
+                'id' => 'basic-1',
+                'name' => 'Minimalist Sage',
+                'code' => $knownCodes['basic-1'],
+                'thumbnail_url' => '/assets/wedding/couple-foliage.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        } else {
+            $basic1->update([
+                'name' => 'Minimalist Sage',
+                'code' => $knownCodes['basic-1'],
+                'thumbnail_url' => '/assets/wedding/couple-foliage.png',
+                'is_active' => true,
+                'package_level' => 'BASIC',
+            ]);
+        }
+
+        // Assign codes for all existing themes
         $existingThemes = Theme::all();
         $assignedCodes = [];
 
         foreach ($existingThemes as $theme) {
-            if (empty($theme->code)) {
+            if (isset($knownCodes[$theme->id])) {
+                $theme->code = $knownCodes[$theme->id];
+                $theme->save();
+                $assignedCodes[] = $theme->code;
+            } elseif (empty($theme->code)) {
                 do {
                     $code = strtolower(Str::random(6));
                 } while (in_array($code, $assignedCodes) || Theme::where('code', $code)->exists());
@@ -33,30 +73,6 @@ return new class extends Migration
                 $theme->code = $code;
                 $theme->save();
             }
-        }
-
-        // Ensure basic-1 theme exists and is active
-        $basic1 = Theme::find('basic-1');
-        if (!$basic1) {
-            do {
-                $basicCode = strtolower(Str::random(6));
-            } while (in_array($basicCode, $assignedCodes) || Theme::where('code', $basicCode)->exists());
-
-            Theme::create([
-                'id' => 'basic-1',
-                'name' => 'Minimalist Sage',
-                'code' => $basicCode,
-                'thumbnail_url' => '/assets/wedding/couple-foliage.png',
-                'is_active' => true,
-                'package_level' => 'BASIC',
-            ]);
-        } else {
-            $basic1->update([
-                'name' => 'Minimalist Sage',
-                'thumbnail_url' => '/assets/wedding/couple-foliage.png',
-                'is_active' => true,
-                'package_level' => 'BASIC',
-            ]);
         }
     }
 
