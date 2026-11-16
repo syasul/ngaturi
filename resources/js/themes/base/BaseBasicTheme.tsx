@@ -304,6 +304,14 @@ export const BaseBasicTheme: React.FC<BaseBasicThemeProps> = ({
     const primaryDate =
         schedules.akad?.date || schedules.resepsi?.date || 'Sabtu, 24 Oktober 2026';
 
+    const sections = data?.sections || {};
+    const showQuotes = sections.showQuotes !== false;
+    const showStory = sections.showStory !== false;
+    const showGallery = sections.showGallery !== false;
+    const showGift = sections.showGift !== false;
+    const showRsvp = sections.showRsvp !== false;
+    const showWishes = sections.showWishes !== false;
+
     const handleOpen = () => {
         setIsOpened(true);
         if (externalOnOpen) externalOnOpen();
@@ -777,23 +785,25 @@ export const BaseBasicTheme: React.FC<BaseBasicThemeProps> = ({
                 {/* ========================================================== */}
                 {/* 3. SECTION: AYAT SUCI (CONTRAST BANNER)                     */}
                 {/* ========================================================== */}
-                <section className={`relative overflow-hidden ${config.quoteBannerBg} px-8 py-16 text-center ${config.quoteTextColor}`}>
-                    {config.renderCorner({ position: 'top-left', size: 54, className: 'left-4 top-4' })}
-                    {config.renderCorner({ position: 'bottom-right', size: 54, className: 'bottom-4 right-4' })}
+                {showQuotes && (
+                    <section className={`relative overflow-hidden ${config.quoteBannerBg} px-8 py-16 text-center ${config.quoteTextColor}`}>
+                        {config.renderCorner({ position: 'top-left', size: 54, className: 'left-4 top-4' })}
+                        {config.renderCorner({ position: 'bottom-right', size: 54, className: 'bottom-4 right-4' })}
 
-                    <div className="relative z-10 mx-auto max-w-sm">
-                        <svg className={`mx-auto mb-4 h-8 w-8 ${config.quoteAccentColor} opacity-70`} fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                        </svg>
+                        <div className="relative z-10 mx-auto max-w-sm">
+                            <svg className={`mx-auto mb-4 h-8 w-8 ${config.quoteAccentColor} opacity-70`} fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                            </svg>
 
-                        <p className="font-serif text-sm leading-relaxed opacity-90 italic sm:text-base">
-                            &ldquo;Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.&rdquo;
-                        </p>
-                        <p className={`mt-4 font-mono text-xs uppercase tracking-widest ${config.quoteAccentColor}`}>
-                            &bull; Q.S. Ar-Rum: 21 &bull;
-                        </p>
-                    </div>
-                </section>
+                            <p className="font-serif text-sm leading-relaxed opacity-90 italic sm:text-base">
+                                &ldquo;Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.&rdquo;
+                            </p>
+                            <p className={`mt-4 font-mono text-xs uppercase tracking-widest ${config.quoteAccentColor}`}>
+                                &bull; Q.S. Ar-Rum: 21 &bull;
+                            </p>
+                        </div>
+                    </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 4. SECTION: MEMPELAI (BRIDE & GROOM)                       */}
@@ -1016,80 +1026,84 @@ export const BaseBasicTheme: React.FC<BaseBasicThemeProps> = ({
                 {/* ========================================================== */}
                 {/* 6. SECTION: KISAH CINTA (OUR STORY)                         */}
                 {/* ========================================================== */}
-                <section id="section-story" className="relative px-6 py-20 text-center">
-                    <div className="relative z-10 mx-auto max-w-md">
-                        <span className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${config.accentText}`}>
-                            Kisah Kasih
-                        </span>
-                        <h2 className={`mt-2 font-serif text-2xl font-medium tracking-tight ${config.cardTitleText} sm:text-3xl`}>
-                            Cerita Cinta Kami
-                        </h2>
+                {showStory && stories && stories.length > 0 && (
+                    <section id="section-story" className="relative px-6 py-20 text-center">
+                        <div className="relative z-10 mx-auto max-w-md">
+                            <span className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${config.accentText}`}>
+                                Kisah Kasih
+                            </span>
+                            <h2 className={`mt-2 font-serif text-2xl font-medium tracking-tight ${config.cardTitleText} sm:text-3xl`}>
+                                Cerita Cinta Kami
+                            </h2>
 
-                        <div className="my-6">
-                            {config.renderDivider()}
-                        </div>
+                            <div className="my-6">
+                                {config.renderDivider()}
+                            </div>
 
-                        <div className="space-y-4">
-                            {stories.map((story: any, idx: number) => (
-                                <div
-                                    key={idx}
-                                    className={`rounded-2xl border ${config.cardBorder} ${config.cardBg} p-5 text-left shadow-sm backdrop-blur-sm`}
-                                >
-                                    <span className={`inline-block rounded-full ${config.accentBg} px-3 py-1 font-mono text-[10px] font-bold text-white`}>
-                                        {story.year}
-                                    </span>
-                                    <h4 className={`mt-2 font-serif text-base font-medium ${config.cardTitleText}`}>
-                                        {story.title}
-                                    </h4>
-                                    <p className={`mt-1 text-xs leading-relaxed ${config.cardSubText}`}>
-                                        {story.content}
-                                    </p>
-                                </div>
-                            ))}
+                            <div className="space-y-4">
+                                {stories.map((story: any, idx: number) => (
+                                    <div
+                                        key={idx}
+                                        className={`rounded-2xl border ${config.cardBorder} ${config.cardBg} p-5 text-left shadow-sm backdrop-blur-sm`}
+                                    >
+                                        <span className={`inline-block rounded-full ${config.accentBg} px-3 py-1 font-mono text-[10px] font-bold text-white`}>
+                                            {story.year}
+                                        </span>
+                                        <h4 className={`mt-2 font-serif text-base font-medium ${config.cardTitleText}`}>
+                                            {story.title}
+                                        </h4>
+                                        <p className={`mt-1 text-xs leading-relaxed ${config.cardSubText}`}>
+                                            {story.content}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 7. SECTION: GALERI FOTO                                    */}
                 {/* ========================================================== */}
-                <section id="section-gallery" className={`relative ${config.sectionAltBg} px-6 py-20 text-center`}>
-                    <div className="relative z-10 mx-auto max-w-md">
-                        <span className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${config.accentText}`}>
-                            Momen Bahagia
-                        </span>
-                        <h2 className={`mt-2 font-serif text-2xl font-medium tracking-tight ${config.cardTitleText} sm:text-3xl`}>
-                            Galeri Foto
-                        </h2>
+                {showGallery && galleries && galleries.length > 0 && (
+                    <section id="section-gallery" className={`relative ${config.sectionAltBg} px-6 py-20 text-center`}>
+                        <div className="relative z-10 mx-auto max-w-md">
+                            <span className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${config.accentText}`}>
+                                Momen Bahagia
+                            </span>
+                            <h2 className={`mt-2 font-serif text-2xl font-medium tracking-tight ${config.cardTitleText} sm:text-3xl`}>
+                                Galeri Foto
+                            </h2>
 
-                        <div className="my-6">
-                            {config.renderDivider()}
-                        </div>
+                            <div className="my-6">
+                                {config.renderDivider()}
+                            </div>
 
-                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                            {galleries.map((item: any, idx: number) => (
-                                <motion.div
-                                    key={item.id || idx}
-                                    variants={scaleIn}
-                                    initial="hidden"
-                                    whileInView="visible"
-                                    viewport={{ once: true }}
-                                    onClick={() => setSelectedPhoto(resolveImageUrl(item.url, '/assets/wedding/hero-floral.png'))}
-                                    className={`group relative aspect-square cursor-pointer overflow-hidden rounded-2xl border-2 ${config.cardBorder} bg-white/40 shadow-sm transition hover:scale-105 hover:shadow-md`}
-                                >
-                                    <img
-                                        src={resolveImageUrl(item.url, '/assets/wedding/hero-floral.png')}
-                                        alt={item.caption || `Galeri ${idx + 1}`}
-                                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                    />
-                                    <div className="absolute inset-0 bg-black/30 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                                        <ImageIcon size={20} className="text-white" />
-                                    </div>
-                                </motion.div>
-                            ))}
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                                {galleries.map((item: any, idx: number) => (
+                                    <motion.div
+                                        key={item.id || idx}
+                                        variants={scaleIn}
+                                        initial="hidden"
+                                        whileInView="visible"
+                                        viewport={{ once: true }}
+                                        onClick={() => setSelectedPhoto(resolveImageUrl(item.url, '/assets/wedding/hero-floral.png'))}
+                                        className={`group relative aspect-square cursor-pointer overflow-hidden rounded-2xl border-2 ${config.cardBorder} bg-white/40 shadow-sm transition hover:scale-105 hover:shadow-md`}
+                                    >
+                                        <img
+                                            src={resolveImageUrl(item.url, '/assets/wedding/hero-floral.png')}
+                                            alt={item.caption || `Galeri ${idx + 1}`}
+                                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-black/30 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                                            <ImageIcon size={20} className="text-white" />
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                )}
 
                 {/* Lightbox Modal */}
                 <AnimatePresence>
@@ -1119,179 +1133,187 @@ export const BaseBasicTheme: React.FC<BaseBasicThemeProps> = ({
                 {/* ========================================================== */}
                 {/* 8. SECTION: HADIAH DIGITAL (AMPLOP DIGITAL)                */}
                 {/* ========================================================== */}
-                <section id="section-gift" className="relative px-6 py-20 text-center">
-                    <div className="relative z-10 mx-auto max-w-md">
-                        <span className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${config.accentText}`}>
-                            Tanda Kasih
-                        </span>
-                        <h2 className={`mt-2 font-serif text-2xl font-medium tracking-tight ${config.cardTitleText} sm:text-3xl`}>
-                            Kado & Amplop Digital
-                        </h2>
-                        <p className={`mx-auto mt-2 max-w-xs text-xs leading-relaxed ${config.cardSubText}`}>
-                            Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda bermaksud memberikan tanda kasih:
-                        </p>
+                {showGift && (
+                    <section id="section-gift" className="relative px-6 py-20 text-center">
+                        <div className="relative z-10 mx-auto max-w-md">
+                            <span className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${config.accentText}`}>
+                                Tanda Kasih
+                            </span>
+                            <h2 className={`mt-2 font-serif text-2xl font-medium tracking-tight ${config.cardTitleText} sm:text-3xl`}>
+                                Kado & Amplop Digital
+                            </h2>
+                            <p className={`mx-auto mt-2 max-w-xs text-xs leading-relaxed ${config.cardSubText}`}>
+                                Doa restu Anda merupakan karunia terindah bagi kami. Namun jika Anda bermaksud memberikan tanda kasih:
+                            </p>
 
-                        <div className="my-6">
-                            {config.renderDivider()}
-                        </div>
-
-                        <div className="space-y-4">
-                            {bankAccounts.map((account: any, idx: number) => (
-                                <div
-                                    key={idx}
-                                    className={`rounded-2xl border ${config.cardBorder} ${config.cardBg} p-5 shadow-sm backdrop-blur-sm`}
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <span className={`font-serif text-sm font-semibold ${config.cardTitleText}`}>
-                                            {account.bank}
-                                        </span>
-                                        <Gift size={16} className={config.accentText} />
-                                    </div>
-                                    <p className={`mt-3 font-mono text-base font-semibold tracking-wider ${config.cardTitleText}`}>
-                                        {account.accountNumber}
-                                    </p>
-                                    <p className={`text-xs ${config.cardSubText}`}>
-                                        a.n. {account.accountName}
-                                    </p>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleCopy(account.accountNumber, `bank-${idx}`)}
-                                        className={`mt-4 inline-flex items-center gap-1.5 rounded-xl border ${config.accentBorder} ${config.containerBg} px-4 py-2 text-xs font-semibold ${config.accentText} transition hover:shadow-xs active:scale-95`}
-                                    >
-                                        {copiedAccount === `bank-${idx}` ? (
-                                            <>
-                                                <Check size={13} className="text-emerald-600" />
-                                                <span>Berhasil Disalin!</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Copy size={13} />
-                                                <span>Salin No. Rekening</span>
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* ========================================================== */}
-                {/* 9. SECTION: RSVP & UCAPAN (GUESTBOOK)                       */}
-                {/* ========================================================== */}
-                <section id="section-rsvp" className={`relative ${config.sectionAltBg} px-6 py-20 text-center`}>
-                    <div className="relative z-10 mx-auto max-w-md">
-                        <span className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${config.accentText}`}>
-                            Konfirmasi Kehadiran
-                        </span>
-                        <h2 className={`mt-2 font-serif text-2xl font-medium tracking-tight ${config.cardTitleText} sm:text-3xl`}>
-                            RSVP & Ucapan Doa
-                        </h2>
-
-                        <div className="my-6">
-                            {config.renderDivider()}
-                        </div>
-
-                        {/* RSVP Form */}
-                        <form
-                            onSubmit={handleRsvpSubmit}
-                            className={`rounded-3xl border ${config.cardBorder} ${config.cardBg} p-6 text-left shadow-sm backdrop-blur-sm`}
-                        >
-                            <div className="mb-4">
-                                <label className={`block text-xs font-medium ${config.cardTitleText}`}>
-                                    Nama Lengkap
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={rsvpName}
-                                    onChange={(e) => setRsvpName(e.target.value)}
-                                    placeholder="Nama Anda"
-                                    className={`mt-1.5 w-full rounded-xl border ${config.cardBorder} bg-white/70 px-4 py-2.5 text-xs ${config.cardTitleText} focus:outline-none focus:ring-2 focus:ring-current`}
-                                />
+                            <div className="my-6">
+                                {config.renderDivider()}
                             </div>
 
-                            <div className="mb-4">
-                                <label className={`block text-xs font-medium ${config.cardTitleText}`}>
-                                    Konfirmasi Kehadiran
-                                </label>
-                                <select
-                                    value={rsvpStatus}
-                                    onChange={(e: any) => setRsvpStatus(e.target.value)}
-                                    className={`mt-1.5 w-full rounded-xl border ${config.cardBorder} bg-white/70 px-4 py-2.5 text-xs ${config.cardTitleText} focus:outline-none focus:ring-2 focus:ring-current`}
-                                >
-                                    <option value="hadir">Akan Hadir</option>
-                                    <option value="ragu">Masih Ragu</option>
-                                    <option value="tidak_hadir">Tidak Dapat Hadir</option>
-                                </select>
-                            </div>
-
-                            <div className="mb-5">
-                                <label className={`block text-xs font-medium ${config.cardTitleText}`}>
-                                    Ucapan & Doa Restu
-                                </label>
-                                <textarea
-                                    rows={3}
-                                    value={rsvpMessage}
-                                    onChange={(e) => setRsvpMessage(e.target.value)}
-                                    placeholder="Tuliskan ucapan dan doa terbaik Anda..."
-                                    className={`mt-1.5 w-full rounded-xl border ${config.cardBorder} bg-white/70 px-4 py-2.5 text-xs ${config.cardTitleText} focus:outline-none focus:ring-2 focus:ring-current`}
-                                />
-                            </div>
-
-                            <button
-                                type="submit"
-                                disabled={isSubmittingRsvp}
-                                className={`w-full rounded-xl ${config.buttonPrimary} py-3 text-xs font-semibold shadow-sm transition active:scale-95 flex items-center justify-center gap-2`}
-                            >
-                                <MessageSquare size={14} />
-                                <span>{isSubmittingRsvp ? 'Mengirim...' : 'Kirim Konfirmasi & Ucapan'}</span>
-                            </button>
-
-                            {rsvpSubmitted && (
-                                <p className="mt-3 text-center text-xs font-semibold text-emerald-600">
-                                    ✓ Terima kasih atas konfirmasi dan ucapan Anda!
-                                </p>
-                            )}
-                        </form>
-
-                        {/* Wishes List */}
-                        <div id="section-wishes" className="mx-auto mt-10 max-w-sm text-left">
-                            <h4 className={`mb-4 flex items-center gap-2 font-serif text-sm font-semibold ${config.cardTitleText}`}>
-                                <MessageCircle size={15} className={config.accentText} />
-                                <span>Doa & Harapan ({localWishes.length})</span>
-                            </h4>
-
-                            <div className="max-h-80 space-y-3 overflow-y-auto pr-1">
-                                {localWishes.map((w: any) => (
+                            <div className="space-y-4">
+                                {bankAccounts.map((account: any, idx: number) => (
                                     <div
-                                        key={w.id}
-                                        className={`rounded-2xl border ${config.cardBorder} ${config.cardBg} p-4 shadow-2xs backdrop-blur-sm`}
+                                        key={idx}
+                                        className={`rounded-2xl border ${config.cardBorder} ${config.cardBg} p-5 shadow-sm backdrop-blur-sm`}
                                     >
                                         <div className="flex items-center justify-between">
-                                            <span className={`font-serif text-xs font-semibold ${config.cardTitleText}`}>
-                                                {w.name}
+                                            <span className={`font-serif text-sm font-semibold ${config.cardTitleText}`}>
+                                                {account.bank}
                                             </span>
-                                            <span className={`rounded-full px-2 py-0.5 text-[9px] font-semibold ${
-                                                w.rsvpStatus === 'hadir'
-                                                    ? 'bg-emerald-100 text-emerald-700'
-                                                    : 'bg-amber-100 text-amber-700'
-                                            }`}>
-                                                {w.rsvpStatus === 'hadir' ? 'Hadir' : 'Belum Pasti'}
-                                            </span>
+                                            <Gift size={16} className={config.accentText} />
                                         </div>
-                                        <p className={`mt-2 text-xs leading-relaxed ${config.cardSubText}`}>
-                                            {w.message}
+                                        <p className={`mt-3 font-mono text-base font-semibold tracking-wider ${config.cardTitleText}`}>
+                                            {account.accountNumber}
                                         </p>
-                                        <p className={`mt-1.5 text-[10px] ${config.cardSubText} opacity-70`}>
-                                            {w.createdAt ? new Date(w.createdAt).toLocaleDateString('id-ID') : 'Baru saja'}
+                                        <p className={`text-xs ${config.cardSubText}`}>
+                                            a.n. {account.accountName}
                                         </p>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleCopy(account.accountNumber, `bank-${idx}`)}
+                                            className={`mt-4 inline-flex items-center gap-1.5 rounded-xl border ${config.accentBorder} ${config.containerBg} px-4 py-2 text-xs font-semibold ${config.accentText} transition hover:shadow-xs active:scale-95`}
+                                        >
+                                            {copiedAccount === `bank-${idx}` ? (
+                                                <>
+                                                    <Check size={13} className="text-emerald-600" />
+                                                    <span>Berhasil Disalin!</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Copy size={13} />
+                                                    <span>Salin No. Rekening</span>
+                                                </>
+                                            )}
+                                        </button>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                )}
+
+                {/* ========================================================== */}
+                {/* 9. SECTION: RSVP & UCAPAN (GUESTBOOK)                       */}
+                {/* ========================================================== */}
+                {(showRsvp || showWishes) && (
+                    <section id="section-rsvp" className={`relative ${config.sectionAltBg} px-6 py-20 text-center`}>
+                        <div className="relative z-10 mx-auto max-w-md">
+                            <span className={`text-[10px] font-semibold uppercase tracking-[0.3em] ${config.accentText}`}>
+                                Konfirmasi Kehadiran
+                            </span>
+                            <h2 className={`mt-2 font-serif text-2xl font-medium tracking-tight ${config.cardTitleText} sm:text-3xl`}>
+                                RSVP & Ucapan Doa
+                            </h2>
+
+                            <div className="my-6">
+                                {config.renderDivider()}
+                            </div>
+
+                            {/* RSVP Form */}
+                            {showRsvp && (
+                                <form
+                                    onSubmit={handleRsvpSubmit}
+                                    className={`rounded-3xl border ${config.cardBorder} ${config.cardBg} p-6 text-left shadow-sm backdrop-blur-sm`}
+                                >
+                                    <div className="mb-4">
+                                        <label className={`block text-xs font-medium ${config.cardTitleText}`}>
+                                            Nama Lengkap
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={rsvpName}
+                                            onChange={(e) => setRsvpName(e.target.value)}
+                                            placeholder="Nama Anda"
+                                            className={`mt-1.5 w-full rounded-xl border ${config.cardBorder} bg-white/70 px-4 py-2.5 text-xs ${config.cardTitleText} focus:outline-none focus:ring-2 focus:ring-current`}
+                                        />
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <label className={`block text-xs font-medium ${config.cardTitleText}`}>
+                                            Konfirmasi Kehadiran
+                                        </label>
+                                        <select
+                                            value={rsvpStatus}
+                                            onChange={(e: any) => setRsvpStatus(e.target.value)}
+                                            className={`mt-1.5 w-full rounded-xl border ${config.cardBorder} bg-white/70 px-4 py-2.5 text-xs ${config.cardTitleText} focus:outline-none focus:ring-2 focus:ring-current`}
+                                        >
+                                            <option value="hadir">Akan Hadir</option>
+                                            <option value="ragu">Masih Ragu</option>
+                                            <option value="tidak_hadir">Tidak Dapat Hadir</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="mb-5">
+                                        <label className={`block text-xs font-medium ${config.cardTitleText}`}>
+                                            Ucapan & Doa Restu
+                                        </label>
+                                        <textarea
+                                            rows={3}
+                                            value={rsvpMessage}
+                                            onChange={(e) => setRsvpMessage(e.target.value)}
+                                            placeholder="Tuliskan ucapan dan doa terbaik Anda..."
+                                            className={`mt-1.5 w-full rounded-xl border ${config.cardBorder} bg-white/70 px-4 py-2.5 text-xs ${config.cardTitleText} focus:outline-none focus:ring-2 focus:ring-current`}
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmittingRsvp}
+                                        className={`w-full rounded-xl ${config.buttonPrimary} py-3 text-xs font-semibold shadow-sm transition active:scale-95 flex items-center justify-center gap-2`}
+                                    >
+                                        <MessageSquare size={14} />
+                                        <span>{isSubmittingRsvp ? 'Mengirim...' : 'Kirim Konfirmasi & Ucapan'}</span>
+                                    </button>
+
+                                    {rsvpSubmitted && (
+                                        <p className="mt-3 text-center text-xs font-semibold text-emerald-600">
+                                            ✓ Terima kasih atas konfirmasi dan ucapan Anda!
+                                        </p>
+                                    )}
+                                </form>
+                            )}
+
+                            {/* Wishes List */}
+                            {showWishes && (
+                                <div id="section-wishes" className={`mx-auto ${showRsvp ? 'mt-10' : 'mt-2'} max-w-sm text-left`}>
+                                    <h4 className={`mb-4 flex items-center gap-2 font-serif text-sm font-semibold ${config.cardTitleText}`}>
+                                        <MessageCircle size={15} className={config.accentText} />
+                                        <span>Doa & Harapan ({localWishes.length})</span>
+                                    </h4>
+
+                                    <div className="max-h-80 space-y-3 overflow-y-auto pr-1">
+                                        {localWishes.map((w: any) => (
+                                            <div
+                                                key={w.id}
+                                                className={`rounded-2xl border ${config.cardBorder} ${config.cardBg} p-4 shadow-2xs backdrop-blur-sm`}
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <span className={`font-serif text-xs font-semibold ${config.cardTitleText}`}>
+                                                        {w.name}
+                                                    </span>
+                                                    <span className={`rounded-full px-2 py-0.5 text-[9px] font-semibold ${
+                                                        w.rsvpStatus === 'hadir'
+                                                            ? 'bg-emerald-100 text-emerald-700'
+                                                            : 'bg-amber-100 text-amber-700'
+                                                    }`}>
+                                                        {w.rsvpStatus === 'hadir' ? 'Hadir' : 'Belum Pasti'}
+                                                    </span>
+                                                </div>
+                                                <p className={`mt-2 text-xs leading-relaxed ${config.cardSubText}`}>
+                                                    {w.message}
+                                                </p>
+                                                <p className={`mt-1.5 text-[10px] ${config.cardSubText} opacity-70`}>
+                                                    {w.createdAt ? new Date(w.createdAt).toLocaleDateString('id-ID') : 'Baru saja'}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 10. SECTION: PROTOKOL KESEHATAN & PENUTUP                  */}
@@ -1360,28 +1382,32 @@ export const BaseBasicTheme: React.FC<BaseBasicThemeProps> = ({
                                 <CalendarIcon size={13} />
                                 <span className="hidden sm:inline">Acara</span>
                             </button>
-                            <button
-                                onClick={() => scrollTo('section-gallery')}
-                                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                                    activeSection === 'section-gallery'
-                                        ? `${config.dockActiveBg} ${config.dockActiveText} font-semibold`
-                                        : `${config.dockText} hover:${config.dockActiveText}`
-                                }`}
-                            >
-                                <ImageIcon size={13} />
-                                <span className="hidden sm:inline">Galeri</span>
-                            </button>
-                            <button
-                                onClick={() => scrollTo('section-rsvp')}
-                                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                                    activeSection === 'section-rsvp'
-                                        ? `${config.dockActiveBg} ${config.dockActiveText} font-semibold`
-                                        : `${config.dockText} hover:${config.dockActiveText}`
-                                }`}
-                            >
-                                <MessageSquare size={13} />
-                                <span className="hidden sm:inline">Ucapan</span>
-                            </button>
+                            {showGallery && galleries && galleries.length > 0 && (
+                                <button
+                                    onClick={() => scrollTo('section-gallery')}
+                                    className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                                        activeSection === 'section-gallery'
+                                            ? `${config.dockActiveBg} ${config.dockActiveText} font-semibold`
+                                            : `${config.dockText} hover:${config.dockActiveText}`
+                                    }`}
+                                >
+                                    <ImageIcon size={13} />
+                                    <span className="hidden sm:inline">Galeri</span>
+                                </button>
+                            )}
+                            {(showRsvp || showWishes) && (
+                                <button
+                                    onClick={() => scrollTo('section-rsvp')}
+                                    className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                                        activeSection === 'section-rsvp'
+                                            ? `${config.dockActiveBg} ${config.dockActiveText} font-semibold`
+                                            : `${config.dockText} hover:${config.dockActiveText}`
+                                    }`}
+                                >
+                                    <MessageSquare size={13} />
+                                    <span className="hidden sm:inline">Ucapan</span>
+                                </button>
+                            )}
                         </nav>
                     </div>
                 )}

@@ -279,6 +279,15 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
         schedules.resepsi?.date ||
         'Sabtu, 24 Oktober 2026';
 
+    const sections = data?.sections || {};
+    const showQuotes = sections.showQuotes !== false;
+    const showStory = sections.showStory !== false;
+    const showGallery = sections.showGallery !== false;
+    const showGift = sections.showGift !== false;
+    const showRsvp = sections.showRsvp !== false;
+    const showWishes = sections.showWishes !== false;
+
+
     const resolveImageUrl = (path?: string, fallback = '') => {
         if (!path) return fallback;
         if (
@@ -771,7 +780,8 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                 {/* ========================================================== */}
                 {/* 3. SECTION: AYAT SUCI (CONTRAST BANNER: SLATE ZEN CHARCOAL) */}
                 {/* ========================================================== */}
-                <section className="relative overflow-hidden bg-[#25262B] px-8 py-16 text-center text-[#FFF8F7]">
+                                {showQuotes && (
+                    <section className="relative overflow-hidden bg-[#25262B] px-8 py-16 text-center text-[#FFF8F7]">
                     <SakuraCorner position="top-left" color="#E598A8" size={54} className="left-4 top-4" />
                     <SakuraCorner position="bottom-right" color="#E598A8" size={54} className="bottom-4 right-4" />
 
@@ -788,6 +798,7 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                         </p>
                     </div>
                 </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 4. SECTION: MEMPELAI (BRIDE & GROOM)                       */}
@@ -967,7 +978,8 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                 {/* ========================================================== */}
                 {/* 6. SECTION: LOVE STORY                                     */}
                 {/* ========================================================== */}
-                <section id="section-story" className="relative px-6 py-20 text-center">
+                                {showStory && stories && stories.length > 0 && (
+                    <section id="section-story" className="relative px-6 py-20 text-center">
                     <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#DE7E91]">
                         Untaian Kisah
                     </span>
@@ -995,11 +1007,13 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                         ))}
                     </div>
                 </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 7. SECTION: GALERI FOTO                                    */}
                 {/* ========================================================== */}
-                <section id="section-gallery" className="relative bg-[#FDEEED] px-6 py-20 text-center">
+                                {showGallery && galleries && galleries.length > 0 && (
+                    <section id="section-gallery" className="relative bg-[#FDEEED] px-6 py-20 text-center">
                     <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#DE7E91]">
                         Momen Indah
                     </span>
@@ -1055,11 +1069,13 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                         )}
                     </AnimatePresence>
                 </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 8. SECTION: DIGITAL GIFT / TANDA KASIH                    */}
                 {/* ========================================================== */}
-                <section id="section-gift" className="relative px-6 py-20 text-center">
+                                {showGift && bankAccounts && bankAccounts.length > 0 && (
+                    <section id="section-gift" className="relative px-6 py-20 text-center">
                     <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#DE7E91]">
                         Tanda Kasih
                     </span>
@@ -1111,11 +1127,13 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                         ))}
                     </div>
                 </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 9. SECTION: RSVP & WISHES                                  */}
                 {/* ========================================================== */}
-                <section id="section-rsvp" className="relative bg-[#FDEEED] px-6 py-20 text-center">
+                                {(showRsvp || showWishes) && (
+                    <section id="section-rsvp" className="relative bg-[#FDEEED] px-6 py-20 text-center">
                     <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#DE7E91]">
                         Konfirmasi Kehadiran
                     </span>
@@ -1126,7 +1144,8 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                     <SakuraDivider color="#DE7E91" className="my-6" />
 
                     {/* RSVP Form Card */}
-                    <div className="relative mx-auto max-w-sm rounded-3xl border border-[#DE7E91]/25 bg-white p-6 shadow-sm text-left">
+                                        {showRsvp && (
+                        <div className="relative mx-auto max-w-sm rounded-3xl border border-[#DE7E91]/25 bg-white p-6 shadow-sm text-left">
                         {rsvpSubmitted ? (
                             <div className="py-6 text-center">
                                 <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-pink-100 text-[#C26D7C]">
@@ -1219,9 +1238,11 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                             </form>
                         )}
                     </div>
+                    )}
 
                     {/* Wishes Guestbook List */}
-                    <div id="section-wishes" className="mx-auto mt-10 max-w-sm text-left">
+                                        {showWishes && (
+                        <div id="section-wishes" className="mx-auto mt-10 max-w-sm text-left">
                         <div className="flex items-center justify-between border-b border-[#DE7E91]/20 pb-2">
                             <h4 className="font-serif text-lg font-medium text-[#2C2E35]">
                                 Ucapan &amp; Doa ({localWishes.length})
@@ -1265,7 +1286,9 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                             ))}
                         </div>
                     </div>
+                    )}
                 </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 10. CLOSING FOOTER                                         */}
@@ -1330,7 +1353,9 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                             >
                                 <CalendarIcon size={16} />
                             </button>
-                            <button
+                            {showGallery && galleries && galleries.length > 0 && (
+
+                                <button
                                 type="button"
                                 onClick={() => scrollTo('section-gallery')}
                                 className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
@@ -1342,7 +1367,10 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                             >
                                 <ImageIcon size={16} />
                             </button>
-                            <button
+                            )}
+                            {(showRsvp || showWishes) && (
+
+                                <button
                                 type="button"
                                 onClick={() => scrollTo('section-rsvp')}
                                 className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
@@ -1354,6 +1382,7 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
                             >
                                 <MessageSquare size={16} />
                             </button>
+                            )}
                         </nav>
                     </div>
                 )}

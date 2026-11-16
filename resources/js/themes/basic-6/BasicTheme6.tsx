@@ -336,6 +336,14 @@ export const BasicTheme6: React.FC<BasicTheme6Props> = ({
         schedules.resepsi?.date ||
         'Sabtu, 24 Oktober 2026';
 
+    const sections = data?.sections || {};
+    const showQuotes = sections.showQuotes !== false;
+    const showStory = sections.showStory !== false;
+    const showGallery = sections.showGallery !== false;
+    const showGift = sections.showGift !== false;
+    const showRsvp = sections.showRsvp !== false;
+    const showWishes = sections.showWishes !== false;
+
     const resolveImageUrl = (path?: string, fallback = '') => {
         if (!path) return fallback;
         if (
@@ -862,23 +870,25 @@ export const BasicTheme6: React.FC<BasicTheme6Props> = ({
                 {/* ========================================================== */}
                 {/* 3. SECTION: AYAT SUCI (CONTRAST BANNER: DEEP OLIVE NOIR)   */}
                 {/* ========================================================== */}
-                <section className="relative overflow-hidden bg-[#24301B] px-8 py-16 text-center text-[#F7F5EE]">
-                    <OliveCorner position="top-left" color="#A4BE80" size={54} className="left-4 top-4" />
-                    <OliveCorner position="bottom-right" color="#A4BE80" size={54} className="bottom-4 right-4" />
+                {showQuotes && (
+                    <section className="relative overflow-hidden bg-[#24301B] px-8 py-16 text-center text-[#F7F5EE]">
+                        <OliveCorner position="top-left" color="#A4BE80" size={54} className="left-4 top-4" />
+                        <OliveCorner position="bottom-right" color="#A4BE80" size={54} className="bottom-4 right-4" />
 
-                    <div className="relative z-10 mx-auto max-w-sm">
-                        <svg className="mx-auto mb-4 h-8 w-8 text-[#CBE2AD]/60" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                        </svg>
+                        <div className="relative z-10 mx-auto max-w-sm">
+                            <svg className="mx-auto mb-4 h-8 w-8 text-[#CBE2AD]/60" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                            </svg>
 
-                        <p className="font-serif text-sm leading-relaxed text-[#F7F5EE]/90 italic sm:text-base">
-                            &ldquo;Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.&rdquo;
-                        </p>
-                        <p className="mt-4 font-mono text-xs uppercase tracking-widest text-[#CBE2AD]">
-                            &bull; Q.S. Ar-Rum: 21 &bull;
-                        </p>
-                    </div>
-                </section>
+                            <p className="font-serif text-sm leading-relaxed text-[#F7F5EE]/90 italic sm:text-base">
+                                &ldquo;Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.&rdquo;
+                            </p>
+                            <p className="mt-4 font-mono text-xs uppercase tracking-widest text-[#CBE2AD]">
+                                &bull; Q.S. Ar-Rum: 21 &bull;
+                            </p>
+                        </div>
+                    </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 4. SECTION: MEMPELAI (BRIDE & GROOM)                       */}
@@ -1058,305 +1068,317 @@ export const BasicTheme6: React.FC<BasicTheme6Props> = ({
                 {/* ========================================================== */}
                 {/* 6. SECTION: LOVE STORY                                     */}
                 {/* ========================================================== */}
-                <section id="section-story" className="relative px-6 py-20 text-center">
-                    <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#4E6136]/75">
-                        Perjalanan Cinta
-                    </span>
-                    <h2 className="mt-2 font-serif text-3xl font-normal text-[#232F1A]">
-                        Kisah Kami
-                    </h2>
+                {showStory && stories && stories.length > 0 && (
+                    <section id="section-story" className="relative px-6 py-20 text-center">
+                        <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#4E6136]/75">
+                            Perjalanan Cinta
+                        </span>
+                        <h2 className="mt-2 font-serif text-3xl font-normal text-[#232F1A]">
+                            Kisah Kami
+                        </h2>
 
-                    <OliveDivider color="#4E6136" className="my-6" />
+                        <OliveDivider color="#4E6136" className="my-6" />
 
-                    <div className="relative mx-auto max-w-sm space-y-6 text-left">
-                        <div className="absolute bottom-4 left-4 top-4 w-[2px] bg-[#4E6136]/20" />
-                        {stories.map((story: any, idx: number) => (
-                            <div key={idx} className="relative pl-10">
-                                <div className="absolute left-2.5 top-1.5 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-[#4E6136] bg-[#F7F5EE]" />
-                                <span className="inline-block rounded-md bg-[#4E6136]/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-[#3D4D2B]">
-                                    {story.year}
-                                </span>
-                                <h4 className="mt-1 font-serif text-base font-medium text-[#232F1A]">
-                                    {story.title}
-                                </h4>
-                                <p className="mt-1 text-xs leading-relaxed text-[#4E6136]/80">
-                                    {story.content}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
+                        <div className="relative mx-auto max-w-sm space-y-6 text-left">
+                            <div className="absolute bottom-4 left-4 top-4 w-[2px] bg-[#4E6136]/20" />
+                            {stories.map((story: any, idx: number) => (
+                                <div key={idx} className="relative pl-10">
+                                    <div className="absolute left-2.5 top-1.5 h-3.5 w-3.5 -translate-x-1/2 rounded-full border-2 border-[#4E6136] bg-[#F7F5EE]" />
+                                    <span className="inline-block rounded-md bg-[#4E6136]/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-[#3D4D2B]">
+                                        {story.year}
+                                    </span>
+                                    <h4 className="mt-1 font-serif text-base font-medium text-[#232F1A]">
+                                        {story.title}
+                                    </h4>
+                                    <p className="mt-1 text-xs leading-relaxed text-[#4E6136]/80">
+                                        {story.content}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 7. SECTION: GALERI FOTO                                    */}
                 {/* ========================================================== */}
-                <section id="section-gallery" className="relative bg-[#EFECE2] px-6 py-20 text-center">
-                    <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#4E6136]/75">
-                        Momen Berharga
-                    </span>
-                    <h2 className="mt-2 font-serif text-3xl font-normal text-[#232F1A]">
-                        Galeri Bahagia
-                    </h2>
+                {showGallery && galleries && galleries.length > 0 && (
+                    <section id="section-gallery" className="relative bg-[#EFECE2] px-6 py-20 text-center">
+                        <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#4E6136]/75">
+                            Momen Berharga
+                        </span>
+                        <h2 className="mt-2 font-serif text-3xl font-normal text-[#232F1A]">
+                            Galeri Bahagia
+                        </h2>
 
-                    <OliveDivider color="#4E6136" className="my-6" />
+                        <OliveDivider color="#4E6136" className="my-6" />
 
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                        {galleries.map((img: any, idx: number) => (
-                            <div
-                                key={idx}
-                                onClick={() => setSelectedPhoto(img.url)}
-                                className="group relative aspect-square cursor-pointer overflow-hidden rounded-2xl border-2 border-white shadow-sm transition-transform hover:scale-105"
-                            >
-                                <img
-                                    src={resolveImageUrl(img.url)}
-                                    alt={img.caption || `Galeri ${idx + 1}`}
-                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-black/30 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
-                                    <ImageIcon size={20} className="text-white" />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Lightbox Modal */}
-                    <AnimatePresence>
-                        {selectedPhoto && (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                onClick={() => setSelectedPhoto(null)}
-                                className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-                            >
-                                <div className="relative max-h-[85vh] max-w-md overflow-hidden rounded-2xl bg-white p-2">
-                                    <button
-                                        onClick={() => setSelectedPhoto(null)}
-                                        className="absolute right-4 top-4 z-10 rounded-full bg-black/60 p-2 text-white hover:bg-black"
-                                    >
-                                        <X size={16} />
-                                    </button>
+                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                            {galleries.map((img: any, idx: number) => (
+                                <div
+                                    key={idx}
+                                    onClick={() => setSelectedPhoto(img.url)}
+                                    className="group relative aspect-square cursor-pointer overflow-hidden rounded-2xl border-2 border-white shadow-sm transition-transform hover:scale-105"
+                                >
                                     <img
-                                        src={resolveImageUrl(selectedPhoto)}
-                                        alt="Preview"
-                                        className="h-full w-full rounded-xl object-contain"
+                                        src={resolveImageUrl(img.url)}
+                                        alt={img.caption || `Galeri ${idx + 1}`}
+                                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     />
+                                    <div className="absolute inset-0 bg-black/30 opacity-0 transition-opacity group-hover:opacity-100 flex items-center justify-center">
+                                        <ImageIcon size={20} className="text-white" />
+                                    </div>
                                 </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </section>
+                            ))}
+                        </div>
+
+                        {/* Lightbox Modal */}
+                        <AnimatePresence>
+                            {selectedPhoto && (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={() => setSelectedPhoto(null)}
+                                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+                                >
+                                    <div className="relative max-h-[85vh] max-w-md overflow-hidden rounded-2xl bg-white p-2">
+                                        <button
+                                            onClick={() => setSelectedPhoto(null)}
+                                            className="absolute right-4 top-4 z-10 rounded-full bg-black/60 p-2 text-white hover:bg-black"
+                                        >
+                                            <X size={16} />
+                                        </button>
+                                        <img
+                                            src={resolveImageUrl(selectedPhoto)}
+                                            alt="Preview"
+                                            className="h-full w-full rounded-xl object-contain"
+                                        />
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 8. SECTION: DIGITAL GIFT / TANDA KASIH                    */}
                 {/* ========================================================== */}
-                <section id="section-gift" className="relative px-6 py-20 text-center">
-                    <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#4E6136]/75">
-                        Tanda Kasih
-                    </span>
-                    <h2 className="mt-2 font-serif text-3xl font-normal text-[#232F1A]">
-                        Kado Pernikahan
-                    </h2>
-                    <p className="mx-auto mt-2 max-w-xs text-xs text-[#4E6136]/80 leading-relaxed">
-                        Doa restu Anda merupakan karunia terindah bagi kami. Namun jika ingin memberikan tanda kasih berupa hadiah, Anda dapat menggunakan saluran berikut:
-                    </p>
+                {showGift && (
+                    <section id="section-gift" className="relative px-6 py-20 text-center">
+                        <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#4E6136]/75">
+                            Tanda Kasih
+                        </span>
+                        <h2 className="mt-2 font-serif text-3xl font-normal text-[#232F1A]">
+                            Kado Pernikahan
+                        </h2>
+                        <p className="mx-auto mt-2 max-w-xs text-xs text-[#4E6136]/80 leading-relaxed">
+                            Doa restu Anda merupakan karunia terindah bagi kami. Namun jika ingin memberikan tanda kasih berupa hadiah, Anda dapat menggunakan saluran berikut:
+                        </p>
 
-                    <OliveDivider color="#4E6136" className="my-6" />
+                        <OliveDivider color="#4E6136" className="my-6" />
 
-                    <div className="space-y-4">
-                        {bankAccounts.map((acc: any, idx: number) => (
-                            <div
-                                key={idx}
-                                className="relative mx-auto max-w-xs rounded-2xl border border-[#4E6136]/25 bg-white p-5 shadow-sm text-left"
-                            >
-                                <div className="flex items-center justify-between">
-                                    <span className="rounded-md bg-[#4E6136]/15 px-2 py-0.5 font-mono text-xs font-bold text-[#3D4D2B]">
-                                        {acc.bank}
-                                    </span>
-                                    <Gift size={16} className="text-[#4E6136]" />
-                                </div>
-                                <p className="mt-3 font-mono text-lg font-semibold tracking-wider text-[#232F1A]">
-                                    {acc.accountNumber}
-                                </p>
-                                <p className="text-xs text-[#4E6136]/70">
-                                    a.n {acc.accountName}
-                                </p>
-                                <button
-                                    type="button"
-                                    onClick={() => handleCopy(acc.accountNumber, `acc-${idx}`)}
-                                    className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#4E6136]/30 bg-[#F7F5EE] py-2 text-xs font-medium text-[#3D4D2B] transition-colors hover:bg-[#3D4D2B] hover:text-white"
+                        <div className="space-y-4">
+                            {bankAccounts.map((acc: any, idx: number) => (
+                                <div
+                                    key={idx}
+                                    className="relative mx-auto max-w-xs rounded-2xl border border-[#4E6136]/25 bg-white p-5 shadow-sm text-left"
                                 >
-                                    {copiedAccount === `acc-${idx}` ? (
-                                        <>
-                                            <Check size={13} className="text-green-600" />
-                                            <span>Nomor Berhasil Disalin!</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy size={13} />
-                                            <span>Salin Nomor Rekening</span>
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </section>
+                                    <div className="flex items-center justify-between">
+                                        <span className="rounded-md bg-[#4E6136]/15 px-2 py-0.5 font-mono text-xs font-bold text-[#3D4D2B]">
+                                            {acc.bank}
+                                        </span>
+                                        <Gift size={16} className="text-[#4E6136]" />
+                                    </div>
+                                    <p className="mt-3 font-mono text-lg font-semibold tracking-wider text-[#232F1A]">
+                                        {acc.accountNumber}
+                                    </p>
+                                    <p className="text-xs text-[#4E6136]/70">
+                                        a.n {acc.accountName}
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleCopy(acc.accountNumber, `acc-${idx}`)}
+                                        className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#4E6136]/30 bg-[#F7F5EE] py-2 text-xs font-medium text-[#3D4D2B] transition-colors hover:bg-[#3D4D2B] hover:text-white"
+                                    >
+                                        {copiedAccount === `acc-${idx}` ? (
+                                            <>
+                                                <Check size={13} className="text-green-600" />
+                                                <span>Nomor Berhasil Disalin!</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Copy size={13} />
+                                                <span>Salin Nomor Rekening</span>
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 9. SECTION: RSVP & WISHES                                  */}
                 {/* ========================================================== */}
-                <section id="section-rsvp" className="relative bg-[#EFECE2] px-6 py-20 text-center">
-                    <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#4E6136]/75">
-                        Konfirmasi Kehadiran
-                    </span>
-                    <h2 className="mt-2 font-serif text-3xl font-normal text-[#232F1A]">
-                        RSVP &amp; Doa Restu
-                    </h2>
+                {(showRsvp || showWishes) && (
+                    <section id="section-rsvp" className="relative bg-[#EFECE2] px-6 py-20 text-center">
+                        <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#4E6136]/75">
+                            Konfirmasi Kehadiran
+                        </span>
+                        <h2 className="mt-2 font-serif text-3xl font-normal text-[#232F1A]">
+                            RSVP &amp; Doa Restu
+                        </h2>
 
-                    <OliveDivider color="#4E6136" className="my-6" />
+                        <OliveDivider color="#4E6136" className="my-6" />
 
-                    {/* RSVP Form Card */}
-                    <div className="relative mx-auto max-w-sm rounded-3xl border border-[#4E6136]/25 bg-white p-6 shadow-sm text-left">
-                        {rsvpSubmitted ? (
-                            <div className="py-6 text-center">
-                                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-700">
-                                    <Check size={24} />
-                                </div>
-                                <h4 className="font-serif text-lg font-semibold text-[#232F1A]">
-                                    Terima Kasih atas Konfirmasinya!
-                                </h4>
-                                <p className="mt-1 text-xs text-[#4E6136]/75">
-                                    Konfirmasi kehadiran Anda telah tercatat dengan baik.
-                                </p>
+                        {/* RSVP Form Card */}
+                        {showRsvp && (
+                            <div className="relative mx-auto max-w-sm rounded-3xl border border-[#4E6136]/25 bg-white p-6 shadow-sm text-left">
+                                {rsvpSubmitted ? (
+                                    <div className="py-6 text-center">
+                                        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-700">
+                                            <Check size={24} />
+                                        </div>
+                                        <h4 className="font-serif text-lg font-semibold text-[#232F1A]">
+                                            Terima Kasih atas Konfirmasinya!
+                                        </h4>
+                                        <p className="mt-1 text-xs text-[#4E6136]/75">
+                                            Konfirmasi kehadiran Anda telah tercatat dengan baik.
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <form onSubmit={handleRsvpSubmit} className="space-y-4">
+                                        <div>
+                                            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#4E6136]">
+                                                Nama Anda
+                                            </label>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={rsvpName}
+                                                onChange={(e) => setRsvpName(e.target.value)}
+                                                placeholder="Tuliskan nama lengkap..."
+                                                className="mt-1.5 w-full rounded-xl border border-[#4E6136]/30 bg-[#F7F5EE]/60 px-3.5 py-2.5 text-xs text-[#2C3822] focus:border-[#4E6136] focus:outline-none"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#4E6136]">
+                                                Konfirmasi Kehadiran
+                                            </label>
+                                            <div className="mt-1.5 grid grid-cols-3 gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setRsvpStatus('hadir')}
+                                                    className={`rounded-xl py-2 text-xs font-medium transition-all ${
+                                                        rsvpStatus === 'hadir'
+                                                            ? 'bg-[#3D4D2B] text-white shadow-sm'
+                                                            : 'border border-[#4E6136]/25 bg-[#F7F5EE] text-[#4E6136]'
+                                                    }`}
+                                                >
+                                                    Hadir
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setRsvpStatus('ragu')}
+                                                    className={`rounded-xl py-2 text-xs font-medium transition-all ${
+                                                        rsvpStatus === 'ragu'
+                                                            ? 'bg-[#7E5739] text-white shadow-sm'
+                                                            : 'border border-[#4E6136]/25 bg-[#F7F5EE] text-[#4E6136]'
+                                                    }`}
+                                                >
+                                                    Ragu-ragu
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setRsvpStatus('tidak_hadir')}
+                                                    className={`rounded-xl py-2 text-xs font-medium transition-all ${
+                                                        rsvpStatus === 'tidak_hadir'
+                                                            ? 'bg-neutral-600 text-white shadow-sm'
+                                                            : 'border border-[#4E6136]/25 bg-[#F7F5EE] text-[#4E6136]'
+                                                    }`}
+                                                >
+                                                    Tidak Hadir
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#4E6136]">
+                                                Ucapan &amp; Doa
+                                            </label>
+                                            <textarea
+                                                rows={3}
+                                                value={rsvpMessage}
+                                                onChange={(e) => setRsvpMessage(e.target.value)}
+                                                placeholder="Tuliskan ucapan selamat & doa restu..."
+                                                className="mt-1.5 w-full rounded-xl border border-[#4E6136]/30 bg-[#F7F5EE]/60 px-3.5 py-2.5 text-xs text-[#2C3822] focus:border-[#4E6136] focus:outline-none"
+                                            />
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            disabled={isSubmittingRsvp}
+                                            className="w-full rounded-xl bg-[#3D4D2B] py-3 text-xs font-semibold tracking-wider uppercase text-white shadow-md transition-all hover:bg-[#232F1A] active:scale-95 disabled:opacity-50"
+                                        >
+                                            {isSubmittingRsvp ? 'Mengirim...' : 'Kirim RSVP'}
+                                        </button>
+                                    </form>
+                                )}
                             </div>
-                        ) : (
-                            <form onSubmit={handleRsvpSubmit} className="space-y-4">
-                                <div>
-                                    <label className="text-[11px] font-semibold uppercase tracking-wider text-[#4E6136]">
-                                        Nama Anda
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={rsvpName}
-                                        onChange={(e) => setRsvpName(e.target.value)}
-                                        placeholder="Tuliskan nama lengkap..."
-                                        className="mt-1.5 w-full rounded-xl border border-[#4E6136]/30 bg-[#F7F5EE]/60 px-3.5 py-2.5 text-xs text-[#2C3822] focus:border-[#4E6136] focus:outline-none"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="text-[11px] font-semibold uppercase tracking-wider text-[#4E6136]">
-                                        Konfirmasi Kehadiran
-                                    </label>
-                                    <div className="mt-1.5 grid grid-cols-3 gap-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => setRsvpStatus('hadir')}
-                                            className={`rounded-xl py-2 text-xs font-medium transition-all ${
-                                                rsvpStatus === 'hadir'
-                                                    ? 'bg-[#3D4D2B] text-white shadow-sm'
-                                                    : 'border border-[#4E6136]/25 bg-[#F7F5EE] text-[#4E6136]'
-                                            }`}
-                                        >
-                                            Hadir
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setRsvpStatus('ragu')}
-                                            className={`rounded-xl py-2 text-xs font-medium transition-all ${
-                                                rsvpStatus === 'ragu'
-                                                    ? 'bg-[#7E5739] text-white shadow-sm'
-                                                    : 'border border-[#4E6136]/25 bg-[#F7F5EE] text-[#4E6136]'
-                                            }`}
-                                        >
-                                            Ragu-ragu
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setRsvpStatus('tidak_hadir')}
-                                            className={`rounded-xl py-2 text-xs font-medium transition-all ${
-                                                rsvpStatus === 'tidak_hadir'
-                                                    ? 'bg-neutral-600 text-white shadow-sm'
-                                                    : 'border border-[#4E6136]/25 bg-[#F7F5EE] text-[#4E6136]'
-                                            }`}
-                                        >
-                                            Tidak Hadir
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="text-[11px] font-semibold uppercase tracking-wider text-[#4E6136]">
-                                        Ucapan &amp; Doa
-                                    </label>
-                                    <textarea
-                                        rows={3}
-                                        value={rsvpMessage}
-                                        onChange={(e) => setRsvpMessage(e.target.value)}
-                                        placeholder="Tuliskan ucapan selamat & doa restu..."
-                                        className="mt-1.5 w-full rounded-xl border border-[#4E6136]/30 bg-[#F7F5EE]/60 px-3.5 py-2.5 text-xs text-[#2C3822] focus:border-[#4E6136] focus:outline-none"
-                                    />
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    disabled={isSubmittingRsvp}
-                                    className="w-full rounded-xl bg-[#3D4D2B] py-3 text-xs font-semibold tracking-wider uppercase text-white shadow-md transition-all hover:bg-[#232F1A] active:scale-95 disabled:opacity-50"
-                                >
-                                    {isSubmittingRsvp ? 'Mengirim...' : 'Kirim RSVP'}
-                                </button>
-                            </form>
                         )}
-                    </div>
 
-                    {/* Wishes Guestbook List */}
-                    <div id="section-wishes" className="mx-auto mt-10 max-w-sm text-left">
-                        <div className="flex items-center justify-between border-b border-[#4E6136]/20 pb-2">
-                            <h4 className="font-serif text-lg font-medium text-[#232F1A]">
-                                Ucapan &amp; Doa ({localWishes.length})
-                            </h4>
-                            <MessageCircle size={16} className="text-[#4E6136]" />
-                        </div>
-
-                        <div className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-1">
-                            {localWishes.map((w: any, idx: number) => (
-                                <div
-                                    key={idx}
-                                    className="rounded-2xl border border-[#4E6136]/15 bg-white/90 p-4 shadow-xs"
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <span className="font-serif text-sm font-semibold text-[#232F1A]">
-                                            {w.name}
-                                        </span>
-                                        <span
-                                            className={`rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase ${
-                                                w.rsvpStatus === 'hadir'
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : w.rsvpStatus === 'ragu'
-                                                      ? 'bg-amber-100 text-amber-800'
-                                                      : 'bg-neutral-100 text-neutral-700'
-                                            }`}
-                                        >
-                                            {w.rsvpStatus === 'hadir'
-                                                ? 'Hadir'
-                                                : w.rsvpStatus === 'ragu'
-                                                  ? 'Ragu'
-                                                  : 'Berhalangan'}
-                                        </span>
-                                    </div>
-                                    <p className="mt-2 text-xs leading-relaxed text-[#2C3822]">
-                                        {w.message}
-                                    </p>
-                                    <span className="mt-2 block text-[10px] text-[#4E6136]/60">
-                                        {w.createdAt || 'Baru saja'}
-                                    </span>
+                        {/* Wishes Guestbook List */}
+                        {showWishes && (
+                            <div id="section-wishes" className={`mx-auto ${showRsvp ? 'mt-10' : 'mt-2'} max-w-sm text-left`}>
+                                <div className="flex items-center justify-between border-b border-[#4E6136]/20 pb-2">
+                                    <h4 className="font-serif text-lg font-medium text-[#232F1A]">
+                                        Ucapan &amp; Doa ({localWishes.length})
+                                    </h4>
+                                    <MessageCircle size={16} className="text-[#4E6136]" />
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+
+                                <div className="mt-4 max-h-72 space-y-3 overflow-y-auto pr-1">
+                                    {localWishes.map((w: any, idx: number) => (
+                                        <div
+                                            key={idx}
+                                            className="rounded-2xl border border-[#4E6136]/15 bg-white/90 p-4 shadow-xs"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-serif text-sm font-semibold text-[#232F1A]">
+                                                    {w.name}
+                                                </span>
+                                                <span
+                                                    className={`rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase ${
+                                                        w.rsvpStatus === 'hadir'
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : w.rsvpStatus === 'ragu'
+                                                              ? 'bg-amber-100 text-amber-800'
+                                                              : 'bg-neutral-100 text-neutral-700'
+                                                    }`}
+                                                >
+                                                    {w.rsvpStatus === 'hadir'
+                                                        ? 'Hadir'
+                                                        : w.rsvpStatus === 'ragu'
+                                                          ? 'Ragu'
+                                                          : 'Berhalangan'}
+                                                </span>
+                                            </div>
+                                            <p className="mt-2 text-xs leading-relaxed text-[#2C3822]">
+                                                {w.message}
+                                            </p>
+                                            <span className="mt-2 block text-[10px] text-[#4E6136]/60">
+                                                {w.createdAt || 'Baru saja'}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </section>
+                )}
 
                 {/* ========================================================== */}
                 {/* 10. CLOSING FOOTER                                         */}
@@ -1421,30 +1443,34 @@ export const BasicTheme6: React.FC<BasicTheme6Props> = ({
                             >
                                 <CalendarIcon size={16} />
                             </button>
-                            <button
-                                type="button"
-                                onClick={() => scrollTo('section-gallery')}
-                                className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
-                                    activeSection === 'section-gallery'
-                                        ? 'bg-[#3D4D2B] text-white shadow-sm'
-                                        : 'text-[#4E6136] hover:bg-[#4E6136]/15'
-                                }`}
-                                title="Galeri"
-                            >
-                                <ImageIcon size={16} />
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => scrollTo('section-rsvp')}
-                                className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
-                                    activeSection === 'section-rsvp'
-                                        ? 'bg-[#3D4D2B] text-white shadow-sm'
-                                        : 'text-[#4E6136] hover:bg-[#4E6136]/15'
-                                }`}
-                                title="RSVP & Ucapan"
-                            >
-                                <MessageSquare size={16} />
-                            </button>
+                            {showGallery && galleries && galleries.length > 0 && (
+                                <button
+                                    type="button"
+                                    onClick={() => scrollTo('section-gallery')}
+                                    className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
+                                        activeSection === 'section-gallery'
+                                            ? 'bg-[#3D4D2B] text-white shadow-sm'
+                                            : 'text-[#4E6136] hover:bg-[#4E6136]/15'
+                                    }`}
+                                    title="Galeri"
+                                >
+                                    <ImageIcon size={16} />
+                                </button>
+                            )}
+                            {(showRsvp || showWishes) && (
+                                <button
+                                    type="button"
+                                    onClick={() => scrollTo('section-rsvp')}
+                                    className={`flex h-9 w-9 items-center justify-center rounded-full transition-all ${
+                                        activeSection === 'section-rsvp'
+                                            ? 'bg-[#3D4D2B] text-white shadow-sm'
+                                            : 'text-[#4E6136] hover:bg-[#4E6136]/15'
+                                    }`}
+                                    title="RSVP & Ucapan"
+                                >
+                                    <MessageSquare size={16} />
+                                </button>
+                            )}
                         </nav>
                     </div>
                 )}
