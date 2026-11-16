@@ -8,6 +8,12 @@ import Card from '../../components/ui/Card';
 import api from '../../lib/api';
 import DashboardLayout from '../DashboardLayout';
 
+const TIER_LEVELS: Record<string, number> = {
+    BASIC: 1,
+    PREMIUM: 2,
+    CUSTOM: 3,
+};
+
 export const Themes: React.FC = () => {
     const [wedding, setWedding] = useState<any>(null);
     const [themes, setThemes] = useState<any[]>([]);
@@ -38,10 +44,12 @@ export const Themes: React.FC = () => {
 
     const handleSelectTheme = async (themeId: string, packageLevel: string) => {
         const userPkg = wedding?.package?.packageName || 'BASIC';
+        const userTierRank = TIER_LEVELS[userPkg?.toUpperCase() || 'BASIC'] || 1;
+        const themeTierRank = TIER_LEVELS[packageLevel?.toUpperCase() || 'BASIC'] || 1;
 
-        if (packageLevel === 'PREMIUM' && userPkg !== 'PREMIUM') {
+        if (themeTierRank > userTierRank) {
             toast.error(
-                'Tema Premium hanya tersedia untuk paket PREMIUM. Silakan lakukan upgrade paket.',
+                `Tema ${packageLevel} hanya tersedia untuk paket ${packageLevel} ke atas. Silakan lakukan upgrade paket.`,
             );
             return;
         }
@@ -72,6 +80,7 @@ export const Themes: React.FC = () => {
     }
 
     const userPkg = wedding?.package?.packageName || 'BASIC';
+    const userTierRank = TIER_LEVELS[userPkg?.toUpperCase() || 'BASIC'] || 1;
     const previewUrl = `${window.location.origin}/u/${wedding?.slug}`;
 
     return (
@@ -105,15 +114,15 @@ export const Themes: React.FC = () => {
                 )}
             </div>
 
-            {/* Package Alert if Basic */}
-            {userPkg !== 'PREMIUM' && (
+            {/* Package Status Banner */}
+            {userTierRank === 1 ? (
                 <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-gold-500/20 bg-gold-500/10 p-4 sm:flex-row sm:items-center">
                     <div className="text-sm text-charcoal/80">
                         <p className="font-semibold text-gold-700">
                             Dapatkan Semua Akses Tema Premium!
                         </p>
                         <p className="mt-0.5 text-charcoal/60">
-                            Upgrade ke paket PREMIUM untuk membuka tema
+                            Upgrade ke paket PREMIUM atau CUSTOM untuk membuka tema
                             eksklusif lainnya seperti Modern Minimalist.
                         </p>
                     </div>
@@ -128,15 +137,27 @@ export const Themes: React.FC = () => {
                         </Button>
                     </Link>
                 </div>
+            ) : (
+                <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 sm:flex-row sm:items-center">
+                    <div className="text-sm text-charcoal/80">
+                        <p className="font-semibold text-emerald-800">
+                            Paket Aktif: {userPkg}
+                        </p>
+                        <p className="mt-0.5 text-charcoal/60">
+                            Anda memiliki akses penuh ke seluruh tema kategori {userPkg === 'CUSTOM' ? 'Basic, Premium, & Custom' : 'Basic & Premium'}.
+                        </p>
+                    </div>
+                    <Badge variant="success">Tier {userPkg}</Badge>
+                </div>
             )}
 
             {/* Themes Grid */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 {themes.map((theme) => {
                     const isSelected = wedding?.themeId === theme.id;
-                    const isLocked =
-                        theme.packageLevel === 'PREMIUM' &&
-                        userPkg !== 'PREMIUM';
+                    const themeTierRank =
+                        TIER_LEVELS[theme.packageLevel?.toUpperCase() || 'BASIC'] || 1;
+                    const isLocked = themeTierRank > userTierRank;
                     const savingThis = savingThemeId === theme.id;
 
                     return (
@@ -153,10 +174,10 @@ export const Themes: React.FC = () => {
                             {/* Theme thumbnail cover */}
                             <div className="relative flex h-44 overflow-hidden items-center justify-center bg-sand/20 text-center">
                                 {isLocked && (
-                                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/15">
-                                        <div className="flex items-center gap-1.5 rounded-full bg-white/95 p-3 text-xs font-semibold text-charcoal shadow-lg">
-                                            <Lock size={14} />
-                                            <span>Premium Lock</span>
+                                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/20 backdrop-blur-[1px]">
+                                        <div className="flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-charcoal shadow-lg">
+                                            <Lock size={14} className="text-gold-600" />
+                                            <span>{theme.packageLevel || 'Premium'} Lock</span>
                                         </div>
                                     </div>
                                 )}

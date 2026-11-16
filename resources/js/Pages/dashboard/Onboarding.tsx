@@ -17,6 +17,12 @@ import Modal from '../../components/ui/Modal';
 import api from '../../lib/api';
 import { useAuthStore } from '../../store/auth';
 
+const TIER_LEVELS: Record<string, number> = {
+    BASIC: 1,
+    PREMIUM: 2,
+    CUSTOM: 3,
+};
+
 export const Onboarding: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuthStore();
@@ -127,12 +133,14 @@ export const Onboarding: React.FC = () => {
 
     // Handle Theme Selection & Wedding Creation
     const handleSelectTheme = async (theme: any) => {
-        if (
-            theme.packageLevel === 'PREMIUM' &&
-            activePackageLevel !== 'PREMIUM'
-        ) {
+        const userTierRank =
+            TIER_LEVELS[activePackageLevel?.toUpperCase() || 'BASIC'] || 1;
+        const themeTierRank =
+            TIER_LEVELS[theme.packageLevel?.toUpperCase() || 'BASIC'] || 1;
+
+        if (themeTierRank > userTierRank) {
             toast.error(
-                'Tema Premium hanya tersedia untuk paket PREMIUM. Silakan upgrade.',
+                `Tema ${theme.packageLevel} hanya tersedia untuk paket ${theme.packageLevel} ke atas. Silakan upgrade.`,
             );
             return;
         }
@@ -418,9 +426,11 @@ export const Onboarding: React.FC = () => {
                             </p>
                             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
                                 {themes.map((theme) => {
-                                    const isLocked =
-                                        theme.packageLevel === 'PREMIUM' &&
-                                        activePackageLevel !== 'PREMIUM';
+                                    const userTierRank =
+                                        TIER_LEVELS[activePackageLevel?.toUpperCase() || 'BASIC'] || 1;
+                                    const themeTierRank =
+                                        TIER_LEVELS[theme.packageLevel?.toUpperCase() || 'BASIC'] || 1;
+                                    const isLocked = themeTierRank > userTierRank;
                                     return (
                                         <div
                                             key={theme.id}
@@ -433,8 +443,9 @@ export const Onboarding: React.FC = () => {
                                             <div className="relative flex h-28 items-center justify-center bg-sand/30">
                                                 {isLocked ? (
                                                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/20">
-                                                        <div className="rounded-full bg-white/95 p-2 text-charcoal shadow">
-                                                            <Lock size={16} />
+                                                        <div className="flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-charcoal shadow">
+                                                            <Lock size={14} className="text-gold-600" />
+                                                            <span className="text-[10px]">{theme.packageLevel || 'Premium'} Lock</span>
                                                         </div>
                                                     </div>
                                                 ) : null}

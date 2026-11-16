@@ -211,7 +211,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/api/admin/analytics', [AdminController::class, 'getAnalytics']);
     
     Route::get('/api/admin/users', [AdminController::class, 'getUsers']);
+    Route::post('/api/admin/users', [AdminController::class, 'storeUser']);
     Route::get('/api/admin/users/{id}', [AdminController::class, 'getUserDetail']);
+    Route::put('/api/admin/users/{id}', [AdminController::class, 'updateUser']);
     Route::put('/api/admin/users/{id}/status', [AdminController::class, 'updateUserStatus']);
     Route::put('/api/admin/users/{id}/reset-password', [AdminController::class, 'resetUserPassword']);
     Route::delete('/api/admin/users/{id}', [AdminController::class, 'deleteUser']);

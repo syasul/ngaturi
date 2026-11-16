@@ -13,6 +13,8 @@ use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer as SymfonyMailer;
 use Symfony\Component\Mime\Email;
@@ -174,6 +176,7 @@ class AdminController extends Controller
             $search = $request->query('search', '');
             $status = $request->query('status', 'all');
             $role = $request->query('role', 'all');
+            $tier = $request->query('tier', 'all');
 
             $query = User::query();
 
@@ -190,11 +193,245 @@ class AdminController extends Controller
                 $query->where('role', $role);
             }
 
-            $list = $query->latest()->get(['id', 'name', 'email', 'role', 'status', 'created_at']);
+            $users = $query->latest()
+                ->with(['orders' => function ($q) {
+                    $q->where('status', 'PAID')->latest()->with('package');
+                }])
+                ->get();
+
+            $list = $users->map(function ($u) {
+                $latestPaid = $u->orders->first();
+                $userTier = $latestPaid && $latestPaid->package ? $latestPaid->package->name : 'BASIC';
+                $packageId = $latestPaid && $latestPaid->package ? $latestPaid->package->id : null;
+
+                return [
+                    'id' => $u->id,
+                    'name' => $u->name,
+                    'email' => $u->email,
+                    'role' => $u->role,
+                    'status' => $u->status,
+                    'tier' => $userTier,
+                    'packageId' => $packageId,
+                    'createdAt' => $u->created_at,
+                ];
+            });
+
+            if ($tier !== 'all') {
+                $list = $list->filter(function ($item) use ($tier) {
+                    return strtoupper($item['tier']) === strtoupper($tier);
+                })->values();
+            }
 
             return response()->json(['status' => 'success', 'users' => $list]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    // 2.1 POST /api/admin/users - Create new user with selected tier
+    public function storeUser(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:6',
+            'role' => 'nullable|in:USER,ADMIN',
+            'status' => 'nullable|in:ACTIVE,PENDING,BLOCKED',
+            'tier' => 'nullable|string|in:BASIC,PREMIUM,CUSTOM',
+            'package_id' => 'nullable|string',
+            'notes' => 'nullable|string|max:255',
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 6 karakter.',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $user = User::create([
+                'name' => trim($validated['name']),
+                'email' => strtolower(trim($validated['email'])),
+                'password' => Hash::make($validated['password']),
+                'role' => $validated['role'] ?? 'USER',
+                'status' => $validated['status'] ?? 'ACTIVE',
+                'email_verified_at' => now(), // Auto-verified for instant access
+            ]);
+
+            // Resolve package
+            $tierName = strtoupper(trim($validated['tier'] ?? 'BASIC'));
+            $package = Package::where('name', $tierName)->first();
+            if (!$package && !empty($validated['package_id'])) {
+                $package = Package::find($validated['package_id']);
+            }
+            if (!$package) {
+                $package = Package::where('name', 'BASIC')->first();
+            }
+
+            if ($package) {
+                $order = Order::create([
+                    'user_id' => $user->id,
+                    'package_id' => $package->id,
+                    'status' => 'PAID',
+                    'amount' => $package->price,
+                    'payment_method' => 'WO_PARTNERSHIP',
+                    'paid_at' => now(),
+                ]);
+
+                Transaction::create([
+                    'order_id' => $order->id,
+                    'gateway_ref' => 'WO-' . strtoupper(Str::random(8)),
+                    'status' => 'success',
+                    'payload' => [
+                        'source' => 'admin_create_user',
+                        'partner_notes' => $validated['notes'] ?? 'Kemitraan Wedding Organizer (WO)',
+                        'tier' => $package->name,
+                        'created_by' => Auth::user()?->email,
+                    ],
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User berhasil dibuat dengan tier ' . ($package ? $package->name : 'BASIC') . '.',
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'status' => $user->status,
+                    'tier' => $package ? $package->name : 'BASIC',
+                    'packageId' => $package ? $package->id : null,
+                    'createdAt' => $user->created_at,
+                ],
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'message' => 'Gagal membuat user: ' . $e->getMessage()], 500);
+        }
+    }
+
+    // 2.2 PUT /api/admin/users/{id} - Update user info & tier
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['status' => 'error', 'message' => 'User tidak ditemukan.'], 404);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6',
+            'role' => 'nullable|in:USER,ADMIN',
+            'status' => 'nullable|in:ACTIVE,PENDING,BLOCKED',
+            'tier' => 'nullable|string|in:BASIC,PREMIUM,CUSTOM',
+            'package_id' => 'nullable|string',
+            'notes' => 'nullable|string|max:255',
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah digunakan oleh akun lain.',
+            'password.min' => 'Password minimal 6 karakter.',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $updateData = [
+                'name' => trim($validated['name']),
+                'email' => strtolower(trim($validated['email'])),
+                'role' => $validated['role'] ?? $user->role,
+                'status' => $validated['status'] ?? $user->status,
+            ];
+
+            if ($request->filled('password')) {
+                $updateData['password'] = Hash::make($validated['password']);
+            }
+
+            $user->update($updateData);
+
+            // Sync Tier / Package
+            $tierName = strtoupper(trim($validated['tier'] ?? ''));
+            if ($tierName || !empty($validated['package_id'])) {
+                $package = Package::where('name', $tierName)->first();
+                if (!$package && !empty($validated['package_id'])) {
+                    $package = Package::find($validated['package_id']);
+                }
+
+                if ($package) {
+                    $latestPaidOrder = Order::where('user_id', $user->id)
+                        ->where('status', 'PAID')
+                        ->latest()
+                        ->first();
+
+                    if ($latestPaidOrder) {
+                        $latestPaidOrder->update([
+                            'package_id' => $package->id,
+                            'amount' => $package->price,
+                            'paid_at' => $latestPaidOrder->paid_at ?: now(),
+                        ]);
+                    } else {
+                        $order = Order::create([
+                            'user_id' => $user->id,
+                            'package_id' => $package->id,
+                            'status' => 'PAID',
+                            'amount' => $package->price,
+                            'payment_method' => 'ADMIN_UPDATE',
+                            'paid_at' => now(),
+                        ]);
+
+                        Transaction::create([
+                            'order_id' => $order->id,
+                            'gateway_ref' => 'WO-' . strtoupper(Str::random(8)),
+                            'status' => 'success',
+                            'payload' => [
+                                'source' => 'admin_update_user',
+                                'partner_notes' => $validated['notes'] ?? 'Updated by Admin',
+                                'tier' => $package->name,
+                                'updated_by' => Auth::user()?->email,
+                            ],
+                        ]);
+                    }
+
+                    // Sync Wedding expiration duration if wedding exists
+                    $wedding = Wedding::where('user_id', $user->id)->first();
+                    if ($wedding) {
+                        $durationDays = $package->duration_days ?: 365;
+                        $wedding->update([
+                            'expired_at' => now()->addDays($durationDays),
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            $activeOrder = Order::with('package')->where('user_id', $user->id)->where('status', 'PAID')->latest()->first();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data user & tier berhasil diperbarui.',
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'status' => $user->status,
+                    'tier' => $activeOrder && $activeOrder->package ? $activeOrder->package->name : 'BASIC',
+                    'packageId' => $activeOrder && $activeOrder->package ? $activeOrder->package->id : null,
+                    'createdAt' => $user->created_at,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'message' => 'Gagal memperbarui user: ' . $e->getMessage()], 500);
         }
     }
 
@@ -223,6 +460,15 @@ class AdminController extends Controller
                     ];
                 });
 
+            $latestPaid = Order::with('package')
+                ->where('user_id', $id)
+                ->where('status', 'PAID')
+                ->latest()
+                ->first();
+
+            $activeTier = $latestPaid && $latestPaid->package ? $latestPaid->package->name : 'BASIC';
+            $activePackageId = $latestPaid && $latestPaid->package ? $latestPaid->package->id : null;
+
             $wedding = Wedding::where('user_id', $id)->first();
 
             return response()->json([
@@ -233,6 +479,8 @@ class AdminController extends Controller
                     'email' => $user->email,
                     'role' => $user->role,
                     'status' => $user->status,
+                    'tier' => $activeTier,
+                    'packageId' => $activePackageId,
                     'createdAt' => $user->created_at,
                 ],
                 'orders' => $orders,

@@ -6,6 +6,7 @@ use App\Models\Wedding;
 use App\Models\Photo;
 use App\Models\Order;
 use App\Models\Package;
+use App\Models\Theme;
 use App\Models\Music;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -94,11 +95,11 @@ class WeddingController extends Controller
 
             $userPackage = $latestPaidOrder && $latestPaidOrder->package ? [
                 'packageName' => $latestPaidOrder->package->name,
-                'maxGuests' => $latestPaidOrder->package->maxGuests,
+                'maxGuests' => $latestPaidOrder->package->max_guests ?? 150,
                 'features' => $latestPaidOrder->package->features,
             ] : [
                 'packageName' => 'BASIC',
-                'maxGuests' => 100,
+                'maxGuests' => 150,
                 'features' => [],
             ];
 
@@ -144,12 +145,27 @@ class WeddingController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Anda sudah membuat undangan.'], 400);
             }
 
-            // Get package expiration duration
+            // Get package expiration duration & validate tier
             $latestPaidOrder = Order::with('package')
                 ->where('user_id', $user->id)
                 ->where('status', 'PAID')
                 ->latest()
                 ->first();
+
+            $theme = Theme::find($themeId);
+            if ($theme) {
+                $tierRank = ['BASIC' => 1, 'PREMIUM' => 2, 'CUSTOM' => 3];
+                $themeRank = $tierRank[strtoupper($theme->package_level ?? 'BASIC')] ?? 1;
+                $userPkgName = $latestPaidOrder && $latestPaidOrder->package ? strtoupper($latestPaidOrder->package->name) : 'BASIC';
+                $userRank = $tierRank[$userPkgName] ?? 1;
+
+                if ($themeRank > $userRank) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Tema ' . ($theme->package_level ?? 'PREMIUM') . ' hanya tersedia untuk paket ' . ($theme->package_level ?? 'PREMIUM') . ' ke atas.'
+                    ], 403);
+                }
+            }
 
             $durationDays = $latestPaidOrder && $latestPaidOrder->package ? $latestPaidOrder->package->duration_days : 90;
             $expiredAt = now()->addDays($durationDays);
@@ -263,6 +279,30 @@ class WeddingController extends Controller
 
             if (!$wedding) {
                 return response()->json(['status' => 'error', 'message' => 'Undangan tidak ditemukan.'], 404);
+            }
+
+            $theme = Theme::find($themeId);
+            if (!$theme) {
+                return response()->json(['status' => 'error', 'message' => 'Tema tidak ditemukan.'], 404);
+            }
+
+            $tierRank = ['BASIC' => 1, 'PREMIUM' => 2, 'CUSTOM' => 3];
+            $themeRank = $tierRank[strtoupper($theme->package_level ?? 'BASIC')] ?? 1;
+
+            $latestPaidOrder = Order::with('package')
+                ->where('user_id', $user->id)
+                ->where('status', 'PAID')
+                ->latest()
+                ->first();
+
+            $userPkgName = $latestPaidOrder && $latestPaidOrder->package ? strtoupper($latestPaidOrder->package->name) : 'BASIC';
+            $userRank = $tierRank[$userPkgName] ?? 1;
+
+            if ($themeRank > $userRank) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tema ' . ($theme->package_level ?? 'PREMIUM') . ' hanya tersedia untuk paket ' . ($theme->package_level ?? 'PREMIUM') . ' ke atas. Silakan upgrade paket Anda.'
+                ], 403);
             }
 
             $wedding->update([
