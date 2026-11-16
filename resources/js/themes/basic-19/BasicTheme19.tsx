@@ -84,7 +84,7 @@ export const config19: BasicThemeConfig = {
     name: 'Peachy Coral',
     editionTitle: 'Peachy Coral Blossom Edition',
     hashTag: '#AryaNabilaCoral',
-    heroIllustration: '/assets/wedding/hero-floral.png',
+    heroIllustration: '/assets/wedding/couple-royal.png',
 
     desktopBg: 'bg-[#29110E]',
     desktopGradient: 'from-[#190806] via-[#29110E]/85 to-transparent',

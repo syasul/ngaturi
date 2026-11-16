@@ -129,6 +129,7 @@ export interface BasicTheme10Props extends ThemeProps {
 
 export const BasicTheme10: React.FC<BasicTheme10Props> = ({
     data,
+    photos = [],
     guestName,
     isOpened: externalIsOpened,
     onOpen: externalOnOpen,
@@ -513,8 +514,12 @@ export const BasicTheme10: React.FC<BasicTheme10Props> = ({
     };
 
     const coupleHeroPhoto = resolveImageUrl(
-        customStyle.heroPhoto || data?.coverPhoto,
-        '/assets/wedding/hero-floral.png',
+        (data as any)?.coverPhoto ||
+            (data as any)?.heroPhoto ||
+            (data as any)?.couplePhoto ||
+            customStyle?.heroPhoto ||
+            photos?.find((p: any) => p.type === 'cover')?.url,
+        '/assets/wedding/couple-rustic.png',
     );
     const groomPhoto = resolveImageUrl(
         groom.photo,

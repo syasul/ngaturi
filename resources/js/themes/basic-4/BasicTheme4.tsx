@@ -463,7 +463,11 @@ export const BasicTheme4: React.FC<BasicTheme4Props> = ({
     };
 
     const coupleHeroPhoto = resolveImageUrl(
-        customStyle.heroPhoto || data?.coverPhoto,
+        (data as any)?.coverPhoto ||
+            (data as any)?.heroPhoto ||
+            (data as any)?.couplePhoto ||
+            customStyle?.heroPhoto ||
+            photos?.find((p: any) => p.type === 'cover')?.url,
         '/assets/wedding/couple-royal.png',
     );
     const groomPhoto = resolveImageUrl(

@@ -545,8 +545,12 @@ export const BasicTheme3: React.FC<BasicTheme3Props> = ({
     };
 
     const coupleHeroPhoto = resolveImageUrl(
-        customStyle.heroPhoto || data?.coverPhoto,
-        '/assets/theme_1/foto-mempelai-pria.webp',
+        (data as any)?.coverPhoto ||
+            (data as any)?.heroPhoto ||
+            (data as any)?.couplePhoto ||
+            customStyle?.heroPhoto ||
+            photos?.find((p: any) => p.type === 'cover')?.url,
+        '/assets/wedding/couple-foliage.png',
     );
     const groomPhoto = resolveImageUrl(
         groom.photo,

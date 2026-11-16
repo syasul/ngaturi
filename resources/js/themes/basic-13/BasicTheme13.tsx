@@ -82,7 +82,7 @@ export const config13: BasicThemeConfig = {
     name: 'Crimson Velvet',
     editionTitle: 'Crimson Velvet Edition',
     hashTag: '#AryaNabilaVelvet',
-    heroIllustration: '/assets/wedding/hero-floral.png',
+    heroIllustration: '/assets/wedding/couple-foliage.png',
 
     desktopBg: 'bg-[#2A080E]',
     desktopGradient: 'from-[#1A0307] via-[#2A080E]/85 to-transparent',

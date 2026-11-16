@@ -178,6 +178,7 @@ export interface BasicTheme6Props extends ThemeProps {
 
 export const BasicTheme6: React.FC<BasicTheme6Props> = ({
     data,
+    photos = [],
     guestName,
     isOpened: externalIsOpened,
     onOpen: externalOnOpen,
@@ -601,8 +602,12 @@ export const BasicTheme6: React.FC<BasicTheme6Props> = ({
     };
 
     const coupleHeroPhoto = resolveImageUrl(
-        customStyle.heroPhoto || data?.coverPhoto,
-        '/assets/wedding/hero-floral.png',
+        (data as any)?.coverPhoto ||
+            (data as any)?.heroPhoto ||
+            (data as any)?.couplePhoto ||
+            customStyle?.heroPhoto ||
+            photos?.find((p: any) => p.type === 'cover')?.url,
+        '/assets/wedding/couple-foliage.png',
     );
     const groomPhoto = resolveImageUrl(
         groom.photo,

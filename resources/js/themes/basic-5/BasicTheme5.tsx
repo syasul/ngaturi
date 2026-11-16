@@ -513,7 +513,11 @@ export const BasicTheme5: React.FC<BasicTheme5Props> = ({
     };
 
     const coupleHeroPhoto = resolveImageUrl(
-        customStyle.heroPhoto || data?.coverPhoto,
+        (data as any)?.coverPhoto ||
+            (data as any)?.heroPhoto ||
+            (data as any)?.couplePhoto ||
+            customStyle?.heroPhoto ||
+            photos?.find((p: any) => p.type === 'cover')?.url,
         '/assets/wedding/couple-foliage.png',
     );
     const groomPhoto = resolveImageUrl(

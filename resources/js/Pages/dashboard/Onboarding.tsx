@@ -275,7 +275,20 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             if (res.data.status === 'success') {
-                setCoverPhoto(res.data.url);
+                const photoUrl = res.data.url;
+                setCoverPhoto(photoUrl);
+                try {
+                    await api.put('/weddings/me', {
+                        data: {
+                            coverPhoto: photoUrl,
+                            customStyle: {
+                                heroPhoto: photoUrl,
+                            },
+                        },
+                    });
+                } catch (e) {
+                    console.error('Failed to save coverPhoto to wedding data:', e);
+                }
                 toast.success('Foto cover berhasil diunggah!');
             }
         } catch (err) {

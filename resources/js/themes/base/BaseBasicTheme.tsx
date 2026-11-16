@@ -126,6 +126,7 @@ export interface BaseBasicThemeProps extends ThemeProps {
 
 export const BaseBasicTheme: React.FC<BaseBasicThemeProps> = ({
     data,
+    photos = [],
     guestName,
     onRsvpSubmit,
     isOpened: externalIsOpened = true,
@@ -518,8 +519,12 @@ export const BaseBasicTheme: React.FC<BaseBasicThemeProps> = ({
     };
 
     const coupleHeroPhoto = resolveImageUrl(
-        customStyle.heroPhoto || data?.coverPhoto,
-        config.heroIllustration || '/assets/wedding/hero-floral.png',
+        (data as any)?.coverPhoto ||
+            (data as any)?.heroPhoto ||
+            (data as any)?.couplePhoto ||
+            customStyle?.heroPhoto ||
+            photos?.find((p: any) => p.type === 'cover')?.url,
+        config.heroIllustration || '/assets/wedding/couple-foliage.png',
     );
     const groomPhoto = resolveImageUrl(
         groom.photo,

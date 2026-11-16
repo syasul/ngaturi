@@ -85,7 +85,7 @@ export const config17: BasicThemeConfig = {
     name: 'Lilac Dream',
     editionTitle: 'Lilac Dream Pastel Edition',
     hashTag: '#AryaNabilaLilac',
-    heroIllustration: '/assets/wedding/hero-floral.png',
+    heroIllustration: '/assets/wedding/couple-rustic.png',
 
     desktopBg: 'bg-[#1E1128]',
     desktopGradient: 'from-[#120719] via-[#1E1128]/85 to-transparent',

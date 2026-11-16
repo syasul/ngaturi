@@ -458,7 +458,11 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
                     <div className="relative mx-auto h-72 w-52 overflow-hidden rounded-t-full border-2 border-[#F7D8BA]/60 p-1 shadow-2xl">
                         <img
                             src={resolveImageUrl(
-                                bride.photo || groom.photo,
+                                (data as any)?.coverPhoto ||
+                                    (data as any)?.heroPhoto ||
+                                    (data as any)?.couplePhoto ||
+                                    customStyle?.heroPhoto ||
+                                    photos?.find((p: any) => p.type === 'cover')?.url,
                                 '/assets/wedding/couple-rustic.png',
                             )}
                             alt="Mempelai"
@@ -534,7 +538,11 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
                         <div className="relative mx-auto aspect-[3/4] w-56 overflow-hidden rounded-t-full border-4 border-white shadow-2xl">
                             <img
                                 src={resolveImageUrl(
-                                    bride.photo || groom.photo,
+                                    (data as any)?.coverPhoto ||
+                                        (data as any)?.heroPhoto ||
+                                        (data as any)?.couplePhoto ||
+                                        customStyle?.heroPhoto ||
+                                        photos?.find((p: any) => p.type === 'cover')?.url,
                                     '/assets/wedding/couple-rustic.png',
                                 )}
                                 alt="Couple"
@@ -1443,7 +1451,11 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
                             <div className="relative mx-auto h-48 w-36 sm:h-52 sm:w-40 overflow-hidden rounded-t-full border-2 border-[#F7D8BA]/60 p-1 shadow-2xl">
                                 <img
                                     src={resolveImageUrl(
-                                        (data as any)?.coverPhoto || bride.photo || groom.photo,
+                                        (data as any)?.coverPhoto ||
+                                            (data as any)?.heroPhoto ||
+                                            (data as any)?.couplePhoto ||
+                                            customStyle?.heroPhoto ||
+                                            photos?.find((p: any) => p.type === 'cover')?.url,
                                         '/assets/wedding/couple-rustic.png',
                                     )}
                                     alt="Mempelai"

@@ -2,6 +2,7 @@ import {
     BookOpen,
     Calendar,
     ExternalLink,
+    Image as ImageIcon,
     Loader2,
     MapPin,
     Palette,
@@ -30,6 +31,7 @@ import api from '../../lib/api';
 import DashboardLayout from '../DashboardLayout';
 
 type TabType =
+    | 'couple'
     | 'groom'
     | 'bride'
     | 'akad'
@@ -74,6 +76,7 @@ export const WeddingData: React.FC = () => {
 
     // Local state for all fields
     const [formData, setFormData] = useState<any>({
+        coverPhoto: '',
         groom: {
             name: '',
             nickname: '',
@@ -156,6 +159,10 @@ export const WeddingData: React.FC = () => {
 
                     // Merge fetched data with default structures
                     const merged = {
+                        coverPhoto:
+                            w.data?.coverPhoto ||
+                            w.data?.customStyle?.heroPhoto ||
+                            '',
                         groom: { ...formData.groom, ...(w.data?.groom || {}) },
                         bride: { ...formData.bride, ...(w.data?.bride || {}) },
                         akad: {
@@ -439,8 +446,13 @@ export const WeddingData: React.FC = () => {
         setSaving(true);
         try {
             const currentData = dataOverride || formDataRef.current;
+            const coverPhotoUrl =
+                currentData.coverPhoto ||
+                currentData.customStyle?.heroPhoto ||
+                '';
             const payload = {
                 data: {
+                    coverPhoto: coverPhotoUrl,
                     musicUrl: currentData.customStyle?.musicUrl || '',
                     groom: currentData.groom,
                     bride: currentData.bride,
@@ -455,7 +467,10 @@ export const WeddingData: React.FC = () => {
                     quotes: currentData.quotes,
                     giftAddress: currentData.giftAddress,
                     giftMaps: currentData.giftMaps,
-                    customStyle: currentData.customStyle,
+                    customStyle: {
+                        ...(currentData.customStyle || {}),
+                        heroPhoto: coverPhotoUrl,
+                    },
                     sections: currentData.sections,
                 },
             };
@@ -481,9 +496,9 @@ export const WeddingData: React.FC = () => {
         }
     };
 
-    // 4. Handle avatar uploads
+    // 4. Handle avatar and couple photo uploads
     const handlePhotoUpload = async (
-        tab: 'groom' | 'bride',
+        tab: 'groom' | 'bride' | 'couple',
         e: React.ChangeEvent<HTMLInputElement>,
     ) => {
         const file = e.target.files?.[0];
@@ -492,27 +507,43 @@ export const WeddingData: React.FC = () => {
         const toastId = toast.loading('Mengunggah foto...');
         const data = new FormData();
         data.append('file', file);
-        data.append('purpose', 'profile');
+        data.append('purpose', tab === 'couple' ? 'cover' : 'profile');
 
         try {
             const res = await api.post('/media/upload', data, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             if (res.data.status === 'success') {
-                const updated = {
-                    ...formDataRef.current,
-                    [tab]: {
-                        ...formDataRef.current[tab],
-                        photo: res.data.url,
-                    },
-                };
+                const photoUrl = res.data.url;
+                let updated;
+                if (tab === 'couple') {
+                    updated = {
+                        ...formDataRef.current,
+                        coverPhoto: photoUrl,
+                        customStyle: {
+                            ...(formDataRef.current.customStyle || {}),
+                            heroPhoto: photoUrl,
+                        },
+                    };
+                } else {
+                    updated = {
+                        ...formDataRef.current,
+                        [tab]: {
+                            ...formDataRef.current[tab],
+                            photo: photoUrl,
+                        },
+                    };
+                }
                 formDataRef.current = updated;
                 setFormData(updated);
                 toast.success('Foto berhasil diunggah!', { id: toastId });
                 handleSave(false, updated);
             }
         } catch (err: any) {
-            toast.error(err?.response?.data?.message || 'Gagal mengunggah foto.', { id: toastId });
+            toast.error(
+                err?.response?.data?.message || 'Gagal mengunggah foto.',
+                { id: toastId },
+            );
         } finally {
             e.target.value = '';
         }
@@ -541,6 +572,7 @@ export const WeddingData: React.FC = () => {
     }
 
     const tabs: { id: TabType; name: string; icon: any }[] = [
+        { id: 'couple', name: 'Foto Sampul (Kedua Mempelai)', icon: ImageIcon },
         { id: 'groom', name: 'Mempelai Pria', icon: User },
         { id: 'bride', name: 'Mempelai Wanita', icon: User },
         { id: 'akad', name: 'Akad Nikah', icon: Calendar },
@@ -620,6 +652,74 @@ export const WeddingData: React.FC = () => {
 
                 {/* Form panel */}
                 <Card className="rounded-3xl border border-sand/40 bg-white p-6 shadow-sm sm:p-8 lg:col-span-3">
+                    {/* TAB: FOTO SAMPUL / KEDUA MEMPELAI */}
+                    {activeTab === 'couple' && (
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-sans text-xl font-bold text-charcoal">
+                                    Foto Sampul / Utama (Kedua Mempelai)
+                                </h3>
+                                <p className="mt-1 text-xs text-charcoal/60">
+                                    Foto kedua mempelai ini akan ditampilkan pada jendela lengkung sampul pembuka undangan dan panel utama di semua tema desain.
+                                </p>
+                            </div>
+
+                            <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-sand/80 bg-cream/20 p-8 text-center transition hover:border-gold-500/50">
+                                {formData.coverPhoto ? (
+                                    <div className="space-y-4">
+                                        <div className="relative mx-auto h-72 w-52 overflow-hidden rounded-t-full border-4 border-white shadow-xl">
+                                            <img
+                                                src={resolveImageUrl(formData.coverPhoto)}
+                                                alt="Foto Kedua Mempelai"
+                                                className="h-full w-full object-cover"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold text-charcoal shadow-sm hover:border-gold-500 hover:text-gold-600 transition">
+                                                <Upload size={14} />
+                                                <span>Ganti Foto Kedua Mempelai</span>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onClick={(e) => {
+                                                        (e.target as HTMLInputElement).value = '';
+                                                    }}
+                                                    onChange={(e) =>
+                                                        handlePhotoUpload('couple', e)
+                                                    }
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <label className="group flex flex-col items-center cursor-pointer">
+                                        <div className="rounded-full bg-sand/30 p-4 text-charcoal/40 transition group-hover:text-gold-500">
+                                            <Upload size={32} />
+                                        </div>
+                                        <p className="mt-3 text-xs font-semibold text-charcoal/70 transition group-hover:text-gold-600">
+                                            Klik untuk unggah foto kedua mempelai (sampul/utama)
+                                        </p>
+                                        <p className="mt-1 text-[10px] text-charcoal/40">
+                                            Format: JPG, PNG, WEBP (Maksimal 15MB, rekomendasi orientasi vertikal/portrait)
+                                        </p>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onClick={(e) => {
+                                                (e.target as HTMLInputElement).value = '';
+                                            }}
+                                            onChange={(e) =>
+                                                handlePhotoUpload('couple', e)
+                                            }
+                                        />
+                                    </label>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
                     {/* TAB 1: GROOM */}
                     {activeTab === 'groom' && (
                         <div className="space-y-6">
