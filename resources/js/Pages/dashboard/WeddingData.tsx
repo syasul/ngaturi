@@ -592,7 +592,11 @@ export const WeddingData: React.FC = () => {
         { id: 'dresscode', name: 'Dresscode', icon: Shirt, isPremium: true },
         { id: 'streaming', name: 'Live Streaming', icon: Video, isPremium: true },
         { id: 'quotes', name: 'Quotes', icon: Quote },
-        { id: 'styling', name: 'Desain & Warna', icon: Palette },
+        {
+            id: 'styling',
+            name: isBasic ? 'Musik Latar Belakang' : 'Desain & Warna',
+            icon: isBasic ? Music : Palette,
+        },
         { id: 'sections', name: 'Kelola Section', icon: Sliders },
         { id: 'gifts', name: 'Kado & Rekening', icon: CreditCard },
     ];
@@ -1662,12 +1666,27 @@ export const WeddingData: React.FC = () => {
                         </div>
                     )}
 
-                    {/* TAB 7: STYLING */}
+                    {/* TAB 7: STYLING & MUSIC */}
                     {activeTab === 'styling' && (
                         <div className="space-y-6">
-                            <h4 className="border-b border-sand/20 pb-2 font-sans text-lg font-bold text-charcoal">
-                                Kustomisasi Desain & Warna
-                            </h4>
+                            {!isBasic && (
+                                <h4 className="border-b border-sand/20 pb-2 font-sans text-lg font-bold text-charcoal">
+                                    Kustomisasi Desain & Warna
+                                </h4>
+                            )}
+
+                            {isBasic && (
+                                <div className="border-b border-sand/20 pb-2">
+                                    <h4 className="font-sans text-lg font-bold text-charcoal">
+                                        Musik Latar Belakang (Backsound)
+                                    </h4>
+                                    <p className="mt-0.5 text-xs text-charcoal/60">
+                                        Pilih lagu dari pustaka musik bawaan atau unggah file musik pengiring untuk undangan digital Anda.
+                                    </p>
+                                </div>
+                            )}
+
+                            {!isBasic && (
 
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 {/* Primary Color Picker */}
@@ -1898,13 +1917,16 @@ export const WeddingData: React.FC = () => {
                                     </select>
                                 </div>
                             </div>
+                            )}
 
                             {/* Background Music Panel (Simplified & Enhanced) */}
-                            <div className="space-y-4 border-t border-sand/20 pt-4">
-                                <h5 className="flex items-center gap-2 text-xs font-bold uppercase text-charcoal/80">
-                                    <Music size={14} className="text-gold-500" />
-                                    <span>Musik Latar Belakang (Backsound)</span>
-                                </h5>
+                            <div className={`space-y-4 ${!isBasic ? 'border-t border-sand/20 pt-4' : ''}`}>
+                                {!isBasic && (
+                                    <h5 className="flex items-center gap-2 text-xs font-bold uppercase text-charcoal/80">
+                                        <Music size={14} className="text-gold-500" />
+                                        <span>Musik Latar Belakang (Backsound)</span>
+                                    </h5>
+                                )}
 
                                 {/* 1. Dropdown Preset Music Library */}
                                 <div className="space-y-1.5">
@@ -2158,8 +2180,9 @@ export const WeddingData: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Monogram / Gambar Inisial Custom Upload */}
-                            <div className="space-y-6 border-t border-sand/20 pt-4">
+                            {/* Monogram / Gambar Inisial Custom Upload (PREMIUM & CUSTOM ONLY) */}
+                            {!isBasic && (
+                                <div className="space-y-6 border-t border-sand/20 pt-4">
                                 <h5 className="text-xs font-bold uppercase text-charcoal/80">
                                     Gambar Monogram / Logo Inisial Kustom
                                 </h5>
@@ -2328,8 +2351,9 @@ export const WeddingData: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
+                )}
 
                     {/* TAB 8: SECTIONS */}
                     {activeTab === 'sections' && (
