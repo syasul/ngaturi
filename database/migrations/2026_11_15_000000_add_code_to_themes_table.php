@@ -26,6 +26,11 @@ return new class extends Migration
             'basic-3' => 'b3v7x2',
             'basic-4' => 'b4k8n1',
             'basic-5' => 'b5w9p3',
+            'basic-6' => 'b6m4k2',
+            'basic-7' => 'b7p9x5',
+            'basic-8' => 'b8s3t7',
+            'basic-9' => 'b9e2r8',
+            'basic-10' => 'b10w7q',
             'theme-1' => 'emikvq',
             'theme-2' => 't2ltgr',
             'custom-theme-1' => 'rgudhs',
@@ -141,6 +146,37 @@ return new class extends Migration
                 'is_active' => true,
                 'package_level' => 'BASIC',
             ]);
+        }
+
+        // Ensure basic-6 to basic-10 exist and are active
+        $newBasics = [
+            'basic-6' => ['name' => 'Olive Earth', 'thumbnail' => '/assets/wedding/couple-rustic.png'],
+            'basic-7' => ['name' => 'Lavender Mist', 'thumbnail' => '/assets/wedding/hero-floral.png'],
+            'basic-8' => ['name' => 'Golden Sunset', 'thumbnail' => '/assets/wedding/couple-rustic.png'],
+            'basic-9' => ['name' => 'Emerald Royal', 'thumbnail' => '/assets/wedding/couple-royal.png'],
+            'basic-10' => ['name' => 'Sakura Blossom', 'thumbnail' => '/assets/wedding/hero-floral.png'],
+        ];
+
+        foreach ($newBasics as $bId => $bData) {
+            $bTheme = Theme::find($bId);
+            if (!$bTheme) {
+                Theme::create([
+                    'id' => $bId,
+                    'name' => $bData['name'],
+                    'code' => $knownCodes[$bId],
+                    'thumbnail_url' => $bData['thumbnail'],
+                    'is_active' => true,
+                    'package_level' => 'BASIC',
+                ]);
+            } else {
+                $bTheme->update([
+                    'name' => $bData['name'],
+                    'code' => $knownCodes[$bId],
+                    'thumbnail_url' => $bData['thumbnail'],
+                    'is_active' => true,
+                    'package_level' => 'BASIC',
+                ]);
+            }
         }
 
         // Assign codes for all existing themes

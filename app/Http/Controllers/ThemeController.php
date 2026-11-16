@@ -107,6 +107,11 @@ class ThemeController extends Controller
             'b3v7x2' => 'basic-3',
             'b4k8n1' => 'basic-4',
             'b5w9p3' => 'basic-5',
+            'b6m4k2' => 'basic-6',
+            'b7p9x5' => 'basic-7',
+            'b8s3t7' => 'basic-8',
+            'b9e2r8' => 'basic-9',
+            'b10w7q' => 'basic-10',
             'emikvq' => 'theme-1',
             't2ltgr' => 'theme-2',
             'rgudhs' => 'custom-theme-1',
@@ -277,6 +282,146 @@ class ThemeController extends Controller
                 $theme->name = 'Ocean Breeze';
                 $theme->code = 'b5w9p3';
                 $theme->thumbnail_url = '/assets/wedding/couple-foliage.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 9. Auto-healing for basic-6 if requested
+        if (!$theme && in_array($cleanCode, ['b6m4k2', 'basic-6', 'basic6', 'b-6'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-6'],
+                    [
+                        'name' => 'Olive Earth',
+                        'code' => 'b6m4k2',
+                        'thumbnail_url' => '/assets/wedding/couple-rustic.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'b6m4k2';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                $theme = new Theme();
+                $theme->id = 'basic-6';
+                $theme->name = 'Olive Earth';
+                $theme->code = 'b6m4k2';
+                $theme->thumbnail_url = '/assets/wedding/couple-rustic.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 10. Auto-healing for basic-7 if requested
+        if (!$theme && in_array($cleanCode, ['b7p9x5', 'basic-7', 'basic7', 'b-7'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-7'],
+                    [
+                        'name' => 'Lavender Mist',
+                        'code' => 'b7p9x5',
+                        'thumbnail_url' => '/assets/wedding/hero-floral.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'b7p9x5';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                $theme = new Theme();
+                $theme->id = 'basic-7';
+                $theme->name = 'Lavender Mist';
+                $theme->code = 'b7p9x5';
+                $theme->thumbnail_url = '/assets/wedding/hero-floral.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 11. Auto-healing for basic-8 if requested
+        if (!$theme && in_array($cleanCode, ['b8s3t7', 'basic-8', 'basic8', 'b-8'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-8'],
+                    [
+                        'name' => 'Golden Sunset',
+                        'code' => 'b8s3t7',
+                        'thumbnail_url' => '/assets/wedding/couple-rustic.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'b8s3t7';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                $theme = new Theme();
+                $theme->id = 'basic-8';
+                $theme->name = 'Golden Sunset';
+                $theme->code = 'b8s3t7';
+                $theme->thumbnail_url = '/assets/wedding/couple-rustic.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 12. Auto-healing for basic-9 if requested
+        if (!$theme && in_array($cleanCode, ['b9e2r8', 'basic-9', 'basic9', 'b-9'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-9'],
+                    [
+                        'name' => 'Emerald Royal',
+                        'code' => 'b9e2r8',
+                        'thumbnail_url' => '/assets/wedding/couple-royal.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'b9e2r8';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                $theme = new Theme();
+                $theme->id = 'basic-9';
+                $theme->name = 'Emerald Royal';
+                $theme->code = 'b9e2r8';
+                $theme->thumbnail_url = '/assets/wedding/couple-royal.png';
+                $theme->is_active = true;
+                $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 13. Auto-healing for basic-10 if requested
+        if (!$theme && in_array($cleanCode, ['b10w7q', 'basic-10', 'basic10', 'b-10'])) {
+            try {
+                $theme = Theme::firstOrCreate(
+                    ['id' => 'basic-10'],
+                    [
+                        'name' => 'Sakura Blossom',
+                        'code' => 'b10w7q',
+                        'thumbnail_url' => '/assets/wedding/hero-floral.png',
+                        'is_active' => true,
+                        'package_level' => 'BASIC',
+                    ]
+                );
+                if (empty($theme->code)) {
+                    $theme->code = 'b10w7q';
+                    $theme->save();
+                }
+            } catch (\Throwable $e) {
+                $theme = new Theme();
+                $theme->id = 'basic-10';
+                $theme->name = 'Sakura Blossom';
+                $theme->code = 'b10w7q';
+                $theme->thumbnail_url = '/assets/wedding/hero-floral.png';
                 $theme->is_active = true;
                 $theme->package_level = 'BASIC';
             }

@@ -212,11 +212,21 @@ export const Themes: React.FC = () => {
                                                   ? 'monokrom editorial & ivory noir'
                                                   : theme.id === 'basic-5'
                                                     ? 'sejuk dusty ocean blue & coastal gold'
-                                                    : theme.id === 'elegant'
-                                                      ? 'mewah klasik'
-                                                      : theme.id === 'rustic'
-                                                        ? 'natural kayu'
-                                                        : 'minimalis modern'}
+                                                    : theme.id === 'basic-6'
+                                                      ? 'alami olive earth & chestnut wood'
+                                                      : theme.id === 'basic-7'
+                                                        ? 'lembut lavender mist & silver lilac'
+                                                        : theme.id === 'basic-8'
+                                                          ? 'hangat golden sunset & amber'
+                                                          : theme.id === 'basic-9'
+                                                            ? 'megah royal emerald & gold'
+                                                            : theme.id === 'basic-10'
+                                                              ? 'teduh zen sakura blossom'
+                                                              : theme.id === 'elegant'
+                                                                ? 'mewah klasik'
+                                                                : theme.id === 'rustic'
+                                                                  ? 'natural kayu'
+                                                                  : 'minimalis modern'}
                                         .
                                     </p>
 
