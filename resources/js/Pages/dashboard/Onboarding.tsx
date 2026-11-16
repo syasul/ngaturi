@@ -500,7 +500,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="flex flex-1 flex-col justify-between p-3 text-center">
+                                            <div className="flex flex-1 flex-col justify-between p-3.5 pb-4 text-center">
                                                 <div>
                                                     <p className="text-xs font-semibold text-charcoal">
                                                         {theme.name}
@@ -509,25 +509,25 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                                                         {theme.packageLevel}
                                                     </span>
                                                 </div>
-                                                <div className="mt-3 flex items-center gap-1.5">
+                                                <div className="mt-3.5 grid grid-cols-2 gap-2">
                                                     <a
                                                         href={demoUrl}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="inline-flex shrink-0 items-center justify-center gap-1 rounded-xl border border-gold-500/40 bg-white px-3 py-2 text-xs font-semibold text-gold-700 shadow-2xs transition-all hover:bg-gold-500/10 active:scale-95"
+                                                        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-gold-500/40 bg-white px-2 text-xs font-semibold text-gold-700 shadow-2xs transition-all hover:bg-gold-500/10 active:scale-95"
                                                         title="Buka Pratinjau Tema di Tab Baru"
                                                     >
-                                                        <Eye size={12} className="shrink-0" />
+                                                        <Eye size={13} className="shrink-0" />
                                                         <span>Preview</span>
                                                     </a>
                                                     <button
                                                         type="button"
                                                         disabled={isLocked || loading}
                                                         onClick={() => handleSelectTheme(theme)}
-                                                        className={`flex flex-1 items-center justify-center rounded-xl py-2 px-2 text-xs font-bold transition-all ${
+                                                        className={`flex h-9 w-full items-center justify-center rounded-xl border px-2 text-xs font-bold transition-all ${
                                                             isLocked
-                                                                ? 'cursor-not-allowed border border-sand/40 bg-sand/30 text-charcoal/40'
-                                                                : 'cursor-pointer bg-gold-500 text-white shadow-xs hover:bg-gold-600 active:scale-95'
+                                                                ? 'cursor-not-allowed border-sand/40 bg-sand/30 text-charcoal/40'
+                                                                : 'cursor-pointer border-transparent bg-gold-500 text-white shadow-xs hover:bg-gold-600 active:scale-95'
                                                         }`}
                                                     >
                                                         {isLocked ? 'Terkunci' : 'Gunakan'}

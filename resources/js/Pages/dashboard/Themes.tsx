@@ -278,23 +278,27 @@ export const Themes: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <div className="flex gap-2">
+                                <div className="grid grid-cols-2 gap-2 pt-1">
                                     <a
                                         href={`/demo/${theme.tierCode || 'b'}/${theme.code || theme.id}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-gold-500/40 bg-white px-3 py-2 text-xs font-semibold text-gold-700 shadow-xs hover:bg-gold-500/10 transition"
+                                        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-gold-500/40 bg-white px-2 text-xs font-semibold text-gold-700 shadow-xs hover:bg-gold-500/10 active:scale-95 transition"
                                     >
                                         <Eye size={13} />
                                         <span>Demo</span>
                                     </a>
 
-                                    <Button
-                                        variant={
-                                            isSelected ? 'outline' : 'primary'
-                                        }
+                                    <button
+                                        type="button"
                                         disabled={isLocked || savingThis}
-                                        className="flex flex-1 items-center justify-center gap-1.5 py-2 text-xs"
+                                        className={`flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border px-2 text-xs font-bold transition-all active:scale-95 ${
+                                            isSelected
+                                                ? 'border-gold-500 bg-white text-gold-600 hover:bg-gold-50'
+                                                : isLocked
+                                                  ? 'cursor-not-allowed border-sand/40 bg-sand/30 text-charcoal/40'
+                                                  : 'cursor-pointer border-transparent bg-gold-500 text-white shadow-xs hover:bg-gold-600'
+                                        }`}
                                         onClick={() =>
                                             handleSelectTheme(
                                                 theme.id,
@@ -313,9 +317,9 @@ export const Themes: React.FC = () => {
                                                 <span>Aktif</span>
                                             </>
                                         ) : (
-                                            'Terapkan Tema'
+                                            'Gunakan'
                                         )}
-                                    </Button>
+                                    </button>
                                 </div>
                             </div>
                         </Card>
