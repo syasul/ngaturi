@@ -1,6 +1,8 @@
 import {
     Check,
     CreditCard,
+    ExternalLink,
+    Eye,
     Heart,
     Image as ImageIcon,
     Loader2,
@@ -32,6 +34,7 @@ export const Onboarding: React.FC = () => {
     const [themes, setThemes] = useState<any[]>([]);
 
     const [selectedPkg, setSelectedPkg] = useState<any>(null);
+    const [previewTheme, setPreviewTheme] = useState<any | null>(null);
 
     // Basic metadata form state
     const [groomName, setGroomName] = useState('');
@@ -434,13 +437,13 @@ export const Onboarding: React.FC = () => {
                                     return (
                                         <div
                                             key={theme.id}
-                                            className={`flex flex-col overflow-hidden rounded-2xl border bg-white shadow-sm ${
+                                            className={`flex flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all ${
                                                 isLocked
-                                                    ? 'opacity-65'
-                                                    : 'hover:border-gold-500'
+                                                    ? 'opacity-70'
+                                                    : 'hover:border-gold-500 hover:shadow-md'
                                             }`}
                                         >
-                                            <div className="relative flex h-28 items-center justify-center bg-sand/30">
+                                            <div className="relative flex h-28 items-center justify-center overflow-hidden bg-sand/30">
                                                 {isLocked ? (
                                                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/20">
                                                         <div className="flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-charcoal shadow">
@@ -449,9 +452,17 @@ export const Onboarding: React.FC = () => {
                                                         </div>
                                                     </div>
                                                 ) : null}
-                                                <span className="font-sans font-semibold text-gold-700">
-                                                    {theme.name}
-                                                </span>
+                                                {theme.thumbnailUrl ? (
+                                                    <img
+                                                        src={theme.thumbnailUrl}
+                                                        alt={theme.name}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <span className="font-sans font-semibold text-gold-700">
+                                                        {theme.name}
+                                                    </span>
+                                                )}
                                             </div>
                                             <div className="flex flex-1 flex-col justify-between p-3">
                                                 <div>
@@ -462,24 +473,38 @@ export const Onboarding: React.FC = () => {
                                                         {theme.packageLevel}
                                                     </span>
                                                 </div>
-                                                <Button
-                                                    variant={
-                                                        isLocked
-                                                            ? 'ghost'
-                                                            : 'primary'
-                                                    }
-                                                    disabled={
-                                                        isLocked || loading
-                                                    }
-                                                    className="mt-3 w-full py-1.5 text-xs"
-                                                    onClick={() =>
-                                                        handleSelectTheme(theme)
-                                                    }
-                                                >
-                                                    {isLocked
-                                                        ? 'Terkunci'
-                                                        : 'Gunakan'}
-                                                </Button>
+                                                <div className="mt-3 flex gap-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setPreviewTheme(theme);
+                                                        }}
+                                                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-gold-500/40 bg-white px-3 py-1.5 text-xs font-semibold text-gold-700 shadow-2xs hover:bg-gold-500/10 transition"
+                                                        title="Pratinjau Desain"
+                                                    >
+                                                        <Eye size={13} />
+                                                        <span>Preview</span>
+                                                    </button>
+                                                    <Button
+                                                        variant={
+                                                            isLocked
+                                                                ? 'ghost'
+                                                                : 'primary'
+                                                        }
+                                                        disabled={
+                                                            isLocked || loading
+                                                        }
+                                                        className="flex-1 py-1.5 text-xs"
+                                                        onClick={() =>
+                                                            handleSelectTheme(theme)
+                                                        }
+                                                    >
+                                                        {isLocked
+                                                            ? 'Terkunci'
+                                                            : 'Gunakan'}
+                                                    </Button>
+                                                </div>
                                             </div>
                                         </div>
                                     );
@@ -777,6 +802,90 @@ export const Onboarding: React.FC = () => {
                         </Button>
                     </div>
                 </div>
+            </Modal>
+
+            {/* Theme Live Preview Modal */}
+            <Modal
+                isOpen={!!previewTheme}
+                onClose={() => setPreviewTheme(null)}
+                title={`Pratinjau Desain: ${previewTheme?.name || ''}`}
+                size="lg"
+            >
+                {previewTheme && (() => {
+                    const demoTier =
+                        previewTheme.tierCode ||
+                        (previewTheme.packageLevel === 'CUSTOM'
+                            ? 'c'
+                            : previewTheme.packageLevel === 'PREMIUM'
+                              ? 'p'
+                              : 'b');
+                    const demoCode = previewTheme.code || previewTheme.id;
+                    const demoUrl = `/demo/${demoTier}/${demoCode}`;
+                    const previewUserTierRank =
+                        TIER_LEVELS[activePackageLevel?.toUpperCase() || 'BASIC'] || 1;
+                    const previewThemeTierRank =
+                        TIER_LEVELS[previewTheme.packageLevel?.toUpperCase() || 'BASIC'] || 1;
+                    const isPreviewLocked = previewThemeTierRank > previewUserTierRank;
+
+                    return (
+                        <div className="flex flex-col items-center">
+                            <div className="mb-3 flex w-full items-center justify-between border-b border-sand/40 pb-2.5 text-xs">
+                                <div className="flex items-center gap-2">
+                                    <span className="rounded-full bg-gold-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase text-gold-700">
+                                        Tier {previewTheme.packageLevel}
+                                    </span>
+                                    <span className="hidden font-mono text-[11px] text-charcoal/40 sm:inline">
+                                        {demoUrl}
+                                    </span>
+                                </div>
+                                <a
+                                    href={demoUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1 font-semibold text-gold-600 hover:text-gold-700"
+                                >
+                                    <span>Layar Penuh</span>
+                                    <ExternalLink size={13} />
+                                </a>
+                            </div>
+
+                            {/* Mobile Mockup Frame */}
+                            <div className="relative mx-auto flex h-[500px] w-full max-w-[320px] flex-col overflow-hidden rounded-[36px] border-4 border-charcoal bg-white shadow-2xl">
+                                {/* Speaker notch */}
+                                <div className="absolute left-1/2 top-2 z-20 h-3.5 w-24 -translate-x-1/2 rounded-full bg-charcoal" />
+
+                                <iframe
+                                    src={demoUrl}
+                                    title={previewTheme.name}
+                                    className="h-full w-full border-0 pt-5"
+                                />
+                            </div>
+
+                            <div className="mt-4 flex w-full items-center justify-between border-t border-sand/40 pt-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setPreviewTheme(null)}
+                                    className="rounded-xl border border-sand px-4 py-2 text-xs font-semibold text-charcoal/70 hover:bg-sand/20"
+                                >
+                                    Tutup
+                                </button>
+
+                                <Button
+                                    variant={isPreviewLocked ? 'ghost' : 'primary'}
+                                    disabled={isPreviewLocked || loading}
+                                    className="px-5 py-2 text-xs font-bold"
+                                    onClick={() => {
+                                        const t = previewTheme;
+                                        setPreviewTheme(null);
+                                        handleSelectTheme(t);
+                                    }}
+                                >
+                                    {isPreviewLocked ? 'Tema Terkunci' : 'Gunakan Tema Ini'}
+                                </Button>
+                            </div>
+                        </div>
+                    );
+                })()}
             </Modal>
         </div>
     );
