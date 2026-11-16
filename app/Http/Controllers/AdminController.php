@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer as SymfonyMailer;
 use Symfony\Component\Mime\Email;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -30,25 +31,42 @@ class AdminController extends Controller
             $now = now();
             $firstDayOfMonth = now()->startOfMonth();
 
-            // Total Revenue (current month)
+            // Total Revenue All-Time & This Month
+            $totalRevenueAllTime = (int) Order::where('status', 'PAID')->sum('amount');
             $totalRevenueMonth = (int) Order::where('status', 'PAID')
-                ->where('paid_at', '>=', $firstDayOfMonth)
+                ->where(function ($q) use ($firstDayOfMonth) {
+                    $q->where('paid_at', '>=', $firstDayOfMonth)
+                      ->orWhere(function ($sub) use ($firstDayOfMonth) {
+                          $sub->whereNull('paid_at')->where('created_at', '>=', $firstDayOfMonth);
+                      });
+                })
                 ->sum('amount');
 
-            // Total Users
+            // Total Users & breakdown
             $totalUsers = User::where('role', 'USER')->count();
+            $payingCustomers = Order::where('status', 'PAID')->distinct('user_id')->count('user_id');
+            $freeUsers = max(0, $totalUsers - $payingCustomers);
 
-            // Live/Published Weddings
+            // Weddings breakdown
+            $totalWeddings = Wedding::count();
             $liveWeddings = Wedding::where('status', 'published')->count();
+            $draftWeddings = Wedding::where('status', '!=', 'published')->orWhereNull('status')->count();
 
-            // Order Pending
+            // Orders breakdown
+            $totalOrders = Order::count();
+            $paidOrders = Order::where('status', 'PAID')->count();
             $pendingOrders = Order::where('status', 'PENDING')->count();
 
             // Daily Revenue (last 30 days)
-            $thirtyDaysAgo = now()->subDays(30);
+            $thirtyDaysAgo = now()->subDays(30)->startOfDay();
             $dailyRevOrders = Order::where('status', 'PAID')
-                ->where('paid_at', '>=', $thirtyDaysAgo)
-                ->get(['amount', 'paid_at']);
+                ->where(function ($q) use ($thirtyDaysAgo) {
+                    $q->where('paid_at', '>=', $thirtyDaysAgo)
+                      ->orWhere(function ($sub) use ($thirtyDaysAgo) {
+                          $sub->whereNull('paid_at')->where('created_at', '>=', $thirtyDaysAgo);
+                      });
+                })
+                ->get(['amount', 'paid_at', 'created_at']);
 
             $dailyRevMap = [];
             for ($i = 29; $i >= 0; $i--) {
@@ -56,10 +74,11 @@ class AdminController extends Controller
                 $dailyRevMap[$dateStr] = 0;
             }
             foreach ($dailyRevOrders as $o) {
-                if ($o->paid_at) {
-                    $dateStr = $o->paid_at->toDateString();
+                $payDate = $o->paid_at ?? $o->created_at;
+                if ($payDate) {
+                    $dateStr = Carbon::parse($payDate)->toDateString();
                     if (array_key_exists($dateStr, $dailyRevMap)) {
-                        $dailyRevMap[$dateStr] += $o->amount;
+                        $dailyRevMap[$dateStr] += (int) $o->amount;
                     }
                 }
             }
@@ -68,49 +87,73 @@ class AdminController extends Controller
                 $dailyRevenue[] = ['date' => $date, 'amount' => $amount];
             }
 
-            // New Users per Week
-            $fourWeeksAgo = now()->subDays(28);
-            $recentUsers = User::where('role', 'USER')
-                ->where('created_at', '>=', $fourWeeksAgo)
-                ->get(['created_at']);
-
-            $weeklyUsersMap = [
-                'Week 1' => 0,
-                'Week 2' => 0,
-                'Week 3' => 0,
-                'Week 4' => 0,
-            ];
-
-            foreach ($recentUsers as $u) {
-                $diffDays = $now->diffInDays($u->created_at);
-                if ($diffDays < 7) {
-                    $weeklyUsersMap['Week 4']++;
-                } elseif ($diffDays < 14) {
-                    $weeklyUsersMap['Week 3']++;
-                } elseif ($diffDays < 21) {
-                    $weeklyUsersMap['Week 2']++;
-                } elseif ($diffDays < 28) {
-                    $weeklyUsersMap['Week 1']++;
-                }
-            }
+            // New Users per Week (4 Weeks with readable Date Ranges)
             $weeklyUsers = [];
-            foreach ($weeklyUsersMap as $week => $count) {
-                $weeklyUsers[] = ['week' => $week, 'count' => $count];
+            $recentUsersCount = 0;
+            for ($w = 3; $w >= 0; $w--) {
+                $weekStart = now()->subDays(($w + 1) * 7)->startOfDay();
+                $weekEnd = $w === 0 ? now()->endOfDay() : now()->subDays($w * 7)->endOfDay();
+                
+                $label = $weekStart->format('d M') . ' - ' . $weekEnd->format('d M');
+                $count = User::where('role', 'USER')
+                    ->whereBetween('created_at', [$weekStart, $weekEnd])
+                    ->count();
+
+                $recentUsersCount += $count;
+                $weeklyUsers[] = [
+                    'week' => $label,
+                    'count' => $count,
+                ];
             }
+            $olderUsersCount = max(0, $totalUsers - $recentUsersCount);
 
-            // Package Sales Distribution
-            $pkgDistributionOrders = Order::with('package')
-                ->where('status', 'PAID')
-                ->get();
-
-            $pkgMap = [];
-            foreach ($pkgDistributionOrders as $o) {
+            // Package Sales Distribution (All-Time)
+            $pkgDistributionOrdersAll = Order::with('package')->where('status', 'PAID')->get();
+            $pkgMapAll = [];
+            foreach ($pkgDistributionOrdersAll as $o) {
                 $name = $o->package ? $o->package->name : 'UNKNOWN';
-                $pkgMap[$name] = ($pkgMap[$name] ?? 0) + 1;
+                if (!isset($pkgMapAll[$name])) {
+                    $pkgMapAll[$name] = ['count' => 0, 'amount' => 0];
+                }
+                $pkgMapAll[$name]['count']++;
+                $pkgMapAll[$name]['amount'] += (int) $o->amount;
             }
             $packageDistribution = [];
-            foreach ($pkgMap as $name => $count) {
-                $packageDistribution[] = ['name' => $name, 'value' => $count];
+            foreach ($pkgMapAll as $name => $item) {
+                $packageDistribution[] = [
+                    'name' => $name,
+                    'value' => $item['count'],
+                    'amount' => $item['amount'],
+                ];
+            }
+
+            // Package Sales Distribution (Current Month)
+            $pkgDistributionOrdersMonth = Order::with('package')
+                ->where('status', 'PAID')
+                ->where(function ($q) use ($firstDayOfMonth) {
+                    $q->where('paid_at', '>=', $firstDayOfMonth)
+                      ->orWhere(function ($sub) use ($firstDayOfMonth) {
+                          $sub->whereNull('paid_at')->where('created_at', '>=', $firstDayOfMonth);
+                      });
+                })
+                ->get();
+
+            $pkgMapMonth = [];
+            foreach ($pkgDistributionOrdersMonth as $o) {
+                $name = $o->package ? $o->package->name : 'UNKNOWN';
+                if (!isset($pkgMapMonth[$name])) {
+                    $pkgMapMonth[$name] = ['count' => 0, 'amount' => 0];
+                }
+                $pkgMapMonth[$name]['count']++;
+                $pkgMapMonth[$name]['amount'] += (int) $o->amount;
+            }
+            $packageDistributionMonth = [];
+            foreach ($pkgMapMonth as $name => $item) {
+                $packageDistributionMonth[] = [
+                    'name' => $name,
+                    'value' => $item['count'],
+                    'amount' => $item['amount'],
+                ];
             }
 
             // Recent 5 Transactions
@@ -121,19 +164,20 @@ class AdminController extends Controller
                 ->map(function ($o) {
                     return [
                         'id' => $o->id,
-                        'userName' => $o->user ? $o->user->name : null,
-                        'userEmail' => $o->user ? $o->user->email : null,
-                        'packageName' => $o->package ? $o->package->name : null,
-                        'amount' => $o->amount,
+                        'userName' => $o->user ? $o->user->name : 'Customer',
+                        'userEmail' => $o->user ? $o->user->email : '-',
+                        'packageName' => $o->package ? $o->package->name : 'PAKET',
+                        'amount' => (int) $o->amount,
                         'status' => $o->status,
-                        'paymentMethod' => $o->payment_method,
+                        'paymentMethod' => $o->payment_method ?: 'Payment Gateway',
                         'createdAt' => $o->created_at,
                     ];
                 });
 
             // Weddings expiring in 7 days
-            $sevenDaysFromNow = now()->addDays(7);
+            $sevenDaysFromNow = now()->addDays(7)->endOfDay();
             $expiringWeddings = Wedding::with('user')
+                ->whereNotNull('expired_at')
                 ->where('expired_at', '>=', $now)
                 ->where('expired_at', '<=', $sevenDaysFromNow)
                 ->orderBy('expired_at')
@@ -152,14 +196,24 @@ class AdminController extends Controller
                 'status' => 'success',
                 'analytics' => [
                     'kpis' => [
+                        'totalRevenueAllTime' => $totalRevenueAllTime,
                         'totalRevenueMonth' => $totalRevenueMonth,
                         'totalUsers' => $totalUsers,
+                        'payingCustomers' => $payingCustomers,
+                        'freeUsers' => $freeUsers,
+                        'recentUsersCount' => $recentUsersCount,
+                        'olderUsersCount' => $olderUsersCount,
+                        'totalWeddings' => $totalWeddings,
                         'liveWeddings' => $liveWeddings,
+                        'draftWeddings' => $draftWeddings,
+                        'totalOrders' => $totalOrders,
+                        'paidOrders' => $paidOrders,
                         'pendingOrders' => $pendingOrders,
                     ],
                     'dailyRevenue' => $dailyRevenue,
                     'weeklyUsers' => $weeklyUsers,
                     'packageDistribution' => $packageDistribution,
+                    'packageDistributionMonth' => $packageDistributionMonth,
                     'recentTransactions' => $recentTransactions,
                     'expiringWeddings' => $expiringWeddings,
                 ]
@@ -938,13 +992,25 @@ class AdminController extends Controller
 
             $query = Order::with('package')->where('status', 'PAID');
             if ($start) {
-                $query->where('paid_at', '>=', $start);
+                $startDt = Carbon::parse($start)->startOfDay();
+                $query->where(function ($q) use ($startDt) {
+                    $q->where('paid_at', '>=', $startDt)
+                      ->orWhere(function ($sub) use ($startDt) {
+                          $sub->whereNull('paid_at')->where('created_at', '>=', $startDt);
+                      });
+                });
             }
             if ($end) {
-                $query->where('paid_at', '<=', $end);
+                $endDt = Carbon::parse($end)->endOfDay();
+                $query->where(function ($q) use ($endDt) {
+                    $q->where('paid_at', '<=', $endDt)
+                      ->orWhere(function ($sub) use ($endDt) {
+                          $sub->whereNull('paid_at')->where('created_at', '<=', $endDt);
+                      });
+                });
             }
 
-            $paidOrders = $query->latest('paid_at')->get();
+            $paidOrders = $query->latest(DB::raw('COALESCE(paid_at, created_at)'))->get();
 
             $totalRevenue = 0;
             $packageBreakdown = [];
