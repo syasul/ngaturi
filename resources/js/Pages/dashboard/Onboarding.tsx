@@ -51,7 +51,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({
     const [themes, setThemes] = useState<any[]>([]);
 
     const [selectedPkg, setSelectedPkg] = useState<any>(null);
-    const [previewTheme, setPreviewTheme] = useState<any | null>(null);
 
     // Basic metadata form state
     const [groomName, setGroomName] = useState('');
@@ -452,6 +451,19 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                                     const themeTierRank =
                                         TIER_LEVELS[theme.packageLevel?.toUpperCase() || 'BASIC'] || 1;
                                     const isLocked = themeTierRank > userTierRank;
+                                    const demoTier =
+                                        theme.tierCode ||
+                                        (theme.packageLevel === 'CUSTOM'
+                                            ? 'c'
+                                            : theme.packageLevel === 'PREMIUM'
+                                              ? 'p'
+                                              : 'b');
+                                    const demoCode = theme.code || theme.id;
+                                    const demoUrl = `/demo/${demoTier}/${demoCode}`;
+                                    const screenshotUrl =
+                                        theme.thumbnailUrl ||
+                                        `/assets/themes/${theme.id}.png`;
+
                                     return (
                                         <div
                                             key={theme.id}
@@ -461,7 +473,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                                                     : 'hover:border-gold-500 hover:shadow-md'
                                             }`}
                                         >
-                                            <div className="relative flex h-36 sm:h-40 items-center justify-center overflow-hidden bg-gradient-to-b from-sand/30 to-sand/10">
+                                            <div className="relative flex h-48 sm:h-52 items-center justify-center overflow-hidden bg-gradient-to-b from-sand/30 to-sand/10">
                                                 {isLocked && (
                                                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/30 backdrop-blur-[2px]">
                                                         <div className="flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-charcoal shadow-md">
@@ -470,20 +482,15 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                                                         </div>
                                                     </div>
                                                 )}
-                                                {theme.thumbnailUrl ? (
-                                                    <img
-                                                        src={theme.thumbnailUrl}
-                                                        alt={theme.name}
-                                                        className="h-full w-full object-cover object-top transition-transform duration-300 hover:scale-105"
-                                                    />
-                                                ) : (
-                                                    <div className="flex flex-col items-center justify-center p-3 text-center">
-                                                        <Palette className="mb-1 text-gold-600/50" size={24} />
-                                                        <span className="font-sans text-xs font-bold text-charcoal/70">
-                                                            {theme.name}
-                                                        </span>
-                                                    </div>
-                                                )}
+                                                <img
+                                                    src={screenshotUrl}
+                                                    alt={theme.name}
+                                                    onError={(e) => {
+                                                        // Fallback if screenshot asset missing
+                                                        (e.target as HTMLImageElement).src = '/assets/wedding/hero-floral.png';
+                                                    }}
+                                                    className="h-full w-full object-cover object-top transition-transform duration-300 hover:scale-105"
+                                                />
                                             </div>
                                             <div className="flex flex-1 flex-col justify-between p-3">
                                                 <div>
@@ -495,18 +502,16 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                                                     </span>
                                                 </div>
                                                 <div className="mt-3 flex items-center gap-1.5">
-                                                    <button
-                                                        type="button"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setPreviewTheme(theme);
-                                                        }}
-                                                        className="inline-flex shrink-0 items-center justify-center gap-1 rounded-xl border border-gold-500/40 bg-white px-2.5 py-2 text-xs font-semibold text-gold-700 shadow-2xs transition-all hover:bg-gold-500/10 active:scale-95"
-                                                        title="Pratinjau Tema"
+                                                    <a
+                                                        href={demoUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-flex shrink-0 items-center justify-center gap-1 rounded-xl border border-gold-500/40 bg-white px-3 py-2 text-xs font-semibold text-gold-700 shadow-2xs transition-all hover:bg-gold-500/10 active:scale-95"
+                                                        title="Buka Pratinjau Tema di Tab Baru"
                                                     >
                                                         <Eye size={12} className="shrink-0" />
                                                         <span>Preview</span>
-                                                    </button>
+                                                    </a>
                                                     <button
                                                         type="button"
                                                         disabled={isLocked || loading}
@@ -817,90 +822,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                         </Button>
                     </div>
                 </div>
-            </Modal>
-
-            {/* Theme Live Preview Modal */}
-            <Modal
-                isOpen={!!previewTheme}
-                onClose={() => setPreviewTheme(null)}
-                title={`Pratinjau Desain: ${previewTheme?.name || ''}`}
-                size="lg"
-            >
-                {previewTheme && (() => {
-                    const demoTier =
-                        previewTheme.tierCode ||
-                        (previewTheme.packageLevel === 'CUSTOM'
-                            ? 'c'
-                            : previewTheme.packageLevel === 'PREMIUM'
-                              ? 'p'
-                              : 'b');
-                    const demoCode = previewTheme.code || previewTheme.id;
-                    const demoUrl = `/demo/${demoTier}/${demoCode}`;
-                    const previewUserTierRank =
-                        TIER_LEVELS[activePackageLevel?.toUpperCase() || 'BASIC'] || 1;
-                    const previewThemeTierRank =
-                        TIER_LEVELS[previewTheme.packageLevel?.toUpperCase() || 'BASIC'] || 1;
-                    const isPreviewLocked = previewThemeTierRank > previewUserTierRank;
-
-                    return (
-                        <div className="flex flex-col items-center">
-                            <div className="mb-3 flex w-full items-center justify-between border-b border-sand/40 pb-2.5 text-xs">
-                                <div className="flex items-center gap-2">
-                                    <span className="rounded-full bg-gold-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase text-gold-700">
-                                        Tier {previewTheme.packageLevel}
-                                    </span>
-                                    <span className="hidden font-mono text-[11px] text-charcoal/40 sm:inline">
-                                        {demoUrl}
-                                    </span>
-                                </div>
-                                <a
-                                    href={demoUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-1 font-semibold text-gold-600 hover:text-gold-700"
-                                >
-                                    <span>Layar Penuh</span>
-                                    <ExternalLink size={13} />
-                                </a>
-                            </div>
-
-                            {/* Mobile Mockup Frame */}
-                            <div className="relative mx-auto flex h-[500px] w-full max-w-[320px] flex-col overflow-hidden rounded-[36px] border-4 border-charcoal bg-white shadow-2xl">
-                                {/* Speaker notch */}
-                                <div className="absolute left-1/2 top-2 z-20 h-3.5 w-24 -translate-x-1/2 rounded-full bg-charcoal" />
-
-                                <iframe
-                                    src={demoUrl}
-                                    title={previewTheme.name}
-                                    className="h-full w-full border-0 pt-5"
-                                />
-                            </div>
-
-                            <div className="mt-4 flex w-full items-center justify-between border-t border-sand/40 pt-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setPreviewTheme(null)}
-                                    className="rounded-xl border border-sand px-4 py-2 text-xs font-semibold text-charcoal/70 hover:bg-sand/20"
-                                >
-                                    Tutup
-                                </button>
-
-                                <Button
-                                    variant={isPreviewLocked ? 'ghost' : 'primary'}
-                                    disabled={isPreviewLocked || loading}
-                                    className="px-5 py-2 text-xs font-bold"
-                                    onClick={() => {
-                                        const t = previewTheme;
-                                        setPreviewTheme(null);
-                                        handleSelectTheme(t);
-                                    }}
-                                >
-                                    {isPreviewLocked ? 'Tema Terkunci' : 'Gunakan Tema Ini'}
-                                </Button>
-                            </div>
-                        </div>
-                    );
-                })()}
             </Modal>
         </div>
     );

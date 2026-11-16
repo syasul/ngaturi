@@ -442,7 +442,7 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
                 <div
                     className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-10"
                     style={{
-                        backgroundImage: "url('/assets/wedding/couple-rustic.png')",
+                        backgroundImage: "url('/assets/wedding/hero-floral.png')",
                     }}
                 />
 
@@ -1423,31 +1423,31 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0, y: -40 }}
                         transition={{ duration: 0.6, ease: 'easeInOut' }}
-                        className="fixed inset-0 z-50 flex flex-col items-center justify-between overflow-hidden bg-gradient-to-br from-[#7A2E1A] via-[#8F3D24] to-[#A64B2A] p-8 text-center text-white"
+                        className="fixed inset-0 z-50 flex flex-col items-center justify-between overflow-y-auto px-6 py-6 sm:p-8 text-center text-white bg-gradient-to-br from-[#7A2E1A] via-[#8F3D24] to-[#A64B2A]"
                     >
                         <div
                             className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-10"
                             style={{
-                                backgroundImage: "url('/assets/wedding/couple-rustic.png')",
+                                backgroundImage: "url('/assets/wedding/hero-floral.png')",
                             }}
                         />
 
-                        <div className="relative z-10 space-y-2 pt-6">
+                        <div className="relative z-10 space-y-1.5 pt-2 sm:pt-4">
                             <BohoSunArch color="#F7D8BA" />
-                            <span className="block text-[11px] font-bold uppercase tracking-[0.3em] text-[#F7D8BA]">
+                            <span className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-[#F7D8BA]">
                                 UNDANGAN PERNIKAHAN
                             </span>
                         </div>
 
-                        <div className="relative z-10 my-auto space-y-5">
-                            <div className="relative mx-auto h-52 w-40 overflow-hidden rounded-t-full border-2 border-[#F7D8BA]/60 p-1 shadow-2xl">
+                        <div className="relative z-10 my-auto py-2 space-y-4">
+                            <div className="relative mx-auto h-48 w-36 sm:h-52 sm:w-40 overflow-hidden rounded-t-full border-2 border-[#F7D8BA]/60 p-1 shadow-2xl">
                                 <img
                                     src={resolveImageUrl(
-                                        bride.photo || groom.photo,
+                                        (data as any)?.coverPhoto || bride.photo || groom.photo,
                                         '/assets/wedding/couple-rustic.png',
                                     )}
                                     alt="Mempelai"
-                                    className="h-full w-full rounded-t-full object-cover"
+                                    className="h-full w-full rounded-t-full object-cover object-top"
                                 />
                                 <div className="pointer-events-none absolute inset-1 rounded-t-full border border-white/20" />
                             </div>
@@ -1461,14 +1461,14 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
                                 >
                                     {groomNickname} & {brideNickname}
                                 </h1>
-                                <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-[#F7D8BA]">
+                                <p className="mt-1.5 text-xs font-semibold uppercase tracking-widest text-[#F7D8BA]">
                                     {formatDate(primaryDate)}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="relative z-10 w-full max-w-xs space-y-4 pb-6">
-                            <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-md">
+                        <div className="relative z-10 w-full max-w-xs space-y-3 pb-2 sm:pb-4">
+                            <div className="rounded-2xl border border-white/15 bg-white/10 p-3.5 backdrop-blur-md">
                                 <p className="text-[10px] font-medium uppercase tracking-wider text-[#FFFBF5]/75">
                                     Kepada Yth. Bapak/Ibu/Saudara/i:
                                 </p>
@@ -1479,7 +1479,7 @@ export const BasicTheme2: React.FC<BasicTheme2Props> = ({
 
                             <button
                                 onClick={onOpen}
-                                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#F7D8BA] py-3.5 text-xs font-bold uppercase tracking-widest text-[#7A2E1A] shadow-xl transition hover:scale-105 hover:bg-[#fad0a7]"
+                                className="inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#F7D8BA] py-3 text-xs font-bold uppercase tracking-widest text-[#7A2E1A] shadow-xl transition hover:scale-105 hover:bg-[#fad0a7]"
                             >
                                 <Heart size={14} className="fill-current" />
                                 <span>Buka Undangan</span>

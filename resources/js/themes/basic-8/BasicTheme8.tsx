@@ -501,7 +501,7 @@ export const BasicTheme8: React.FC<BasicTheme8Props> = ({
 
     const coupleHeroPhoto = resolveImageUrl(
         customStyle.heroPhoto || data?.coverPhoto,
-        '/assets/wedding/couple-rustic.png',
+        '/assets/wedding/hero-floral.png',
     );
     const groomPhoto = resolveImageUrl(
         groom.photo,

@@ -13,16 +13,23 @@ class ThemeController extends Controller
     public function index()
     {
         try {
-            $list = Theme::where('is_active', true)->get()->map(fn ($theme) => [
-                'id' => $theme->id,
-                'name' => $theme->name,
-                'thumbnailUrl' => $theme->thumbnail_url,
-                'isActive' => $theme->is_active,
-                'packageLevel' => $theme->package_level,
-                'code' => $theme->code,
-                'tierCode' => $theme->tier_code,
-                'demoUrl' => $theme->demo_url,
-            ]);
+            $list = Theme::where('is_active', true)->get()->map(function ($theme) {
+                $screenshot = '/assets/themes/' . $theme->id . '.png';
+                $thumb = file_exists(public_path('assets/themes/' . $theme->id . '.png'))
+                    ? $screenshot
+                    : ($theme->thumbnail_url ?: $screenshot);
+
+                return [
+                    'id' => $theme->id,
+                    'name' => $theme->name,
+                    'thumbnailUrl' => $thumb,
+                    'isActive' => $theme->is_active,
+                    'packageLevel' => $theme->package_level,
+                    'code' => $theme->code,
+                    'tierCode' => $theme->tier_code,
+                    'demoUrl' => $theme->demo_url,
+                ];
+            });
 
             return response()->json(['status' => 'success', 'themes' => $list]);
         } catch (\Exception $e) {

@@ -509,7 +509,7 @@ export const BasicTheme9: React.FC<BasicTheme9Props> = ({
 
     const coupleHeroPhoto = resolveImageUrl(
         customStyle.heroPhoto || data?.coverPhoto,
-        '/assets/wedding/couple-royal.png',
+        '/assets/wedding/hero-floral.png',
     );
     const groomPhoto = resolveImageUrl(
         groom.photo,

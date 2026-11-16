@@ -15,7 +15,6 @@ import {
 import React, { useMemo, useState } from 'react';
 import Badge from '../../components/ui/Badge';
 import Card from '../../components/ui/Card';
-import Modal from '../../components/ui/Modal';
 import TiltCard from '../../components/ui/TiltCard';
 import { ALL_THEMES, type CatalogTheme } from '../../data/themesData';
 import Footer from '../../sections/landing/Footer';
@@ -24,9 +23,6 @@ import Navbar from '../../sections/landing/Navbar';
 export const CatalogPage: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState<'all' | 'basic' | 'premium' | 'custom'>('all');
     const [searchQuery, setSearchQuery] = useState('');
-
-    // Modal state for quick preview
-    const [previewTheme, setPreviewTheme] = useState<CatalogTheme | null>(null);
 
     const filteredThemes = useMemo(() => {
         return ALL_THEMES.filter((theme) => {
@@ -242,25 +238,16 @@ export const CatalogPage: React.FC = () => {
 
                                             {/* Action Buttons */}
                                             <div className="mt-6 flex flex-col gap-2 pt-2 border-t border-neutral-100">
-                                                <div className="grid grid-cols-2 gap-2">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setPreviewTheme(theme)}
-                                                        className="flex items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-semibold text-charcoal hover:border-charcoal hover:bg-neutral-50 transition-colors"
-                                                    >
-                                                        <Eye size={13} />
-                                                        <span>Pratinjau</span>
-                                                    </button>
-                                                    <a
-                                                        href={demoUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="flex items-center justify-center gap-1.5 rounded-xl border border-gold-500/40 bg-gold-50/50 py-2.5 text-xs font-semibold text-gold-700 hover:bg-gold-500 hover:text-white transition-all"
-                                                    >
-                                                        <span>Buka Tab Baru</span>
-                                                        <ExternalLink size={12} />
-                                                    </a>
-                                                </div>
+                                                <a
+                                                    href={demoUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center justify-center gap-1.5 rounded-xl border border-gold-500/40 bg-white py-2.5 text-xs font-semibold text-gold-700 shadow-2xs hover:bg-gold-500 hover:text-white transition-all"
+                                                >
+                                                    <Eye size={13} />
+                                                    <span>Lihat Demo (Tab Baru)</span>
+                                                    <ExternalLink size={12} />
+                                                </a>
 
                                                 <Link
                                                     href={`/register?theme=${theme.id}`}
@@ -307,62 +294,6 @@ export const CatalogPage: React.FC = () => {
                     </div>
                 </section>
             </main>
-
-            {/* Quick Preview Modal */}
-            <Modal
-                isOpen={!!previewTheme}
-                onClose={() => setPreviewTheme(null)}
-                title={`Pratinjau Desain: ${previewTheme?.name || ''}`}
-                size="lg"
-            >
-                {previewTheme && (
-                    <div className="flex flex-col items-center">
-                        <div className="mb-4 flex w-full items-center justify-between border-b border-neutral-100 pb-3 text-xs">
-                            <span className="font-mono text-charcoal/60">
-                                /demo/{previewTheme.demoTier}/{previewTheme.demoCode}
-                            </span>
-                            <a
-                                href={`/demo/${previewTheme.demoTier}/${previewTheme.demoCode}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1.5 font-semibold text-gold-600 hover:text-gold-700"
-                            >
-                                <span>Buka Layar Penuh</span>
-                                <ExternalLink size={13} />
-                            </a>
-                        </div>
-
-                        {/* Interactive Phone Mockup Frame */}
-                        <div className="relative mx-auto flex h-[580px] w-full max-w-[380px] flex-col overflow-hidden rounded-[36px] border-4 border-charcoal bg-white shadow-2xl">
-                            {/* Phone Speaker Notch */}
-                            <div className="absolute left-1/2 top-2 z-20 h-4 w-28 -translate-x-1/2 rounded-full bg-charcoal" />
-
-                            <iframe
-                                src={`/demo/${previewTheme.demoTier}/${previewTheme.demoCode}`}
-                                title={previewTheme.name}
-                                className="h-full w-full border-0 pt-6"
-                            />
-                        </div>
-
-                        <div className="mt-6 flex w-full items-center justify-between border-t border-neutral-100 pt-4">
-                            <button
-                                type="button"
-                                onClick={() => setPreviewTheme(null)}
-                                className="rounded-xl border border-neutral-200 px-5 py-2.5 text-xs font-semibold text-charcoal/70 hover:bg-neutral-50"
-                            >
-                                Tutup Pratinjau
-                            </button>
-                            <Link
-                                href={`/register?theme=${previewTheme.id}`}
-                                className="flex items-center gap-2 rounded-xl bg-gold-500 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-charcoal hover:bg-gold-400"
-                            >
-                                <span>Gunakan Tema Ini</span>
-                                <ArrowRight size={13} />
-                            </Link>
-                        </div>
-                    </div>
-                )}
-            </Modal>
 
             <Footer />
         </div>
