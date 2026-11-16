@@ -1,161 +1,14 @@
-import { ExternalLink, Eye, Smartphone } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { ArrowRight, ExternalLink, Eye, Smartphone, Sparkles } from 'lucide-react';
 import React, { useState } from 'react';
 import Badge from '../../components/ui/Badge';
 import Card from '../../components/ui/Card';
 import Modal from '../../components/ui/Modal';
 import TiltCard from '../../components/ui/TiltCard';
+import { LANDING_SAMPLE_THEMES, type CatalogTheme } from '../../data/themesData';
 
 export const Catalog: React.FC = () => {
-    const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
-    const [selectedThemeName, setSelectedThemeName] = useState<string>('');
-    const [selectedThemeDemoUrl, setSelectedThemeDemoUrl] = useState<string>('');
-
-    const themes = [
-        {
-            id: 'basic-1',
-            demoTier: 'b',
-            demoCode: 'tv6akl',
-            name: 'Minimalist Sage',
-            tag: 'BASIC',
-            color: 'bg-[#F2F6F3] border-[#7F9F8B]',
-            textColor: 'text-[#2D4F3E]',
-            description:
-                'Desain minimalis modern bernuansa sage green & warm sand yang bersih, menenangkan, dan elegan.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'basic-2',
-            demoTier: 'b',
-            demoCode: 'b2x8k1',
-            name: 'Terracotta Bloom',
-            tag: 'BASIC',
-            color: 'bg-[#FDF6F0] border-[#D97D54]',
-            textColor: 'text-[#8F3D24]',
-            description:
-                'Nuansa hangat terracotta dan boho sunset dengan polaroid galeri, lengkungan estetik, dan navigasi modern.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'basic-3',
-            demoTier: 'b',
-            demoCode: 'b3v7x2',
-            name: 'Dusty Rose',
-            tag: 'BASIC',
-            color: 'bg-[#FDF8F8] border-[#D48B99]',
-            textColor: 'text-[#9E4A5B]',
-            description:
-                'Nuansa romantis dusty rose & blush porcelain dengan ornamen floral mawar, countdown mewah, dan bingkai anggun.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'basic-4',
-            demoTier: 'b',
-            demoCode: 'b4k8n1',
-            name: 'Classic Ivory Noir',
-            tag: 'BASIC',
-            color: 'bg-[#FAF9F5] border-neutral-300',
-            textColor: 'text-[#18181B]',
-            description:
-                'Desain monokrom modern editorial bernuansa warm ivory dan aksen emas sampanye yang elegan & abadi.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'basic-5',
-            demoTier: 'b',
-            demoCode: 'b5w9p3',
-            name: 'Ocean Breeze',
-            tag: 'BASIC',
-            color: 'bg-[#F3F7FA] border-[#5B82A1]',
-            textColor: 'text-[#244B66]',
-            description:
-                'Nuansa sejuk dusty ocean blue & pasir pantai dengan ornamen ombak estetik dan detail keemasan anggun.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'basic-6',
-            demoTier: 'b',
-            demoCode: 'b6m4k2',
-            name: 'Olive Earth',
-            tag: 'BASIC',
-            color: 'bg-[#F7F5EE] border-[#7F9A60]',
-            textColor: 'text-[#3E4D2A]',
-            description:
-                'Nuansa hangat bumi & zaitun rustic bernuansa earthy beige, aksen kayu hangat, dan keanggunan natural.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'basic-7',
-            demoTier: 'b',
-            demoCode: 'b7p9x5',
-            name: 'Lavender Mist',
-            tag: 'BASIC',
-            color: 'bg-[#FAF7FD] border-[#BCA3E5]',
-            textColor: 'text-[#6C499C]',
-            description:
-                'Nuansa romantis dreamy lavender mist & silver lilac dengan ornamen floret anggun dan sentuhan peri dongeng.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'basic-8',
-            demoTier: 'b',
-            demoCode: 'b8s3t7',
-            name: 'Golden Sunset',
-            tag: 'BASIC',
-            color: 'bg-[#FDF8F2] border-[#E89B55]',
-            textColor: 'text-[#B85215]',
-            description:
-                'Kehangatan golden hour sunset bernuansa amber, terracotta oranye lembut, dan cahaya senja memukau.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'basic-9',
-            demoTier: 'b',
-            demoCode: 'b9e2r8',
-            name: 'Emerald Royal',
-            tag: 'BASIC',
-            color: 'bg-[#F1F7F4] border-[#0F4435]',
-            textColor: 'text-[#0F4435]',
-            description:
-                'Kemegahan royal emerald green dipadu filigree emas antik champange yang agung, klasik, dan berwibawa.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'basic-10',
-            demoTier: 'b',
-            demoCode: 'b10w7q',
-            name: 'Sakura Blossom',
-            tag: 'BASIC',
-            color: 'bg-[#FFF8F7] border-[#DE7E91]',
-            textColor: 'text-[#C26D7C]',
-            description:
-                'Ketenangan zen bernuansa pastel sakura blossom, peach blush, dan aksen charcoal slate modern yang memikat.',
-            accent: 'rustic' as const,
-        },
-        {
-            id: 'theme-1',
-            demoTier: 'p',
-            demoCode: 'emikvq',
-            name: 'Burgundy Bloom',
-            tag: 'PREMIUM',
-            color: 'bg-[#3A0511] border-[#C9A84C]',
-            textColor: 'text-[#FAF3EC]',
-            description:
-                'Desain royal burgundy mewah dengan aksen emas berkelas dan layout responsif eksklusif.',
-            accent: 'gold' as const,
-        },
-        {
-            id: 'theme-2',
-            demoTier: 'p',
-            demoCode: 't2ltgr',
-            name: 'Premium 10 Animasi',
-            tag: 'PREMIUM',
-            color: 'bg-slate-900 border-gold-400',
-            textColor: 'text-gold-200',
-            description:
-                'Template sinematik dengan 10 animasi visual memukau dan pengalaman interaktif istimewa.',
-            accent: 'gold' as const,
-        },
-    ];
+    const [selectedTheme, setSelectedTheme] = useState<CatalogTheme | null>(null);
 
     return (
         <section
@@ -171,161 +24,176 @@ export const Catalog: React.FC = () => {
             />
 
             <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
-                <div className="mb-16">
+                {/* Section Header */}
+                <div className="mb-14">
                     <span className="font-poppins text-xs font-semibold uppercase tracking-widest text-gold-600">
-                        Desain Undangan
+                        Inspirasi Desain
                     </span>
                     <h2 className="mt-2 font-display text-3xl font-bold text-charcoal sm:text-4xl md:text-5xl">
-                        Pilih Tema yang Mencerminkan Cinta Kalian
+                        Pilihan Tema Favorit Mempelai
                     </h2>
                     <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-gold-400" />
                     <p className="mx-auto mt-4 max-w-xl font-sans text-sm leading-relaxed text-charcoal/70 sm:text-base">
-                        Temukan tema pilihan terbaik yang mewakili kepribadian
-                        dan nuansa hari istimewa kalian.
+                        Berikut beberapa contoh tema populer yang memikat hati. Masing-masing dilengkapi
+                        fitur interaktif modern, musik latar, hitung mundur, dan responsif di semua perangkat.
                     </p>
                 </div>
 
+                {/* 3 Featured Sample Theme Cards */}
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                    {themes.map((theme) => (
-                        <TiltCard key={theme.id} className="h-full">
-                            <Card
-                                className="relative flex h-full flex-col items-start justify-between overflow-hidden bg-white p-6 text-left"
-                                hoverable={false}
-                            >
-                                <div className="w-full">
-                                    <div className="mb-6 flex items-center justify-between">
-                                        <Badge variant={theme.accent}>
-                                            {theme.tag}
-                                        </Badge>
-                                        <span className="font-poppins text-[10px] font-bold text-charcoal/40">
-                                            MOBILE OPTIMIZED
-                                        </span>
-                                    </div>
-
-                                    {/* Theme preview with floral bg */}
-                                    <div
-                                        className={`relative mb-6 flex aspect-[4/3] w-full select-none flex-col items-center justify-center overflow-hidden rounded-xl border p-4 ${theme.color}`}
-                                    >
-                                        <img
-                                            src="/assets/wedding/hero-floral.png"
-                                            alt=""
-                                            aria-hidden="true"
-                                            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-20"
-                                        />
-                                        <img
-                                            src="/assets/wedding/ornaments.png"
-                                            alt=""
-                                            aria-hidden="true"
-                                            className="pointer-events-none absolute right-0 top-0 w-14 opacity-30"
-                                        />
-                                        <Smartphone
-                                            className={`relative z-10 mb-2 h-8 w-8 opacity-50 ${theme.textColor}`}
-                                        />
-                                        <span
-                                            className={`relative z-10 font-sans text-sm font-semibold ${theme.textColor}`}
-                                        >
-                                            {theme.name}
-                                        </span>
-                                        <span
-                                            className={`relative z-10 mt-1 text-[9px] uppercase tracking-widest opacity-40 ${theme.textColor}`}
-                                        >
-                                            Live Template
-                                        </span>
-                                    </div>
-
-                                    <h3 className="mb-2 font-poppins text-lg font-bold text-charcoal">
-                                        {theme.name}
-                                    </h3>
-                                    <p className="mb-6 font-sans text-sm leading-relaxed text-charcoal/60">
-                                        {theme.description}
-                                    </p>
-                                </div>
-
-                                <button
-                                    onClick={() => {
-                                        setSelectedTheme(theme.id);
-                                        setSelectedThemeName(theme.name);
-                                        setSelectedThemeDemoUrl(`/demo/${theme.demoTier}/${theme.demoCode}`);
-                                    }}
-                                    className="shadow-xs inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-gold-500 py-3 font-poppins text-sm font-semibold text-gold-600 transition-all duration-300 hover:bg-gold-500 hover:text-white hover:shadow-md"
+                    {LANDING_SAMPLE_THEMES.map((theme) => {
+                        const demoUrl = `/demo/${theme.demoTier}/${theme.demoCode}`;
+                        return (
+                            <TiltCard key={theme.id} className="h-full">
+                                <Card
+                                    className="relative flex h-full flex-col items-start justify-between overflow-hidden bg-white p-6 text-left shadow-sm hover:shadow-md transition-shadow"
+                                    hoverable={false}
                                 >
-                                    <Eye size={16} />
-                                    <span>Live Preview</span>
-                                </button>
-                            </Card>
-                        </TiltCard>
-                    ))}
+                                    <div className="w-full">
+                                        <div className="mb-6 flex items-center justify-between">
+                                            <Badge variant={theme.accent}>
+                                                {theme.tag}
+                                            </Badge>
+                                            <span className="font-poppins text-[10px] font-bold text-charcoal/40">
+                                                MOBILE OPTIMIZED
+                                            </span>
+                                        </div>
+
+                                        {/* Theme preview with floral bg */}
+                                        <div
+                                            className={`relative mb-6 flex aspect-[4/3] w-full select-none flex-col items-center justify-center overflow-hidden rounded-xl border p-4 ${theme.color}`}
+                                        >
+                                            <img
+                                                src="/assets/wedding/hero-floral.png"
+                                                alt=""
+                                                aria-hidden="true"
+                                                className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-20"
+                                            />
+                                            <img
+                                                src="/assets/wedding/ornaments.png"
+                                                alt=""
+                                                aria-hidden="true"
+                                                className="pointer-events-none absolute right-0 top-0 w-14 opacity-30"
+                                            />
+                                            <Smartphone
+                                                className={`relative z-10 mb-2 h-8 w-8 opacity-50 ${theme.textColor}`}
+                                            />
+                                            <span
+                                                className={`relative z-10 font-sans text-base font-semibold ${theme.textColor}`}
+                                            >
+                                                {theme.name}
+                                            </span>
+                                            <span
+                                                className={`relative z-10 mt-1 text-[9px] uppercase tracking-widest opacity-40 ${theme.textColor}`}
+                                            >
+                                                Live Interactive
+                                            </span>
+                                        </div>
+
+                                        <h3 className="mb-2 font-poppins text-lg font-bold text-charcoal">
+                                            {theme.name}
+                                        </h3>
+                                        <p className="mb-6 font-sans text-sm leading-relaxed text-charcoal/60">
+                                            {theme.description}
+                                        </p>
+                                    </div>
+
+                                    <div className="w-full space-y-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedTheme(theme)}
+                                            className="shadow-xs inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-gold-500 py-3 font-poppins text-sm font-semibold text-gold-600 transition-all duration-300 hover:bg-gold-500 hover:text-white hover:shadow-md"
+                                        >
+                                            <Eye size={16} />
+                                            <span>Lihat Demo Interaktif</span>
+                                        </button>
+                                    </div>
+                                </Card>
+                            </TiltCard>
+                        );
+                    })}
+                </div>
+
+                {/* View Full Catalog CTA Banner */}
+                <div className="mt-14 rounded-3xl border border-gold-200/60 bg-gradient-to-r from-cream/80 via-white to-cream/80 p-8 shadow-sm sm:p-10">
+                    <div className="mx-auto flex flex-col items-center justify-between gap-6 md:flex-row md:text-left">
+                        <div className="max-w-2xl">
+                            <span className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-gold-700">
+                                <Sparkles size={13} className="text-gold-500" />
+                                10+ Pilihan Desain Tersedia
+                            </span>
+                            <h3 className="mt-2 font-serif text-2xl font-bold text-charcoal sm:text-3xl">
+                                Ingin Melihat Seluruh Koleksi Desain?
+                            </h3>
+                            <p className="mt-2 text-xs leading-relaxed text-charcoal/70 sm:text-sm">
+                                Jelajahi katalog lengkap kami dengan aneka konsep: Botanical Sage, Warm Terracotta,
+                                Romantic Dusty Rose, Editorial Ivory Noir, Ocean Breeze, Olive Earth, Lavender Mist,
+                                Golden Sunset, Royal Emerald, Sakura Blossom, hingga tema Premium &amp; Custom.
+                            </p>
+                        </div>
+                        <Link
+                            href="/katalog"
+                            className="inline-flex shrink-0 items-center gap-2.5 rounded-full bg-charcoal px-8 py-4 font-poppins text-xs font-semibold tracking-wider uppercase text-white shadow-lg hover:bg-neutral-800 hover:shadow-xl transition-all hover:scale-105 active:scale-95"
+                        >
+                            <span>Buka Katalog Lengkap</span>
+                            <ArrowRight size={15} />
+                        </Link>
+                    </div>
                 </div>
             </div>
 
+            {/* Quick Demo Preview Modal */}
             <Modal
-                isOpen={selectedTheme !== null}
+                isOpen={!!selectedTheme}
                 onClose={() => setSelectedTheme(null)}
-                title={`Live Preview: ${selectedThemeName}`}
-                size="xl"
+                title={`Pratinjau Tema: ${selectedTheme?.name || ''}`}
+                size="lg"
             >
-                <div className="flex min-h-[550px] flex-col items-center justify-center gap-8 lg:flex-row">
-                    <div className="relative aspect-[9/18] w-full max-w-[340px] shrink-0 overflow-hidden rounded-3xl border border-charcoal/80 bg-charcoal p-3 shadow-2xl">
-                        <div className="absolute left-1/2 top-2.5 z-30 flex h-4 w-20 -translate-x-1/2 items-center justify-center rounded-full bg-charcoal">
-                            <span className="h-1.5 w-1.5 rounded-full bg-gray-900" />
+                {selectedTheme && (
+                    <div className="flex flex-col items-center">
+                        <div className="mb-4 flex w-full items-center justify-between border-b border-neutral-100 pb-3 text-xs">
+                            <span className="font-mono text-charcoal/60">
+                                /demo/{selectedTheme.demoTier}/{selectedTheme.demoCode}
+                            </span>
+                            <a
+                                href={`/demo/${selectedTheme.demoTier}/${selectedTheme.demoCode}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1.5 font-semibold text-gold-600 hover:text-gold-700"
+                            >
+                                <span>Buka Tab Penuh</span>
+                                <ExternalLink size={13} />
+                            </a>
                         </div>
-                        {selectedThemeDemoUrl && (
+
+                        {/* Interactive Phone Mockup Frame */}
+                        <div className="relative mx-auto flex h-[580px] w-full max-w-[380px] flex-col overflow-hidden rounded-[36px] border-4 border-charcoal bg-white shadow-2xl">
+                            <div className="absolute left-1/2 top-2 z-20 h-4 w-28 -translate-x-1/2 rounded-full bg-charcoal" />
                             <iframe
-                                src={selectedThemeDemoUrl}
-                                className="h-full w-full overflow-hidden rounded-2xl border-0"
-                                style={{
-                                    scrollbarWidth: 'none',
-                                    msOverflowStyle: 'none',
-                                }}
-                                title={`${selectedThemeName} Preview`}
+                                src={`/demo/${selectedTheme.demoTier}/${selectedTheme.demoCode}`}
+                                title={selectedTheme.name}
+                                className="h-full w-full border-0 pt-6"
                             />
-                        )}
-                    </div>
-
-                    <div className="flex-1 text-center lg:text-left">
-                        <span className="font-poppins text-xs font-semibold uppercase tracking-widest text-gold-500">
-                            Tampilan Mobile Responsive
-                        </span>
-                        <h3 className="mb-4 mt-2 font-display text-2xl font-bold text-charcoal">
-                            Bagaimana Tamu Melihat Undanganmu
-                        </h3>
-                        <p className="mb-6 font-sans text-sm leading-relaxed text-charcoal/70 sm:text-base">
-                            Lebih dari 95% tamu undangan akan membuka link
-                            undangan digital melalui smartphone mereka. Desain
-                            tema kami dirancang khusus dan dioptimalkan secara
-                            presisi agar tampak sangat mewah dan pas di semua
-                            layar handphone.
-                        </p>
-                        <div className="flex flex-col gap-3 rounded-xl border border-sand bg-cream/50 p-4 text-left font-sans text-xs text-charcoal/80 sm:text-sm">
-                            <p>
-                                ✔️ Animasi transisi yang halus di browser
-                                handphone.
-                            </p>
-                            <p>
-                                ✔️ Pengendali musik latar yang mudah
-                                dinyalakan/dimatikan.
-                            </p>
-                            <p>
-                                ✔️ Integrasi langsung ke maps dan peta petunjuk
-                                arah lokasi.
-                            </p>
                         </div>
 
-                        {selectedThemeDemoUrl && (
-                            <div className="mt-6 flex flex-wrap gap-3">
-                                <a
-                                    href={selectedThemeDemoUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 rounded-full bg-gold-600 px-5 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-gold-700"
-                                >
-                                    <ExternalLink size={14} />
-                                    <span>Buka Demo Layar Penuh</span>
-                                </a>
-                            </div>
-                        )}
+                        <div className="mt-6 flex w-full items-center justify-between border-t border-neutral-100 pt-4">
+                            <button
+                                type="button"
+                                onClick={() => setSelectedTheme(null)}
+                                className="rounded-xl border border-neutral-200 px-5 py-2.5 text-xs font-semibold text-charcoal/70 hover:bg-neutral-50"
+                            >
+                                Tutup
+                            </button>
+                            <Link
+                                href={`/register?theme=${selectedTheme.id}`}
+                                className="flex items-center gap-2 rounded-xl bg-gold-500 px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-charcoal hover:bg-gold-400"
+                            >
+                                <span>Gunakan Tema Ini</span>
+                                <ArrowRight size={13} />
+                            </Link>
+                        </div>
                     </div>
-                </div>
+                )}
             </Modal>
         </section>
     );

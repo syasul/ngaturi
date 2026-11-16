@@ -52,7 +52,7 @@ export const Navbar: React.FC = () => {
     const navLinks = [
         { name: 'Home', href: isLanding ? '#home' : '/#home' },
         { name: 'Fitur', href: isLanding ? '#features' : '/#features' },
-        { name: 'Katalog', href: isLanding ? '#catalog' : '/#catalog' },
+        { name: 'Katalog', href: '/katalog' },
         {
             name: 'Cara Kerja',
             href: isLanding ? '#how-it-works' : '/#how-it-works',

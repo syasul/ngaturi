@@ -21,6 +21,14 @@ Route::get('/', function () {
     return Inertia::render('LandingPage');
 })->name('home');
 
+Route::get('/katalog', function () {
+    return Inertia::render('catalog/CatalogPage');
+})->name('catalog');
+
+Route::get('/catalog', function () {
+    return redirect()->route('catalog');
+});
+
 // Live Template Demo Routes: ngaturi.inxdvi.com/demo/{tier}/{code}
 Route::get('/demo/{tier}/{code}', [ThemeController::class, 'renderDemo'])->name('theme.demo');
 Route::get('/api/demo/{tier}/{code}', [ThemeController::class, 'getDemoData']);

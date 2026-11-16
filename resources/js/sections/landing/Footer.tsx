@@ -15,8 +15,8 @@ export const Footer: React.FC = () => {
         },
         {
             name: 'Katalog Desain',
-            href: isLanding ? '#catalog' : '/#catalog',
-            isHash: true,
+            href: '/katalog',
+            isHash: false,
         },
         {
             name: 'Cara Pembuatan',
