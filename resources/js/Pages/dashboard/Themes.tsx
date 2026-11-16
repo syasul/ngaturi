@@ -171,8 +171,8 @@ export const Themes: React.FC = () => {
                                       : 'border-sand hover:border-gold-500'
                             }`}
                         >
-                            {/* Theme thumbnail cover */}
-                            <div className="relative flex h-44 overflow-hidden items-center justify-center bg-sand/20 text-center">
+                            {/* Theme thumbnail cover (Phone Mockup Pas Tengah) */}
+                            <div className="relative flex h-56 sm:h-64 overflow-hidden items-center justify-center bg-gradient-to-b from-[#FAF7F2] via-[#F4EFE6] to-[#EAE3D6] p-3 text-center">
                                 {isLocked && (
                                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/20 backdrop-blur-[1px]">
                                         <div className="flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-charcoal shadow-lg">
@@ -183,11 +183,14 @@ export const Themes: React.FC = () => {
                                 )}
 
                                 {theme.thumbnailUrl ? (
-                                    <img
-                                        src={theme.thumbnailUrl}
-                                        alt={theme.name}
-                                        className="h-full w-full object-cover"
-                                    />
+                                    <div className="relative h-full aspect-[414/800] overflow-hidden rounded-[16px] border-2 border-neutral-800/85 bg-white shadow-lg transition-transform duration-300 hover:scale-105">
+                                        <div className="absolute left-1/2 top-1 z-10 h-1 w-6 -translate-x-1/2 rounded-full bg-neutral-800/50" />
+                                        <img
+                                            src={theme.thumbnailUrl}
+                                            alt={theme.name}
+                                            className="h-full w-full object-cover object-top"
+                                        />
+                                    </div>
                                 ) : (
                                     <div className="flex flex-col items-center justify-center p-4">
                                         <Palette

@@ -467,30 +467,35 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                                     return (
                                         <div
                                             key={theme.id}
-                                            className={`flex flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all ${
+                                            className={`group flex flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all ${
                                                 isLocked
                                                     ? 'opacity-75'
                                                     : 'hover:border-gold-500 hover:shadow-md'
                                             }`}
                                         >
-                                            <div className="relative flex h-48 sm:h-52 items-center justify-center overflow-hidden bg-gradient-to-b from-sand/30 to-sand/10">
+                                            <div className="relative flex h-56 sm:h-64 items-center justify-center overflow-hidden bg-gradient-to-b from-[#FAF7F2] via-[#F4EFE6] to-[#EAE3D6] p-3">
                                                 {isLocked && (
-                                                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/30 backdrop-blur-[2px]">
+                                                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-charcoal/30 backdrop-blur-[2px]">
                                                         <div className="flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-charcoal shadow-md">
                                                             <Lock size={13} className="text-gold-600" />
                                                             <span>{theme.packageLevel || 'Premium'} Lock</span>
                                                         </div>
                                                     </div>
                                                 )}
-                                                <img
-                                                    src={screenshotUrl}
-                                                    alt={theme.name}
-                                                    onError={(e) => {
-                                                        // Fallback if screenshot asset missing
-                                                        (e.target as HTMLImageElement).src = '/assets/wedding/hero-floral.png';
-                                                    }}
-                                                    className="h-full w-full object-cover object-top transition-transform duration-300 hover:scale-105"
-                                                />
+                                                
+                                                {/* Phone Mockup Frame Pas Tengah */}
+                                                <div className="relative h-full aspect-[414/800] overflow-hidden rounded-[16px] border-2 border-neutral-800/85 bg-white shadow-lg transition-transform duration-300 group-hover:scale-105">
+                                                    <div className="absolute left-1/2 top-1 z-10 h-1 w-6 -translate-x-1/2 rounded-full bg-neutral-800/50" />
+                                                    <img
+                                                        src={screenshotUrl}
+                                                        alt={theme.name}
+                                                        onError={(e) => {
+                                                            // Fallback if screenshot asset missing
+                                                            (e.target as HTMLImageElement).src = '/assets/wedding/hero-floral.png';
+                                                        }}
+                                                        className="h-full w-full object-cover object-top"
+                                                    />
+                                                </div>
                                             </div>
                                             <div className="flex flex-1 flex-col justify-between p-3">
                                                 <div>
