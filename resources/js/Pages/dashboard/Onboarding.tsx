@@ -509,12 +509,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                                                         {theme.packageLevel}
                                                     </span>
                                                 </div>
-                                                <div className="mt-3.5 grid grid-cols-2 gap-2">
+                                                <div className="mt-3.5 flex flex-col gap-2">
                                                     <a
                                                         href={demoUrl}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-gold-500/40 bg-white px-2 text-xs font-semibold text-gold-700 shadow-2xs transition-all hover:bg-gold-500/10 active:scale-95"
+                                                        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-gold-500/40 bg-white px-3 text-xs font-semibold text-gold-700 shadow-2xs transition-all hover:bg-gold-500/10 active:scale-95"
                                                         title="Buka Pratinjau Tema di Tab Baru"
                                                     >
                                                         <Eye size={13} className="shrink-0" />
@@ -524,7 +524,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                                                         type="button"
                                                         disabled={isLocked || loading}
                                                         onClick={() => handleSelectTheme(theme)}
-                                                        className={`flex h-9 w-full items-center justify-center rounded-xl border px-2 text-xs font-bold transition-all ${
+                                                        className={`flex h-9 w-full items-center justify-center rounded-xl border px-3 text-xs font-bold transition-all ${
                                                             isLocked
                                                                 ? 'cursor-not-allowed border-sand/40 bg-sand/30 text-charcoal/40'
                                                                 : 'cursor-pointer border-transparent bg-gold-500 text-white shadow-xs hover:bg-gold-600 active:scale-95'
