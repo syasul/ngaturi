@@ -161,7 +161,7 @@ export const Overview = () => {
           )
         : 'Belum diisi';
 
-    const previewUrl = `${window.location.origin}/u/${wedding?.slug}`;
+    const previewUrl = `${window.location.origin}/u/${wedding?.slug}?preview=true`;
 
     // Preparation checklist
     const checklist = [

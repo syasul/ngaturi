@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { Clock, Heart } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -8,11 +8,24 @@ import MusicPlayer from '../../themes/reusable/MusicPlayer';
 
 interface InvitationPublicProps {
     slug?: string;
+    isPreview?: boolean;
 }
 
 export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     slug: propSlug,
+    isPreview: propIsPreview,
 }) => {
+    const pageProps = usePage?.().props as any;
+    const isPreview =
+        Boolean(propIsPreview) ||
+        Boolean(pageProps?.isPreview) ||
+        (typeof window !== 'undefined' &&
+            (new URLSearchParams(window.location.search).get('preview') ===
+                'true' ||
+                window.location.pathname.endsWith('/preview')));
+
+    const currentUser = pageProps?.auth?.user;
+
     const slug =
         propSlug ||
         (typeof window !== 'undefined'
@@ -194,8 +207,17 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
         );
     }
 
-    // Handle 404: Not Found or Unpublished/Draft state
-    if (!wedding || wedding.status !== 'published') {
+    const isOwner = Boolean(
+        wedding?.isOwner ||
+        (currentUser && wedding && (
+            currentUser.id === wedding.user_id ||
+            currentUser.id === wedding.userId ||
+            currentUser.role === 'ADMIN'
+        ))
+    );
+
+    // Handle 404: Not Found or Unpublished/Draft state (allow if owner or in preview mode)
+    if (!wedding || (wedding.status !== 'published' && !isPreview && !isOwner)) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center bg-[#FAF7F2] p-6 text-center font-sans">
                 <Head title="Undangan Tidak Aktif" />
@@ -269,6 +291,21 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
     return (
         <div className="relative min-h-screen w-full overflow-x-hidden" style={{ colorScheme: 'only light' }}>
             <Head title={pageTitle} />
+
+            {/* Preview Banner for Draft Wedding */}
+            {wedding.status !== 'published' && (
+                <div className="sticky top-0 z-50 flex items-center justify-center bg-amber-600/95 px-4 py-2 text-xs font-medium text-white shadow-md backdrop-blur-sm">
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                        <span className="rounded bg-black/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                            Mode Pratinjau
+                        </span>
+                        <span>
+                            Undangan berstatus <strong>Draf</strong> (hanya Anda yang dapat melihatnya). Publikasikan di menu <strong>Pengaturan</strong> agar dapat diakses publik.
+                        </span>
+                    </div>
+                </div>
+            )}
+
             {/* Autoplay Music Player */}
             {wedding.data?.musicUrl && (
                 <MusicPlayer

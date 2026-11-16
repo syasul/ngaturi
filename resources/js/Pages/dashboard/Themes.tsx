@@ -81,7 +81,7 @@ export const Themes: React.FC = () => {
 
     const userPkg = wedding?.package?.packageName || 'BASIC';
     const userTierRank = TIER_LEVELS[userPkg?.toUpperCase() || 'BASIC'] || 1;
-    const previewUrl = `${window.location.origin}/u/${wedding?.slug}`;
+    const previewUrl = `${window.location.origin}/u/${wedding?.slug}?preview=true`;
 
     return (
         <div className="space-y-6 font-sans">

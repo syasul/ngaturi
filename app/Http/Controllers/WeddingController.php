@@ -17,14 +17,16 @@ class WeddingController extends Controller
     public function renderPublicInvitation($slug)
     {
         return Inertia::render('public/InvitationPublic', [
-            'slug' => $slug
+            'slug' => $slug,
+            'isPreview' => request()->query('preview') === 'true',
         ]);
     }
 
     public function renderPublicPreview($slug)
     {
         return Inertia::render('public/InvitationPublic', [
-            'slug' => $slug
+            'slug' => $slug,
+            'isPreview' => true,
         ]);
     }
 
@@ -45,12 +47,15 @@ class WeddingController extends Controller
                 ->orderBy('order')
                 ->get();
 
+            $isOwner = Auth::check() && (Auth::id() === $wedding->user_id || Auth::user()->role === 'ADMIN');
+
             return response()->json([
                 'status' => 'success',
                 'wedding' => array_merge($wedding->toArray(), [
                     'themeName' => $wedding->theme ? $wedding->theme->name : null,
                     'themeId' => $wedding->theme_id,
-                    'photos' => $photos
+                    'photos' => $photos,
+                    'isOwner' => $isOwner,
                 ])
             ]);
         } catch (\Exception $e) {
@@ -84,6 +89,30 @@ class WeddingController extends Controller
 
             if (!$wedding) {
                 return response()->json(['status' => 'success', 'wedding' => null]);
+            }
+
+            // Auto-heal any slug that contains 'undefined'
+            if (str_contains($wedding->slug, 'undefined')) {
+                $baseName = '';
+                $wData = is_array($wedding->data) ? $wedding->data : [];
+                if (!empty($wData['groom']['nickname']) && !empty($wData['bride']['nickname'])) {
+                    $baseName = Str::slug($wData['groom']['nickname'] . '-' . $wData['bride']['nickname']);
+                } elseif (!empty($wData['groom']['name']) && !empty($wData['bride']['name'])) {
+                    $baseName = Str::slug($wData['groom']['name'] . '-' . $wData['bride']['name']);
+                } elseif (!empty($user->name)) {
+                    $baseName = Str::slug($user->name);
+                } else {
+                    $baseName = Str::slug(explode('@', $user->email)[0]);
+                }
+                if (empty($baseName)) {
+                    $baseName = 'undangan';
+                }
+                $newSlug = $baseName . '-' . rand(100, 999);
+                while (Wedding::where('slug', $newSlug)->where('id', '!=', $wedding->id)->exists()) {
+                    $newSlug = $baseName . '-' . rand(100, 999);
+                }
+                $wedding->slug = $newSlug;
+                $wedding->save();
             }
 
             // Load user package details from latest paid order
@@ -205,6 +234,29 @@ class WeddingController extends Controller
             $wedding->update([
                 'data' => $data,
             ]);
+
+            // Auto-heal slug if it contains 'undefined' when saving wedding data
+            if (str_contains($wedding->slug, 'undefined')) {
+                $baseName = '';
+                if (!empty($data['groom']['nickname']) && !empty($data['bride']['nickname'])) {
+                    $baseName = Str::slug($data['groom']['nickname'] . '-' . $data['bride']['nickname']);
+                } elseif (!empty($data['groom']['name']) && !empty($data['bride']['name'])) {
+                    $baseName = Str::slug($data['groom']['name'] . '-' . $data['bride']['name']);
+                } elseif (!empty($user->name)) {
+                    $baseName = Str::slug($user->name);
+                } else {
+                    $baseName = Str::slug(explode('@', $user->email)[0]);
+                }
+                if (empty($baseName)) {
+                    $baseName = 'undangan';
+                }
+                $newSlug = $baseName . '-' . rand(100, 999);
+                while (Wedding::where('slug', $newSlug)->where('id', '!=', $wedding->id)->exists()) {
+                    $newSlug = $baseName . '-' . rand(100, 999);
+                }
+                $wedding->slug = $newSlug;
+                $wedding->save();
+            }
 
             return response()->json([
                 'status' => 'success',

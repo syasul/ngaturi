@@ -465,6 +465,9 @@ export const WeddingData: React.FC = () => {
                 isDirtyRef.current = false;
                 const now = new Date().toLocaleTimeString('id-ID');
                 setLastSaved(now);
+                if (res.data.wedding) {
+                    setWedding((prev: any) => ({ ...prev, ...res.data.wedding }));
+                }
                 if (showToast) {
                     toast.success('Perubahan data berhasil disimpan!');
                 }
@@ -517,8 +520,13 @@ export const WeddingData: React.FC = () => {
 
     const handlePreview = async () => {
         await handleSave(false);
-        const previewUrl = `${window.location.origin}/u/${wedding?.slug}`;
-        window.open(previewUrl, '_blank');
+        const slug = wedding?.slug;
+        if (slug) {
+            const previewUrl = `${window.location.origin}/u/${slug}?preview=true`;
+            window.open(previewUrl, '_blank');
+        } else {
+            toast.error('Data undangan belum dimuat.');
+        }
     };
 
     if (loading) {

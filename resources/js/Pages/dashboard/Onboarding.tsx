@@ -167,7 +167,18 @@ export const Onboarding: React.FC<OnboardingProps> = ({
         setLoading(true);
         try {
             // Auto-generate slug
-            const nameSlug = `${user?.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Math.floor(
+            const authUser = user || pageProps?.auth?.user;
+            const rawName =
+                authUser?.name ||
+                authUser?.email?.split('@')[0] ||
+                'undangan';
+            const cleanName =
+                rawName
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-|-$/g, '') || 'undangan';
+            const nameSlug = `${cleanName}-${Math.floor(
                 Math.random() * 900 + 100,
             )}`;
 
@@ -723,14 +734,21 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                             <Button
                                 variant="primary"
                                 className="mt-6 w-full"
-                                onClick={() => {
+                                onClick={async () => {
+                                    try {
+                                        await api.put('/weddings/me/status', {
+                                            status: 'published',
+                                        });
+                                    } catch (e) {
+                                        console.error('Auto-publish error:', e);
+                                    }
                                     toast.success(
-                                        'Selamat! Onboarding selesai.',
+                                        'Selamat! Undangan digital Anda telah aktif.',
                                     );
                                     navigate('/dashboard');
                                 }}
                             >
-                                Selesaikan & Buka Dasboard
+                                Selesaikan & Buka Dashboard
                             </Button>
                         </div>
                     )}
