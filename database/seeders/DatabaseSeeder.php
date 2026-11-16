@@ -70,10 +70,10 @@ class DatabaseSeeder extends Seeder
             ['id' => 'royal-yogyakarta', 'name' => 'Royal Yogyakarta', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM', 'code' => 'mowx32'],
             ['id' => 'botanical-minimal', 'name' => 'Botanical Minimal', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'BASIC', 'code' => 'bzuqtb'],
             ['id' => 'editorial-mono', 'name' => 'Editorial Mono', 'thumbnail_url' => null, 'is_active' => false, 'package_level' => 'PREMIUM', 'code' => '94shhu'],
-            ['id' => 'theme-1', 'name' => 'Burgundy Bloom', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM', 'code' => 'emikvq'],
-            ['id' => 'custom-theme-1', 'name' => 'Custom Theme 1', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'CUSTOM', 'code' => 'rgudhs'],
-            ['id' => 'theme-2', 'name' => 'Premium 10 Animasi', 'thumbnail_url' => null, 'is_active' => true, 'package_level' => 'PREMIUM', 'code' => 't2ltgr'],
-            ['id' => 'theme-3', 'name' => 'Burgundy Bloom V2', 'thumbnail_url' => '/assets/theme_1/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'PREMIUM', 'code' => 'w616j1'],
+            ['id' => 'theme-1', 'name' => 'Burgundy Bloom', 'thumbnail_url' => '/assets/wedding/burgundy-envelope-closed.png', 'is_active' => true, 'package_level' => 'PREMIUM', 'code' => 'emikvq'],
+            ['id' => 'custom-theme-1', 'name' => 'Custom Theme 1', 'thumbnail_url' => '/assets/wedding/hero-floral.png', 'is_active' => false, 'package_level' => 'CUSTOM', 'code' => 'rgudhs'],
+            ['id' => 'theme-2', 'name' => 'Premium 10 Animasi', 'thumbnail_url' => '/assets/wedding/couple-royal.png', 'is_active' => true, 'package_level' => 'PREMIUM', 'code' => 't2ltgr'],
+            ['id' => 'theme-3', 'name' => 'Burgundy Bloom V2', 'thumbnail_url' => '/assets/wedding/burgundy-envelope-closed.png', 'is_active' => false, 'package_level' => 'PREMIUM', 'code' => 'w616j1'],
         ];
 
         Theme::upsert($themesSeed, ['id'], ['name', 'thumbnail_url', 'is_active', 'package_level', 'code']);

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { usePage } from '@inertiajs/react';
 import { toast } from 'sonner';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -25,11 +26,27 @@ const TIER_LEVELS: Record<string, number> = {
     CUSTOM: 3,
 };
 
-export const Onboarding: React.FC = () => {
+interface OnboardingProps {
+    initialStep?: number;
+    initialPackage?: string;
+}
+
+export const Onboarding: React.FC<OnboardingProps> = ({
+    initialStep,
+    initialPackage,
+}) => {
+    const pageProps = usePage?.().props as any;
+    const resolvedInitialStep =
+        initialStep || pageProps?.initialStep || 1;
+    const resolvedInitialPackage =
+        (initialPackage && initialPackage !== 'NONE'
+            ? initialPackage
+            : pageProps?.initialPackage) || 'NONE';
+
     const navigate = useNavigate();
     const { user } = useAuthStore();
 
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState<number>(resolvedInitialStep);
     const [packages, setPackages] = useState<any[]>([]);
     const [themes, setThemes] = useState<any[]>([]);
 
@@ -50,8 +67,9 @@ export const Onboarding: React.FC = () => {
 
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [activePackageLevel, setActivePackageLevel] =
-        useState<string>('NONE');
+    const [activePackageLevel, setActivePackageLevel] = useState<string>(
+        resolvedInitialPackage,
+    );
     const [paymentMethod, setPaymentMethod] = useState('QRIS');
     const [pendingOrder, setPendingOrder] = useState<any>(null);
 
@@ -277,7 +295,7 @@ export const Onboarding: React.FC = () => {
 
                 {/* Progress bar */}
                 <div className="relative mt-8 flex items-center justify-between px-8">
-                    <div className="absolute left-0 right-0 top-1/2 z-0 h-0.5 -translate-y-1/2 bg-sand/60" />
+                    <div className="absolute left-12 right-12 top-5 z-0 h-0.5 -translate-y-1/2 bg-sand/60" />
                     {stepsInfo.map((s) => {
                         const Icon = s.icon;
                         const isCompleted = step > s.number;
@@ -439,29 +457,32 @@ export const Onboarding: React.FC = () => {
                                             key={theme.id}
                                             className={`flex flex-col overflow-hidden rounded-2xl border bg-white shadow-sm transition-all ${
                                                 isLocked
-                                                    ? 'opacity-70'
+                                                    ? 'opacity-75'
                                                     : 'hover:border-gold-500 hover:shadow-md'
                                             }`}
                                         >
-                                            <div className="relative flex h-28 items-center justify-center overflow-hidden bg-sand/30">
-                                                {isLocked ? (
-                                                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/20">
-                                                        <div className="flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-charcoal shadow">
-                                                            <Lock size={14} className="text-gold-600" />
-                                                            <span className="text-[10px]">{theme.packageLevel || 'Premium'} Lock</span>
+                                            <div className="relative flex h-36 sm:h-40 items-center justify-center overflow-hidden bg-gradient-to-b from-sand/30 to-sand/10">
+                                                {isLocked && (
+                                                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/30 backdrop-blur-[2px]">
+                                                        <div className="flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-charcoal shadow-md">
+                                                            <Lock size={13} className="text-gold-600" />
+                                                            <span>{theme.packageLevel || 'Premium'} Lock</span>
                                                         </div>
                                                     </div>
-                                                ) : null}
+                                                )}
                                                 {theme.thumbnailUrl ? (
                                                     <img
                                                         src={theme.thumbnailUrl}
                                                         alt={theme.name}
-                                                        className="h-full w-full object-cover"
+                                                        className="h-full w-full object-cover object-top transition-transform duration-300 hover:scale-105"
                                                     />
                                                 ) : (
-                                                    <span className="font-sans font-semibold text-gold-700">
-                                                        {theme.name}
-                                                    </span>
+                                                    <div className="flex flex-col items-center justify-center p-3 text-center">
+                                                        <Palette className="mb-1 text-gold-600/50" size={24} />
+                                                        <span className="font-sans text-xs font-bold text-charcoal/70">
+                                                            {theme.name}
+                                                        </span>
+                                                    </div>
                                                 )}
                                             </div>
                                             <div className="flex flex-1 flex-col justify-between p-3">
@@ -473,37 +494,31 @@ export const Onboarding: React.FC = () => {
                                                         {theme.packageLevel}
                                                     </span>
                                                 </div>
-                                                <div className="mt-3 flex gap-2">
+                                                <div className="mt-3 flex items-center gap-1.5">
                                                     <button
                                                         type="button"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             setPreviewTheme(theme);
                                                         }}
-                                                        className="inline-flex items-center justify-center gap-1 rounded-xl border border-gold-500/40 bg-white px-3 py-1.5 text-xs font-semibold text-gold-700 shadow-2xs hover:bg-gold-500/10 transition"
-                                                        title="Pratinjau Desain"
+                                                        className="inline-flex shrink-0 items-center justify-center gap-1 rounded-xl border border-gold-500/40 bg-white px-2.5 py-2 text-xs font-semibold text-gold-700 shadow-2xs transition-all hover:bg-gold-500/10 active:scale-95"
+                                                        title="Pratinjau Tema"
                                                     >
-                                                        <Eye size={13} />
+                                                        <Eye size={12} className="shrink-0" />
                                                         <span>Preview</span>
                                                     </button>
-                                                    <Button
-                                                        variant={
+                                                    <button
+                                                        type="button"
+                                                        disabled={isLocked || loading}
+                                                        onClick={() => handleSelectTheme(theme)}
+                                                        className={`flex flex-1 items-center justify-center rounded-xl py-2 px-2 text-xs font-bold transition-all ${
                                                             isLocked
-                                                                ? 'ghost'
-                                                                : 'primary'
-                                                        }
-                                                        disabled={
-                                                            isLocked || loading
-                                                        }
-                                                        className="flex-1 py-1.5 text-xs"
-                                                        onClick={() =>
-                                                            handleSelectTheme(theme)
-                                                        }
+                                                                ? 'cursor-not-allowed border border-sand/40 bg-sand/30 text-charcoal/40'
+                                                                : 'cursor-pointer bg-gold-500 text-white shadow-xs hover:bg-gold-600 active:scale-95'
+                                                        }`}
                                                     >
-                                                        {isLocked
-                                                            ? 'Terkunci'
-                                                            : 'Gunakan'}
-                                                    </Button>
+                                                        {isLocked ? 'Terkunci' : 'Gunakan'}
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>

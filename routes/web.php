@@ -77,11 +77,41 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Page Routes
     Route::get('/dashboard', function () {
+        $user = Auth::user();
+        $wedding = \App\Models\Wedding::where('user_id', $user->id)->first();
+        if (!$wedding) {
+            $latestPaidOrder = \App\Models\Order::with('package')
+                ->where('user_id', $user->id)
+                ->where('status', 'PAID')
+                ->latest()
+                ->first();
+
+            $initialPackage = $latestPaidOrder && $latestPaidOrder->package ? $latestPaidOrder->package->name : 'NONE';
+            $initialStep = $latestPaidOrder ? 2 : 1;
+
+            return Inertia::render('dashboard/Onboarding', [
+                'initialStep' => $initialStep,
+                'initialPackage' => $initialPackage,
+            ]);
+        }
         return Inertia::render('dashboard/Overview');
     })->name('dashboard');
 
     Route::get('/dashboard/onboarding', function () {
-        return Inertia::render('dashboard/Onboarding');
+        $user = Auth::user();
+        $latestPaidOrder = \App\Models\Order::with('package')
+            ->where('user_id', $user->id)
+            ->where('status', 'PAID')
+            ->latest()
+            ->first();
+
+        $initialPackage = $latestPaidOrder && $latestPaidOrder->package ? $latestPaidOrder->package->name : 'NONE';
+        $initialStep = $latestPaidOrder ? 2 : 1;
+
+        return Inertia::render('dashboard/Onboarding', [
+            'initialStep' => $initialStep,
+            'initialPackage' => $initialPackage,
+        ]);
     });
 
     Route::get('/dashboard/wedding-data', function () {
