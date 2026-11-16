@@ -66,6 +66,16 @@ export const WeddingData: React.FC = () => {
     const [saving, setSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState<string | null>(null);
 
+    const userPkg = wedding?.package?.packageName || 'BASIC';
+    const currentThemeId = wedding?.themeId || wedding?.theme_id || '';
+    const isBasic = userPkg.toUpperCase() === 'BASIC' || currentThemeId.startsWith('basic');
+
+    useEffect(() => {
+        if (isBasic && (activeTab === 'timeline' || activeTab === 'dresscode' || activeTab === 'streaming')) {
+            setActiveTab('couple');
+        }
+    }, [isBasic, activeTab]);
+
     // States for enhanced music selection
     const [libraryMusic, setLibraryMusic] = useState<any[]>([]);
     const [previewPlayingUrl, setPreviewPlayingUrl] = useState<string | null>(null);
@@ -571,21 +581,23 @@ export const WeddingData: React.FC = () => {
         );
     }
 
-    const tabs: { id: TabType; name: string; icon: any }[] = [
+    const allTabs: { id: TabType; name: string; icon: any; isPremium?: boolean }[] = [
         { id: 'couple', name: 'Foto Sampul (Kedua Mempelai)', icon: ImageIcon },
         { id: 'groom', name: 'Mempelai Pria', icon: User },
         { id: 'bride', name: 'Mempelai Wanita', icon: User },
         { id: 'akad', name: 'Akad Nikah', icon: Calendar },
         { id: 'resepsi', name: 'Resepsi', icon: MapPin },
         { id: 'stories', name: 'Love Story', icon: BookOpen },
-        { id: 'timeline', name: 'Timeline Rundown', icon: Clock },
-        { id: 'dresscode', name: 'Dresscode', icon: Shirt },
-        { id: 'streaming', name: 'Live Streaming', icon: Video },
+        { id: 'timeline', name: 'Timeline Rundown', icon: Clock, isPremium: true },
+        { id: 'dresscode', name: 'Dresscode', icon: Shirt, isPremium: true },
+        { id: 'streaming', name: 'Live Streaming', icon: Video, isPremium: true },
         { id: 'quotes', name: 'Quotes', icon: Quote },
         { id: 'styling', name: 'Desain & Warna', icon: Palette },
         { id: 'sections', name: 'Kelola Section', icon: Sliders },
         { id: 'gifts', name: 'Kado & Rekening', icon: CreditCard },
     ];
+
+    const tabs = isBasic ? allTabs.filter((t) => !t.isPremium) : allTabs;
 
     return (
         <div className="space-y-6 font-sans">
@@ -1352,7 +1364,7 @@ export const WeddingData: React.FC = () => {
                     )}
 
                     {/* TAB timeline: TIMELINE */}
-                    {activeTab === 'timeline' && (
+                    {activeTab === 'timeline' && !isBasic && (
                         <div className="space-y-6">
                             <div className="flex items-center justify-between border-b border-sand/20 pb-2">
                                 <h4 className="font-sans text-lg font-bold text-charcoal">
@@ -1472,7 +1484,7 @@ export const WeddingData: React.FC = () => {
                     )}
 
                     {/* TAB dresscode: DRESSCODE */}
-                    {activeTab === 'dresscode' && (
+                    {activeTab === 'dresscode' && !isBasic && (
                         <div className="space-y-6">
                             <div className="flex items-center justify-between border-b border-sand/20 pb-2">
                                 <h4 className="font-sans text-lg font-bold text-charcoal">
@@ -1560,7 +1572,7 @@ export const WeddingData: React.FC = () => {
                     )}
 
                     {/* TAB streaming: LIVE STREAMING */}
-                    {activeTab === 'streaming' && (
+                    {activeTab === 'streaming' && !isBasic && (
                         <div className="space-y-6">
                             <div className="flex items-center justify-between border-b border-sand/20 pb-2">
                                 <h4 className="font-sans text-lg font-bold text-charcoal">
@@ -2363,16 +2375,20 @@ export const WeddingData: React.FC = () => {
                                         title: 'Buku Tamu (Ucapan & Doa)',
                                         desc: 'Menampilkan daftar ucapan selamat dan doa dari tamu undangan.',
                                     },
-                                    {
-                                        key: 'showDresscode',
-                                        title: 'Dresscode',
-                                        desc: 'Menampilkan bagian dresscode pakaian & swatch palet warna untuk para tamu.',
-                                    },
-                                    {
-                                        key: 'showStreaming',
-                                        title: 'Live Streaming',
-                                        desc: 'Menampilkan bagian siaran langsung (live streaming) virtual untuk para tamu.',
-                                    },
+                                    ...(!isBasic
+                                        ? [
+                                              {
+                                                  key: 'showDresscode',
+                                                  title: 'Dresscode',
+                                                  desc: 'Menampilkan bagian dresscode pakaian & swatch palet warna untuk para tamu.',
+                                              },
+                                              {
+                                                  key: 'showStreaming',
+                                                  title: 'Live Streaming',
+                                                  desc: 'Menampilkan bagian siaran langsung (live streaming) virtual untuk para tamu.',
+                                              },
+                                          ]
+                                        : []),
                                 ].map((item) => (
                                     <div
                                         key={item.key}
