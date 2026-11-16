@@ -119,6 +119,16 @@ class ThemeController extends Controller
             'b8s3t7' => 'basic-8',
             'b9e2r8' => 'basic-9',
             'b10w7q' => 'basic-10',
+            'b11n9x' => 'basic-11',
+            'b12c4v' => 'basic-12',
+            'b13r8m' => 'basic-13',
+            'b14p7k' => 'basic-14',
+            'b15e2w' => 'basic-15',
+            'b16a5z' => 'basic-16',
+            'b17l3d' => 'basic-17',
+            'b18d6s' => 'basic-18',
+            'b19c8p' => 'basic-19',
+            'b20o1r' => 'basic-20',
             'emikvq' => 'theme-1',
             't2ltgr' => 'theme-2',
             'rgudhs' => 'custom-theme-1',
@@ -431,6 +441,51 @@ class ThemeController extends Controller
                 $theme->thumbnail_url = '/assets/wedding/hero-floral.png';
                 $theme->is_active = true;
                 $theme->package_level = 'BASIC';
+            }
+        }
+
+        // 14. Auto-healing for basic-11 to basic-20
+        $extraBasics = [
+            'basic-11' => ['name' => 'Midnight Navy', 'code' => 'b11n9x', 'thumb' => '/assets/wedding/couple-royal.png'],
+            'basic-12' => ['name' => 'Champagne Luxe', 'code' => 'b12c4v', 'thumb' => '/assets/wedding/couple-royal.png'],
+            'basic-13' => ['name' => 'Crimson Velvet', 'code' => 'b13r8m', 'thumb' => '/assets/wedding/hero-floral.png'],
+            'basic-14' => ['name' => 'Nordic Pine', 'code' => 'b14p7k', 'thumb' => '/assets/wedding/couple-foliage.png'],
+            'basic-15' => ['name' => 'Ethereal Sky', 'code' => 'b15e2w', 'thumb' => '/assets/wedding/couple-foliage.png'],
+            'basic-16' => ['name' => 'Warm Amber', 'code' => 'b16a5z', 'thumb' => '/assets/wedding/couple-rustic.png'],
+            'basic-17' => ['name' => 'Lilac Dream', 'code' => 'b17l3d', 'thumb' => '/assets/wedding/hero-floral.png'],
+            'basic-18' => ['name' => 'Desert Sand', 'code' => 'b18d6s', 'thumb' => '/assets/wedding/couple-rustic.png'],
+            'basic-19' => ['name' => 'Peachy Coral', 'code' => 'b19c8p', 'thumb' => '/assets/wedding/hero-floral.png'],
+            'basic-20' => ['name' => 'Pearl Opal', 'code' => 'b20o1r', 'thumb' => '/assets/wedding/couple-royal.png'],
+        ];
+
+        foreach ($extraBasics as $bId => $bInfo) {
+            $num = str_replace('basic-', '', $bId);
+            if (!$theme && in_array($cleanCode, [$bInfo['code'], $bId, 'basic' . $num, 'b-' . $num])) {
+                try {
+                    $theme = Theme::firstOrCreate(
+                        ['id' => $bId],
+                        [
+                            'name' => $bInfo['name'],
+                            'code' => $bInfo['code'],
+                            'thumbnail_url' => $bInfo['thumb'],
+                            'is_active' => true,
+                            'package_level' => 'BASIC',
+                        ]
+                    );
+                    if (empty($theme->code)) {
+                        $theme->code = $bInfo['code'];
+                        $theme->save();
+                    }
+                } catch (\Throwable $e) {
+                    $theme = new Theme();
+                    $theme->id = $bId;
+                    $theme->name = $bInfo['name'];
+                    $theme->code = $bInfo['code'];
+                    $theme->thumbnail_url = $bInfo['thumb'];
+                    $theme->is_active = true;
+                    $theme->package_level = 'BASIC';
+                }
+                break;
             }
         }
 

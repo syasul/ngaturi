@@ -22,6 +22,16 @@ import BasicTheme7 from './basic-7/BasicTheme7';
 import BasicTheme8 from './basic-8/BasicTheme8';
 import BasicTheme9 from './basic-9/BasicTheme9';
 import BasicTheme10 from './basic-10/BasicTheme10';
+import BasicTheme11 from './basic-11/BasicTheme11';
+import BasicTheme12 from './basic-12/BasicTheme12';
+import BasicTheme13 from './basic-13/BasicTheme13';
+import BasicTheme14 from './basic-14/BasicTheme14';
+import BasicTheme15 from './basic-15/BasicTheme15';
+import BasicTheme16 from './basic-16/BasicTheme16';
+import BasicTheme17 from './basic-17/BasicTheme17';
+import BasicTheme18 from './basic-18/BasicTheme18';
+import BasicTheme19 from './basic-19/BasicTheme19';
+import BasicTheme20 from './basic-20/BasicTheme20';
 
 const Theme2 = React.lazy(() => import('./theme-2/Theme2'));
 const Theme3 = React.lazy(() => import('./theme-3/Theme3'));
@@ -64,6 +74,166 @@ export const ThemeRouter: React.FC<ThemeRouterProps> = ({
             !normalizedId.includes('basic'));
 
     const renderTheme = () => {
+        if (
+            normalizedId.includes('basic-20') ||
+            normalizedId.includes('basic_20') ||
+            normalizedId.includes('basic20')
+        ) {
+            return (
+                <BasicTheme20
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
+        if (
+            normalizedId.includes('basic-19') ||
+            normalizedId.includes('basic_19') ||
+            normalizedId.includes('basic19')
+        ) {
+            return (
+                <BasicTheme19
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
+        if (
+            normalizedId.includes('basic-18') ||
+            normalizedId.includes('basic_18') ||
+            normalizedId.includes('basic18')
+        ) {
+            return (
+                <BasicTheme18
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
+        if (
+            normalizedId.includes('basic-17') ||
+            normalizedId.includes('basic_17') ||
+            normalizedId.includes('basic17')
+        ) {
+            return (
+                <BasicTheme17
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
+        if (
+            normalizedId.includes('basic-16') ||
+            normalizedId.includes('basic_16') ||
+            normalizedId.includes('basic16')
+        ) {
+            return (
+                <BasicTheme16
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
+        if (
+            normalizedId.includes('basic-15') ||
+            normalizedId.includes('basic_15') ||
+            normalizedId.includes('basic15')
+        ) {
+            return (
+                <BasicTheme15
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
+        if (
+            normalizedId.includes('basic-14') ||
+            normalizedId.includes('basic_14') ||
+            normalizedId.includes('basic14')
+        ) {
+            return (
+                <BasicTheme14
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
+        if (
+            normalizedId.includes('basic-13') ||
+            normalizedId.includes('basic_13') ||
+            normalizedId.includes('basic13')
+        ) {
+            return (
+                <BasicTheme13
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
+        if (
+            normalizedId.includes('basic-12') ||
+            normalizedId.includes('basic_12') ||
+            normalizedId.includes('basic12')
+        ) {
+            return (
+                <BasicTheme12
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
+        if (
+            normalizedId.includes('basic-11') ||
+            normalizedId.includes('basic_11') ||
+            normalizedId.includes('basic11')
+        ) {
+            return (
+                <BasicTheme11
+                    {...props}
+                    isOpened={isOpened}
+                    onOpen={onOpen}
+                    isPlayingMusic={isPlayingMusic}
+                    setIsPlayingMusic={setIsPlayingMusic}
+                />
+            );
+        }
+
         if (
             normalizedId.includes('basic-10') ||
             normalizedId.includes('basic_10') ||
