@@ -14,6 +14,9 @@ import {
     X,
     ChevronDown,
     ChevronUp,
+    Copy,
+    Check,
+    ExternalLink,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -44,6 +47,7 @@ export const Settings: React.FC = () => {
         null,
     );
     const [checkingSlug, setCheckingSlug] = useState(false);
+    const [copiedLink, setCopiedLink] = useState(false);
 
     const loadWedding = async () => {
         try {
@@ -307,6 +311,14 @@ export const Settings: React.FC = () => {
     const isPremium = userPkg === 'PREMIUM';
     const invitationUrl = `${window.location.origin}/u/${wedding?.slug}`;
 
+    const handleCopyInvitationLink = () => {
+        if (!invitationUrl) return;
+        navigator.clipboard.writeText(invitationUrl);
+        setCopiedLink(true);
+        toast.success('Tautan undangan berhasil disalin!');
+        setTimeout(() => setCopiedLink(false), 2000);
+    };
+
     return (
         <div className="mx-auto max-w-3xl space-y-6 font-sans">
             <div className="border-b border-sand/35 pb-4">
@@ -363,6 +375,69 @@ export const Settings: React.FC = () => {
                         )}
                     </Button>
                 </div>
+
+                {/* Tautan Publik saat status Aktif */}
+                {wedding?.status === 'published' && (
+                    <div className="rounded-2xl border border-emerald-500/25 bg-emerald-50/50 p-4 transition-all">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800">
+                                    <span className="relative flex h-2 w-2">
+                                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                                        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+                                    </span>
+                                    <span>Tautan Undangan Aktif:</span>
+                                </div>
+                                <a
+                                    href={invitationUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-1 block truncate font-mono text-xs font-semibold text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900 sm:text-sm"
+                                    title={invitationUrl}
+                                >
+                                    {invitationUrl}
+                                </a>
+                            </div>
+
+                            <div className="flex items-center gap-2 shrink-0">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleCopyInvitationLink}
+                                    className="flex items-center gap-1.5 rounded-xl border-emerald-300 bg-white text-xs font-semibold text-emerald-800 shadow-xs hover:bg-emerald-100/60"
+                                >
+                                    {copiedLink ? (
+                                        <>
+                                            <Check size={13} className="text-emerald-600" />
+                                            <span>Tersalin!</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Copy size={13} />
+                                            <span>Salin Link</span>
+                                        </>
+                                    )}
+                                </Button>
+                                <a
+                                    href={invitationUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Button
+                                        type="button"
+                                        variant="primary"
+                                        size="sm"
+                                        className="flex items-center gap-1.5 rounded-xl bg-emerald-600 text-xs font-semibold text-white shadow-xs hover:bg-emerald-700"
+                                    >
+                                        <ExternalLink size={13} />
+                                        <span>Buka Undangan</span>
+                                    </Button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </Card>
 
             {/* 2. Custom Link / Slug Panel */}
@@ -379,7 +454,7 @@ export const Settings: React.FC = () => {
                 <form onSubmit={handleUpdateSlug} className="space-y-4">
                     <div className="flex items-center gap-2">
                         <span className="border-r border-sand pr-3 text-sm text-charcoal/50">
-                            ngaturi.id/u/
+                            {typeof window !== 'undefined' ? `${window.location.host}/u/` : 'ngaturi.id/u/'}
                         </span>
                         <input
                             type="text"

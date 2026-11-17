@@ -162,6 +162,7 @@ export const Overview = () => {
         : 'Belum diisi';
 
     const previewUrl = `${window.location.origin}/u/${wedding?.slug}?preview=true`;
+    const publicUrl = `${window.location.origin}/u/${wedding?.slug}`;
 
     // Preparation checklist
     const checklist = [
@@ -276,7 +277,7 @@ export const Overview = () => {
                                 u/{wedding?.slug}
                             </span>
                             <button
-                                onClick={() => copyToClipboard(previewUrl)}
+                                onClick={() => copyToClipboard(wedding?.status === 'published' ? publicUrl : previewUrl)}
                                 className="rounded-lg border border-transparent p-1.5 text-gold-600 transition-colors hover:border-sand hover:bg-white hover:text-gold-700"
                                 title="Salin Link"
                             >
