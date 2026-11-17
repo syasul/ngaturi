@@ -796,6 +796,14 @@ class AdminController extends Controller
                     ]);
                 }
 
+                \App\Models\Notification::send(
+                    $order->user_id,
+                    'Pembayaran Dikonfirmasi!',
+                    'Pembayaran paket ' . ($pkg?->name ?? 'Undangan') . ' telah diverifikasi. Masa aktif undangan telah diperpanjang.',
+                    'order',
+                    '/dashboard/billing'
+                );
+
                 return response()->json(['status' => 'success', 'message' => 'Pembayaran manual berhasil dikonfirmasi!']);
             });
         } catch (\Exception $e) {

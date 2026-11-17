@@ -117,6 +117,19 @@ class WebhookController extends Controller
                     logger()->info("[Subscription Updated] Extended wedding slug /u/{$wedding->slug} expiry to {$newExpiry->toIso8601String()}");
                 }
 
+                // In-app Notification
+                try {
+                    \App\Models\Notification::send(
+                        $user->id,
+                        'Pembayaran Terkonfirmasi!',
+                        'Pembayaran paket ' . $pkg->name . ' berhasil. Paket dan masa aktif undangan Anda kini aktif!',
+                        'order',
+                        '/dashboard/billing'
+                    );
+                } catch (\Exception $notifErr) {
+                    logger()->error('[Notification Error] Failed to create in-app notification: ' . $notifErr->getMessage());
+                }
+
                 // 1. Dispatch Email Receipt
                 try {
                     MailerService::sendPaymentReceipt(

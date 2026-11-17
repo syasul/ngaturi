@@ -2,6 +2,7 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
     Bell,
+    CheckCheck,
     CreditCard,
     Heart,
     Image as ImageIcon,
@@ -12,12 +13,26 @@ import {
     Palette,
     QrCode,
     Settings,
+    Sparkles,
     User as UserIcon,
     Users,
     X,
 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import api from '../lib/api';
+
+export interface AppNotification {
+    id: string;
+    title: string;
+    message: string;
+    type: 'system' | 'wedding' | 'order' | 'rsvp' | string;
+    url?: string | null;
+    is_read: boolean;
+    read_at?: string | null;
+    createdAt?: string;
+    timeAgo: string;
+}
 
 export const DashboardLayout: React.FC<{
     children?: React.ReactNode;
@@ -30,6 +45,96 @@ export const DashboardLayout: React.FC<{
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
+
+    // Notifications state
+    const [notifications, setNotifications] = useState<AppNotification[]>([]);
+    const [unreadCount, setUnreadCount] = useState<number>(0);
+
+    const fetchNotifications = async () => {
+        try {
+            const res = await api.get('/notifications');
+            if (res.data?.status === 'success') {
+                setNotifications(res.data.notifications || []);
+                setUnreadCount(res.data.unreadCount || 0);
+            }
+        } catch {
+            // Silently ignore if offline
+        }
+    };
+
+    useEffect(() => {
+        if (user) {
+            fetchNotifications();
+            const interval = setInterval(fetchNotifications, 45000);
+            return () => clearInterval(interval);
+        }
+    }, [user]);
+
+    const handleNotificationClick = async (notif: AppNotification) => {
+        if (!notif.is_read) {
+            try {
+                await api.put(`/notifications/${notif.id}/read`);
+                setNotifications((prev) =>
+                    prev.map((n) =>
+                        n.id === notif.id ? { ...n, is_read: true } : n,
+                    ),
+                );
+                setUnreadCount((c) => Math.max(0, c - 1));
+            } catch {
+                // Ignore
+            }
+        }
+        setShowNotifications(false);
+        if (notif.url) {
+            if (notif.url.startsWith('/u/')) {
+                window.open(notif.url, '_blank');
+            } else {
+                router.visit(notif.url);
+            }
+        }
+    };
+
+    const handleMarkAllRead = async () => {
+        try {
+            await api.put('/notifications/read-all');
+            setNotifications((prev) =>
+                prev.map((n) => ({ ...n, is_read: true })),
+            );
+            setUnreadCount(0);
+            toast.success('Semua notifikasi ditandai telah dibaca.');
+        } catch {
+            toast.error('Gagal menandai notifikasi.');
+        }
+    };
+
+    const renderNotifIcon = (type: string) => {
+        switch (type) {
+            case 'rsvp':
+                return (
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500">
+                        <Heart size={16} />
+                    </div>
+                );
+            case 'order':
+                return (
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600">
+                        <CreditCard size={16} />
+                    </div>
+                );
+            case 'wedding':
+                return (
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gold-500/15 text-gold-600">
+                        <Sparkles size={16} />
+                    </div>
+                );
+            default:
+                return (
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500">
+                        <Bell size={16} />
+                    </div>
+                );
+        }
+    };
 
     const handleLogout = () => {
         router.post(
@@ -300,14 +405,21 @@ export const DashboardLayout: React.FC<{
                         {/* Notification Bell */}
                         <div className="relative">
                             <button
-                                onClick={() =>
-                                    setShowNotifications(!showNotifications)
-                                }
+                                onClick={() => {
+                                    const next = !showNotifications;
+                                    setShowNotifications(next);
+                                    if (next) fetchNotifications();
+                                }}
                                 className="relative rounded-xl p-2 text-charcoal/60 transition-colors hover:bg-cream/30 hover:text-gold-600"
+                                title="Notifikasi"
                             >
                                 <Bell size={20} />
-                                <span className="absolute right-1 top-1 h-2 w-2 animate-ping rounded-full bg-gold-500" />
-                                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-gold-500" />
+                                {unreadCount > 0 && (
+                                    <>
+                                        <span className="absolute right-1 top-1 h-2 w-2 animate-ping rounded-full bg-gold-500" />
+                                        <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-gold-500" />
+                                    </>
+                                )}
                             </button>
 
                             <AnimatePresence>
@@ -320,35 +432,79 @@ export const DashboardLayout: React.FC<{
                                             }
                                         />
                                         <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: 10 }}
-                                            className="absolute right-0 z-30 mt-2 w-80 rounded-2xl border border-sand bg-white p-4 shadow-2xl"
+                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                            className="absolute right-0 z-30 mt-2 w-80 sm:w-96 rounded-2xl border border-sand bg-white p-4 shadow-2xl"
                                         >
-                                            <h3 className="mb-2 border-b border-sand/35 pb-2 font-sans text-sm font-bold text-charcoal">
-                                                Notifikasi Terbaru
-                                            </h3>
-                                            <div className="max-h-60 space-y-3 overflow-y-auto">
-                                                <div className="border-b border-sand/20 pb-2 text-xs text-charcoal/80">
-                                                    <p className="font-semibold text-gold-600">
-                                                        Sistem Autentikasi
-                                                    </p>
-                                                    <p className="mt-0.5 text-charcoal/60">
-                                                        Selamat datang di Panel
-                                                        Ngaturi! Silakan
-                                                        selesaikan onboarding
-                                                        Anda.
-                                                    </p>
+                                            <div className="mb-2.5 flex items-center justify-between border-b border-sand/35 pb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <h3 className="font-sans text-sm font-bold text-charcoal">
+                                                        Notifikasi
+                                                    </h3>
+                                                    {unreadCount > 0 && (
+                                                        <span className="rounded-full bg-gold-500/15 px-2 py-0.5 text-[10px] font-bold text-gold-700">
+                                                            {unreadCount} Baru
+                                                        </span>
+                                                    )}
                                                 </div>
-                                                <div className="text-xs text-charcoal/80">
-                                                    <p className="font-semibold text-gold-600">
-                                                        Upgrade Sukses
-                                                    </p>
-                                                    <p className="mt-0.5 text-charcoal/60">
-                                                        Lengkapi data pernikahan
-                                                        untuk preview undangan.
-                                                    </p>
-                                                </div>
+                                                {unreadCount > 0 && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleMarkAllRead}
+                                                        className="flex items-center gap-1 text-[11px] font-semibold text-gold-600 transition-colors hover:text-gold-700 hover:underline"
+                                                    >
+                                                        <CheckCheck size={13} />
+                                                        <span>Tandai dibaca</span>
+                                                    </button>
+                                                )}
+                                            </div>
+
+                                            <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                                                {notifications.length > 0 ? (
+                                                    notifications.map((n) => (
+                                                        <div
+                                                            key={n.id}
+                                                            onClick={() => handleNotificationClick(n)}
+                                                            className={`group flex cursor-pointer items-start gap-3 rounded-xl p-2.5 transition-all ${
+                                                                !n.is_read
+                                                                    ? 'bg-cream/40 hover:bg-cream/70'
+                                                                    : 'hover:bg-sand/15'
+                                                            }`}
+                                                        >
+                                                            {renderNotifIcon(n.type)}
+                                                            <div className="min-w-0 flex-1">
+                                                                <div className="flex items-center justify-between gap-1">
+                                                                    <p className={`truncate text-xs ${!n.is_read ? 'font-bold text-charcoal' : 'font-medium text-charcoal/80'}`}>
+                                                                        {n.title}
+                                                                    </p>
+                                                                    {!n.is_read && (
+                                                                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold-500" />
+                                                                    )}
+                                                                </div>
+                                                                <p className="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-charcoal/65">
+                                                                    {n.message}
+                                                                </p>
+                                                                <div className="mt-1 flex items-center justify-between text-[10px] text-charcoal/40">
+                                                                    <span>{n.timeAgo}</span>
+                                                                    {n.url && (
+                                                                        <span className="font-semibold text-gold-600 group-hover:underline">
+                                                                            Buka &rarr;
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="py-8 text-center text-xs text-charcoal/50">
+                                                        <Bell size={24} className="mx-auto mb-2 text-charcoal opacity-30" />
+                                                        <p className="font-semibold text-charcoal/70">Belum ada notifikasi baru</p>
+                                                        <p className="mt-0.5 text-[11px] text-charcoal/40">
+                                                            Konfirmasi RSVP dan status akun akan muncul di sini.
+                                                        </p>
+                                                    </div>
+                                                )}
                                             </div>
                                         </motion.div>
                                     </>

@@ -70,6 +70,18 @@ class GuestController extends Controller
                     'is_message_visible' => true,
                 ]);
 
+                // Create real notification for wedding owner
+                $wedding = Wedding::find($wid);
+                if ($wedding && $wedding->user_id) {
+                    \App\Models\Notification::send(
+                        $wedding->user_id,
+                        'Konfirmasi RSVP: ' . ($guest->name ?? 'Tamu Undangan'),
+                        ($guest->name ?? 'Tamu') . ' mengonfirmasi: ' . ucfirst($rsvpStatus ?: 'hadir') . ($message ? ' - "' . Str::limit($message, 50) . '"' : ''),
+                        'rsvp',
+                        '/dashboard/rsvps'
+                    );
+                }
+
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Konfirmasi kehadiran berhasil dikirim.',
@@ -90,6 +102,18 @@ class GuestController extends Controller
                 'message' => $message ?: null,
                 'is_message_visible' => true,
             ]);
+
+            // Create real notification for wedding owner
+            $wedding = Wedding::find($guest->wedding_id);
+            if ($wedding && $wedding->user_id) {
+                \App\Models\Notification::send(
+                    $wedding->user_id,
+                    'Konfirmasi RSVP: ' . ($guest->name ?? 'Tamu Undangan'),
+                    ($guest->name ?? 'Tamu') . ' memperbarui RSVP: ' . ucfirst($rsvpStatus) . ($message ? ' - "' . Str::limit($message, 50) . '"' : ''),
+                    'rsvp',
+                    '/dashboard/rsvps'
+                );
+            }
 
             return response()->json([
                 'status' => 'success',

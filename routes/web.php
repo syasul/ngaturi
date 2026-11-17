@@ -7,6 +7,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -195,6 +196,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/api/media/upload', [MediaController::class, 'upload']);
     Route::post('/api/media/photos/sort', [MediaController::class, 'sortPhotos']);
     Route::delete('/api/media/photos/{id}', [MediaController::class, 'deletePhoto']);
+
+    // API: Notifications
+    Route::get('/api/notifications', [NotificationController::class, 'index']);
+    Route::put('/api/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::put('/api/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::delete('/api/notifications/{id}', [NotificationController::class, 'destroy']);
 });
 
 /*
