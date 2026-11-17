@@ -192,6 +192,29 @@ class AdminController extends Controller
                     ];
                 });
 
+            // Theme Usage Statistics (Most frequently used themes)
+            $themeUsages = Wedding::selectRaw('theme_id, count(id) as count')
+                ->whereNotNull('theme_id')
+                ->where('theme_id', '!=', '')
+                ->groupBy('theme_id')
+                ->orderByDesc('count')
+                ->get();
+
+            $allThemes = Theme::all()->keyBy('id');
+            $topThemes = $themeUsages->map(function ($tu) use ($allThemes) {
+                $theme = $allThemes->get($tu->theme_id);
+                return [
+                    'themeId' => $tu->theme_id,
+                    'name' => $theme ? $theme->name : ucwords(str_replace('-', ' ', $tu->theme_id)),
+                    'packageLevel' => $theme ? $theme->package_level : (str_starts_with($tu->theme_id, 'basic') ? 'BASIC' : 'PREMIUM'),
+                    'thumbnailUrl' => $theme ? $theme->thumbnail_url : null,
+                    'count' => (int) $tu->count,
+                ];
+            });
+
+            $mostPopularTheme = $topThemes->first() ?? null;
+            $totalWeddingsWithTheme = $themeUsages->sum('count');
+
             return response()->json([
                 'status' => 'success',
                 'analytics' => [
@@ -209,11 +232,16 @@ class AdminController extends Controller
                         'totalOrders' => $totalOrders,
                         'paidOrders' => $paidOrders,
                         'pendingOrders' => $pendingOrders,
+                        'mostPopularTheme' => $mostPopularTheme ? $mostPopularTheme['name'] : '-',
+                        'mostPopularThemeCount' => $mostPopularTheme ? $mostPopularTheme['count'] : 0,
+                        'totalWeddingsWithTheme' => (int) $totalWeddingsWithTheme,
                     ],
                     'dailyRevenue' => $dailyRevenue,
                     'weeklyUsers' => $weeklyUsers,
                     'packageDistribution' => $packageDistribution,
                     'packageDistributionMonth' => $packageDistributionMonth,
+                    'topThemes' => $topThemes,
+                    'mostPopularTheme' => $mostPopularTheme,
                     'recentTransactions' => $recentTransactions,
                     'expiringWeddings' => $expiringWeddings,
                 ]
@@ -231,6 +259,7 @@ class AdminController extends Controller
             $status = $request->query('status', 'all');
             $role = $request->query('role', 'all');
             $tier = $request->query('tier', 'all');
+            $themeFilter = $request->query('theme', 'all');
 
             $query = User::query();
 
@@ -247,16 +276,28 @@ class AdminController extends Controller
                 $query->where('role', $role);
             }
 
+            $allThemes = Theme::all()->keyBy('id');
+
             $users = $query->latest()
-                ->with(['orders' => function ($q) {
-                    $q->where('status', 'PAID')->latest()->with('package');
-                }])
+                ->with([
+                    'orders' => function ($q) {
+                        $q->where('status', 'PAID')->latest()->with('package');
+                    },
+                    'weddings' => function ($q) {
+                        $q->latest();
+                    }
+                ])
                 ->get();
 
-            $list = $users->map(function ($u) {
+            $list = $users->map(function ($u) use ($allThemes) {
                 $latestPaid = $u->orders->first();
                 $userTier = $latestPaid && $latestPaid->package ? $latestPaid->package->name : 'BASIC';
                 $packageId = $latestPaid && $latestPaid->package ? $latestPaid->package->id : null;
+
+                $wedding = $u->weddings->first();
+                $themeId = $wedding?->theme_id;
+                $theme = $themeId ? $allThemes->get($themeId) : null;
+                $themeName = $theme ? $theme->name : ($themeId ? ucwords(str_replace('-', ' ', $themeId)) : null);
 
                 return [
                     'id' => $u->id,
@@ -266,6 +307,12 @@ class AdminController extends Controller
                     'status' => $u->status,
                     'tier' => $userTier,
                     'packageId' => $packageId,
+                    'themeId' => $themeId,
+                    'themeName' => $themeName,
+                    'themePackageLevel' => $theme?->package_level ?: ($themeId && str_starts_with($themeId, 'basic') ? 'BASIC' : null),
+                    'weddingId' => $wedding?->id,
+                    'weddingSlug' => $wedding?->slug,
+                    'weddingStatus' => $wedding?->status,
                     'createdAt' => $u->created_at,
                 ];
             });
@@ -276,7 +323,29 @@ class AdminController extends Controller
                 })->values();
             }
 
-            return response()->json(['status' => 'success', 'users' => $list]);
+            if ($themeFilter !== 'all') {
+                if ($themeFilter === 'none') {
+                    $list = $list->filter(function ($item) {
+                        return empty($item['themeId']);
+                    })->values();
+                } else {
+                    $list = $list->filter(function ($item) use ($themeFilter) {
+                        return $item['themeId'] === $themeFilter;
+                    })->values();
+                }
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'users' => $list,
+                'availableThemes' => $allThemes->values()->map(function ($t) {
+                    return [
+                        'id' => $t->id,
+                        'name' => $t->name,
+                        'packageLevel' => $t->package_level,
+                    ];
+                }),
+            ]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
@@ -524,6 +593,10 @@ class AdminController extends Controller
             $activePackageId = $latestPaid && $latestPaid->package ? $latestPaid->package->id : null;
 
             $wedding = Wedding::where('user_id', $id)->first();
+            $theme = null;
+            if ($wedding && $wedding->theme_id) {
+                $theme = Theme::find($wedding->theme_id);
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -535,10 +608,16 @@ class AdminController extends Controller
                     'status' => $user->status,
                     'tier' => $activeTier,
                     'packageId' => $activePackageId,
+                    'themeId' => $wedding?->theme_id,
+                    'themeName' => $theme?->name ?? ($wedding?->theme_id ? ucwords(str_replace('-', ' ', $wedding->theme_id)) : null),
+                    'themePackageLevel' => $theme?->package_level ?: ($wedding?->theme_id && str_starts_with($wedding->theme_id, 'basic') ? 'BASIC' : 'PREMIUM'),
                     'createdAt' => $user->created_at,
                 ],
                 'orders' => $orders,
-                'wedding' => $wedding ?: null,
+                'wedding' => $wedding ? array_merge($wedding->toArray(), [
+                    'themeName' => $theme?->name ?? ($wedding->theme_id ? ucwords(str_replace('-', ' ', $wedding->theme_id)) : null),
+                    'themePackageLevel' => $theme?->package_level ?: ($wedding->theme_id && str_starts_with($wedding->theme_id, 'basic') ? 'BASIC' : 'PREMIUM'),
+                ]) : null,
             ]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
@@ -764,7 +843,15 @@ class AdminController extends Controller
                 ]);
             });
 
-            return response()->json(['status' => 'success', 'themes' => $formatted]);
+            $popularThemes = $formatted->sortByDesc('usersCount')->values()->take(5);
+            $totalWeddingsCount = array_sum($usages);
+
+            return response()->json([
+                'status' => 'success',
+                'themes' => $formatted,
+                'popularThemes' => $popularThemes,
+                'totalWeddingsCount' => $totalWeddingsCount,
+            ]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }

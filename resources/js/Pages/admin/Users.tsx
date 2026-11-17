@@ -4,9 +4,11 @@ import {
     Copy,
     Crown,
     Download,
+    ExternalLink,
     Eye,
     KeyRound,
     Loader2,
+    Palette,
     Pencil,
     Plus,
     RefreshCw,
@@ -32,6 +34,12 @@ interface User {
     status: 'PENDING' | 'ACTIVE' | 'BLOCKED';
     tier: 'BASIC' | 'PREMIUM' | 'CUSTOM' | string;
     packageId?: string | null;
+    themeId?: string | null;
+    themeName?: string | null;
+    themePackageLevel?: string | null;
+    weddingId?: string | null;
+    weddingSlug?: string | null;
+    weddingStatus?: string | null;
     createdAt: string;
 }
 
@@ -48,6 +56,10 @@ interface UserDetail extends User {
         id: string;
         slug: string;
         status: string;
+        theme_id?: string;
+        themeId?: string;
+        themeName?: string;
+        themePackageLevel?: string;
         expiredAt: string | null;
         createdAt: string;
     } | null;
@@ -84,6 +96,10 @@ export const AdminUsers: React.FC = () => {
     const [roleFilter, setRoleFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
     const [tierFilter, setTierFilter] = useState('all');
+    const [themeFilter, setThemeFilter] = useState('all');
+    const [availableThemes, setAvailableThemes] = useState<
+        Array<{ id: string; name: string; packageLevel: string }>
+    >([]);
 
     // Modals state
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -137,9 +153,13 @@ export const AdminUsers: React.FC = () => {
                     role: roleFilter,
                     status: statusFilter,
                     tier: tierFilter,
+                    theme: themeFilter,
                 },
             });
             setUsersList(response.data.users);
+            if (response.data.availableThemes) {
+                setAvailableThemes(response.data.availableThemes);
+            }
         } catch (err: any) {
             toast.error('Gagal memuat daftar user.');
         } finally {
@@ -149,7 +169,7 @@ export const AdminUsers: React.FC = () => {
 
     useEffect(() => {
         fetchUsers();
-    }, [roleFilter, statusFilter, tierFilter]);
+    }, [roleFilter, statusFilter, tierFilter, themeFilter]);
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -365,11 +385,11 @@ export const AdminUsers: React.FC = () => {
     // Export User List to CSV
     const handleExportCSV = () => {
         if (usersList.length === 0) return;
-        const headers = 'ID,Nama,Email,Tier,Role,Status,Tanggal Terdaftar\n';
+        const headers = 'ID,Nama,Email,Tier,Tema Undangan,Role,Status,Tanggal Terdaftar\n';
         const rows = usersList
             .map(
                 (u) =>
-                    `"${u.id}","${u.name}","${u.email}","${u.tier || 'BASIC'}","${u.role}","${u.status}","${new Date(
+                    `"${u.id}","${u.name}","${u.email}","${u.tier || 'BASIC'}","${u.themeName || u.themeId || 'Belum memilih'}","${u.role}","${u.status}","${new Date(
                         u.createdAt,
                     ).toLocaleDateString('id-ID')}"`,
             )
@@ -449,7 +469,7 @@ export const AdminUsers: React.FC = () => {
             <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
                 <form
                     onSubmit={handleSearchSubmit}
-                    className="grid grid-cols-1 gap-4 md:grid-cols-5"
+                    className="grid grid-cols-1 gap-4 md:grid-cols-6"
                 >
                     <div className="relative rounded-full md:col-span-2">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
@@ -474,6 +494,22 @@ export const AdminUsers: React.FC = () => {
                             <option value="BASIC">Tier: BASIC</option>
                             <option value="PREMIUM">Tier: PREMIUM</option>
                             <option value="CUSTOM">Tier: CUSTOM</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <select
+                            value={themeFilter}
+                            onChange={(e) => setThemeFilter(e.target.value)}
+                            className="block w-full cursor-pointer rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-300 transition-all focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                        >
+                            <option value="all">Semua Tema</option>
+                            <option value="none">Belum Pilih Tema</option>
+                            {availableThemes.map((t) => (
+                                <option key={t.id} value={t.id}>
+                                    {t.name} ({t.id})
+                                </option>
+                            ))}
                         </select>
                     </div>
 
@@ -521,6 +557,7 @@ export const AdminUsers: React.FC = () => {
                                     <th className="px-6 py-4 font-semibold">Nama</th>
                                     <th className="px-6 py-4 font-semibold">Email</th>
                                     <th className="px-6 py-4 font-semibold">Tier / Paket</th>
+                                    <th className="px-6 py-4 font-semibold">Tema Undangan</th>
                                     <th className="px-6 py-4 font-semibold">Role</th>
                                     <th className="px-6 py-4 font-semibold">Status</th>
                                     <th className="px-6 py-4 font-semibold">Terdaftar</th>
@@ -542,6 +579,49 @@ export const AdminUsers: React.FC = () => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 {renderTierBadge(u.tier)}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {u.themeId ? (
+                                                    <div className="flex flex-col gap-0.5">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <span className="font-semibold text-slate-200">
+                                                                {u.themeName || u.themeId}
+                                                            </span>
+                                                            <span
+                                                                className={`rounded px-1.5 py-0.2 text-[9px] font-bold uppercase ${
+                                                                    u.themePackageLevel === 'PREMIUM'
+                                                                        ? 'border border-amber-500/20 bg-amber-500/10 text-amber-400'
+                                                                        : u.themePackageLevel === 'CUSTOM'
+                                                                          ? 'border border-purple-500/20 bg-purple-500/10 text-purple-400'
+                                                                          : 'border border-sky-500/20 bg-sky-500/10 text-sky-400'
+                                                                }`}
+                                                            >
+                                                                {u.themePackageLevel || 'BASIC'}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <span className="font-mono text-[10px] text-slate-400">
+                                                                {u.themeId}
+                                                            </span>
+                                                            {u.weddingSlug && (
+                                                                <a
+                                                                    href={`/u/${u.weddingSlug}`}
+                                                                    target="_blank"
+                                                                    rel="noreferrer"
+                                                                    className="inline-flex items-center gap-0.5 text-[10px] text-amber-400 hover:text-amber-300 hover:underline"
+                                                                    title="Buka Undangan Live"
+                                                                >
+                                                                    <span>/u/{u.weddingSlug}</span>
+                                                                    <ExternalLink size={9} />
+                                                                </a>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-[11px] italic text-slate-500">
+                                                        Belum memilih
+                                                    </span>
+                                                )}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span
@@ -1193,25 +1273,71 @@ export const AdminUsers: React.FC = () => {
                                             </div>
                                         </div>
 
-                                        {/* Active Wedding Invitation */}
+                                        {/* Active Wedding Invitation & Theme */}
                                         <div className="space-y-3">
                                             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                                                Undangan Digital
+                                                Tema & Undangan Digital
                                             </h4>
                                             {userDetail.wedding ? (
                                                 <div className="space-y-3 rounded-xl border border-slate-800/80 bg-slate-950 p-4">
+                                                    {/* Theme Row */}
+                                                    <div className="flex items-start justify-between border-b border-slate-800/60 pb-3">
+                                                        <div>
+                                                            <span className="text-[10px] uppercase tracking-wider text-slate-500">
+                                                                Tema Terpilih
+                                                            </span>
+                                                            <div className="mt-0.5 flex items-center gap-2">
+                                                                <span className="font-semibold text-white">
+                                                                    {userDetail.wedding.themeName || userDetail.wedding.theme_id || userDetail.themeName || userDetail.themeId || 'Belum memilih'}
+                                                                </span>
+                                                                {(userDetail.wedding.theme_id || userDetail.themeId) && (
+                                                                    <span className="rounded bg-slate-800 px-1.5 py-0.5 font-mono text-[10px] text-amber-400">
+                                                                        {userDetail.wedding.theme_id || userDetail.themeId}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        {(userDetail.wedding.theme_id || userDetail.themeId) && (
+                                                            <a
+                                                                href={`/demo/${
+                                                                    (userDetail.wedding.themePackageLevel || userDetail.themePackageLevel || '').toUpperCase() === 'PREMIUM'
+                                                                        ? 'p'
+                                                                        : (userDetail.wedding.themePackageLevel || userDetail.themePackageLevel || '').toUpperCase() === 'CUSTOM'
+                                                                          ? 'c'
+                                                                          : 'b'
+                                                                }/${userDetail.wedding.theme_id || userDetail.themeId}`}
+                                                                target="_blank"
+                                                                rel="noreferrer"
+                                                                className="flex items-center gap-1 rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1 text-[11px] font-semibold text-amber-400 hover:bg-slate-850 hover:text-amber-300"
+                                                            >
+                                                                <span>Demo Tema</span>
+                                                                <ExternalLink size={11} />
+                                                            </a>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Slug & Status Row */}
                                                     <div className="flex items-center justify-between text-xs">
-                                                        <span className="font-semibold text-white">
-                                                            /u/{userDetail.wedding.slug}
-                                                        </span>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-slate-400">Tautan:</span>
+                                                            <a
+                                                                href={`/u/${userDetail.wedding.slug}`}
+                                                                target="_blank"
+                                                                rel="noreferrer"
+                                                                className="flex items-center gap-1 font-semibold text-amber-400 hover:underline"
+                                                            >
+                                                                <span>/u/{userDetail.wedding.slug}</span>
+                                                                <ExternalLink size={11} />
+                                                            </a>
+                                                        </div>
                                                         <span
                                                             className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase ${
                                                                 userDetail.wedding.status === 'published'
-                                                                    ? 'bg-emerald-500/10 text-emerald-400'
+                                                                    ? 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-400'
                                                                     : 'bg-slate-800 text-slate-400'
-                                                            }`}
+                                                                }`}
                                                         >
-                                                            {userDetail.wedding.status}
+                                                            {userDetail.wedding.status === 'published' ? 'Published (Tayang)' : 'Draf'}
                                                         </span>
                                                     </div>
 
@@ -1231,7 +1357,7 @@ export const AdminUsers: React.FC = () => {
                                                 </div>
                                             ) : (
                                                 <p className="text-xs italic text-slate-500">
-                                                    User belum membuat undangan.
+                                                    User belum membuat undangan atau memilih tema.
                                                 </p>
                                             )}
                                         </div>

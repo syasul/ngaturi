@@ -2,7 +2,9 @@ import {
     AlertTriangle,
     ArrowRight,
     Clock,
+    Flame,
     Heart,
+    Palette,
     RefreshCw,
     TrendingUp,
     Users,
@@ -41,6 +43,9 @@ interface KPI {
     totalOrders: number;
     paidOrders: number;
     pendingOrders: number;
+    mostPopularTheme?: string;
+    mostPopularThemeCount?: number;
+    totalWeddingsWithTheme?: number;
 }
 
 interface PackageItem {
@@ -49,12 +54,22 @@ interface PackageItem {
     amount: number;
 }
 
+export interface TopThemeItem {
+    themeId: string;
+    name: string;
+    packageLevel: 'BASIC' | 'PREMIUM' | 'CUSTOM' | string;
+    thumbnailUrl?: string | null;
+    count: number;
+}
+
 interface AnalyticsData {
     kpis: KPI;
     dailyRevenue: Array<{ date: string; amount: number }>;
     weeklyUsers: Array<{ week: string; count: number }>;
     packageDistribution: Array<PackageItem>;
     packageDistributionMonth?: Array<PackageItem>;
+    topThemes?: Array<TopThemeItem>;
+    mostPopularTheme?: TopThemeItem | null;
     recentTransactions: Array<{
         id: string;
         userName: string;
@@ -137,6 +152,8 @@ export const AdminOverview: React.FC = () => {
         weeklyUsers,
         packageDistribution,
         packageDistributionMonth = [],
+        topThemes = [],
+        mostPopularTheme = null,
         recentTransactions,
         expiringWeddings,
     } = data;
@@ -281,9 +298,11 @@ export const AdminOverview: React.FC = () => {
                             {kpis.liveWeddings} Published
                         </span>
                         <span className="text-slate-500">
-                            {kpis.draftWeddings > 0
-                                ? `• ${kpis.draftWeddings} Draf`
-                                : '• Semua ditayangkan'}
+                            {kpis.mostPopularTheme && kpis.mostPopularTheme !== '-'
+                                ? `• Favorit: ${kpis.mostPopularTheme} (${kpis.mostPopularThemeCount}x)`
+                                : kpis.draftWeddings > 0
+                                  ? `• ${kpis.draftWeddings} Draf`
+                                  : '• Semua ditayangkan'}
                         </span>
                     </div>
                 </div>
@@ -702,6 +721,115 @@ export const AdminOverview: React.FC = () => {
                         </table>
                     </div>
                 </div>
+            </div>
+
+            {/* Top Themes & Popularity Section */}
+            <div className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900 p-6">
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h3 className="flex items-center gap-2 text-sm font-semibold text-white">
+                            <Flame className="text-amber-500" size={18} />
+                            <span>Tema Paling Sering Digunakan (Leaderboard Terpopuler)</span>
+                        </h3>
+                        <p className="text-xs text-slate-500">
+                            Peringkat tema undangan berdasarkan jumlah customer yang menggunakannya
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Link
+                            href="/admin/themes"
+                            className="flex items-center gap-1 text-xs font-semibold text-amber-500 hover:text-amber-400"
+                        >
+                            <span>Katalog Semua Tema</span>
+                            <ArrowRight size={14} />
+                        </Link>
+                    </div>
+                </div>
+
+                {topThemes.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {topThemes.map((theme, idx) => {
+                            const totalThemeUsages = kpis.totalWeddingsWithTheme || topThemes.reduce((s, t) => s + t.count, 0);
+                            const percent = totalThemeUsages > 0 ? Math.round((theme.count / totalThemeUsages) * 100) : 0;
+                            return (
+                                <div
+                                    key={theme.themeId}
+                                    className="relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-800/80 bg-slate-950 p-4 transition-all hover:border-slate-700"
+                                >
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex items-center gap-2.5">
+                                            <div
+                                                className={`flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold ${
+                                                    idx === 0
+                                                        ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                                                        : idx === 1
+                                                          ? 'bg-slate-300 text-slate-900'
+                                                          : idx === 2
+                                                            ? 'bg-amber-700/60 text-amber-200'
+                                                            : 'bg-slate-800 text-slate-400'
+                                                }`}
+                                            >
+                                                #{idx + 1}
+                                            </div>
+                                            <div>
+                                                <h4 className="text-sm font-bold text-white">
+                                                    {theme.name}
+                                                </h4>
+                                                <span className="font-mono text-[10px] text-slate-500">
+                                                    {theme.themeId}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span
+                                            className={`rounded px-1.5 py-0.5 text-[9px] font-bold uppercase ${
+                                                theme.packageLevel === 'PREMIUM'
+                                                    ? 'border border-amber-500/20 bg-amber-500/10 text-amber-400'
+                                                    : theme.packageLevel === 'CUSTOM'
+                                                      ? 'border border-purple-500/20 bg-purple-500/10 text-purple-400'
+                                                      : 'border border-sky-500/20 bg-sky-500/10 text-sky-400'
+                                            }`}
+                                        >
+                                            {theme.packageLevel}
+                                        </span>
+                                    </div>
+
+                                    <div className="mt-4 space-y-1.5">
+                                        <div className="flex items-center justify-between text-xs">
+                                            <span className="text-slate-400">Pengguna:</span>
+                                            <span className="font-bold text-white">
+                                                {theme.count} Customer ({percent}%)
+                                            </span>
+                                        </div>
+                                        {/* Progress bar */}
+                                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
+                                            <div
+                                                className={`h-full rounded-full transition-all duration-500 ${
+                                                    idx === 0
+                                                        ? 'bg-amber-500'
+                                                        : 'bg-blue-500'
+                                                }`}
+                                                style={{ width: `${Math.max(percent, 8)}%` }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-3 flex items-center justify-between border-t border-slate-800/60 pt-2 text-[11px]">
+                                        <Link
+                                            href={`/admin/users?theme=${theme.themeId}`}
+                                            className="text-slate-400 hover:text-amber-400"
+                                        >
+                                            Lihat customer pemakai &rarr;
+                                        </Link>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <div className="rounded-xl border border-dashed border-slate-800 p-8 text-center text-xs text-slate-500">
+                        Belum ada customer yang memilih atau menggunakan tema undangan.
+                    </div>
+                )}
             </div>
 
             {/* Recent Transactions List */}
