@@ -19,6 +19,7 @@ export const Themes: React.FC = () => {
     const [themes, setThemes] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [savingThemeId, setSavingThemeId] = useState<string | null>(null);
+    const [filterTab, setFilterTab] = useState<'ALL' | 'BASIC' | 'PREMIUM'>('ALL');
 
     useEffect(() => {
         const loadData = async () => {
@@ -58,8 +59,9 @@ export const Themes: React.FC = () => {
         try {
             const res = await api.put('/weddings/me/theme', { themeId });
             if (res.data.status === 'success') {
-                setWedding((prev: any) => ({ ...prev, themeId }));
-                toast.success('Tema undangan berhasil diperbarui!');
+                setWedding((prev: any) => ({ ...prev, themeId, status: 'published' }));
+                const chosen = themes.find((t) => t.id === themeId);
+                toast.success(`Tema "${chosen?.name || themeId}" berhasil diterapkan!`);
             }
         } catch (err) {
             toast.error('Gagal memperbarui tema.');
@@ -81,7 +83,14 @@ export const Themes: React.FC = () => {
 
     const userPkg = wedding?.package?.packageName || 'BASIC';
     const userTierRank = TIER_LEVELS[userPkg?.toUpperCase() || 'BASIC'] || 1;
-    const previewUrl = `${window.location.origin}/u/${wedding?.slug}?preview=true`;
+    const safeSlug = wedding?.slug || '';
+    const previewUrl = safeSlug ? `${window.location.origin}/u/${safeSlug}` : '#';
+    const activeTheme = themes.find((t) => t.id === wedding?.themeId);
+
+    const filteredThemes = themes.filter((t) => {
+        if (filterTab === 'ALL') return true;
+        return (t.packageLevel || 'BASIC').toUpperCase() === filterTab;
+    });
 
     return (
         <div className="space-y-6 font-sans">
@@ -92,11 +101,11 @@ export const Themes: React.FC = () => {
                     </h2>
                     <p className="mt-1 text-sm text-charcoal/60">
                         Ganti template dan tampilan undangan digital Anda.
-                        Desain responsif, modern, dan premium.
+                        Tersedia 20 tema Basic gratis dan tema Premium eksklusif.
                     </p>
                 </div>
 
-                {wedding?.slug && (
+                {safeSlug && (
                     <a
                         href={previewUrl}
                         target="_blank"
@@ -114,36 +123,113 @@ export const Themes: React.FC = () => {
                 )}
             </div>
 
-            {/* Package Status Banner */}
+            {/* Active Theme Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-gold-500/35 bg-gradient-to-r from-cream via-white to-cream p-4 shadow-xs">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gold-500 text-white shadow-sm">
+                        <Palette size={20} />
+                    </div>
+                    <div>
+                        <span className="block text-[11px] font-bold uppercase tracking-wider text-charcoal/50">
+                            Tema Undangan Anda Saat Ini
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-base font-bold text-charcoal">
+                                {activeTheme?.name || 'Minimalist Sage'}
+                            </span>
+                            <Badge variant={activeTheme?.packageLevel === 'PREMIUM' ? 'danger' : 'success'}>
+                                {activeTheme?.packageLevel || 'BASIC'}
+                            </Badge>
+                        </div>
+                    </div>
+                </div>
+                {safeSlug && (
+                    <a
+                        href={previewUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="shrink-0"
+                    >
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            className="w-full sm:w-auto flex items-center justify-center gap-1.5 rounded-xl bg-gold-500 text-xs font-bold text-white shadow-xs hover:bg-gold-600"
+                        >
+                            <ExternalLink size={13} />
+                            <span>Lihat Undangan Saya</span>
+                        </Button>
+                    </a>
+                )}
+            </div>
+
+            {/* Category Filter Tabs */}
+            <div className="flex flex-wrap items-center gap-2 border-b border-sand/35 pb-2">
+                <button
+                    type="button"
+                    onClick={() => setFilterTab('ALL')}
+                    className={`cursor-pointer rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                        filterTab === 'ALL'
+                            ? 'bg-gold-500 text-white shadow-xs'
+                            : 'bg-sand/20 text-charcoal/70 hover:bg-sand/35'
+                    }`}
+                >
+                    Semua Template ({themes.length})
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setFilterTab('BASIC')}
+                    className={`cursor-pointer flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                        filterTab === 'BASIC'
+                            ? 'bg-emerald-600 text-white shadow-xs'
+                            : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100/60'
+                    }`}
+                >
+                    <span>Tema Basic ({themes.filter((t) => (t.packageLevel || 'BASIC').toUpperCase() === 'BASIC').length})</span>
+                    <span className="rounded-full bg-emerald-500/20 px-1.5 py-0.5 text-[9px] font-bold">Gratis</span>
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setFilterTab('PREMIUM')}
+                    className={`cursor-pointer flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                        filterTab === 'PREMIUM'
+                            ? 'bg-amber-600 text-white shadow-xs'
+                            : 'bg-amber-50 text-amber-900 hover:bg-amber-100/60'
+                    }`}
+                >
+                    <span>Tema Premium ({themes.filter((t) => (t.packageLevel || 'BASIC').toUpperCase() === 'PREMIUM').length})</span>
+                    <span className="rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-bold">VIP</span>
+                </button>
+            </div>
+
+            {/* Package Status Banner (Compact) */}
             {userTierRank === 1 ? (
-                <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-gold-500/20 bg-gold-500/10 p-4 sm:flex-row sm:items-center">
-                    <div className="text-sm text-charcoal/80">
+                <div className="flex flex-col items-start justify-between gap-3 rounded-2xl border border-gold-500/20 bg-gold-500/10 p-3.5 sm:flex-row sm:items-center">
+                    <div className="text-xs text-charcoal/80">
                         <p className="font-semibold text-gold-700">
-                            Dapatkan Semua Akses Tema Premium!
+                            Paket Anda: BASIC (Bisa gunakan 20 Tema Basic)
                         </p>
-                        <p className="mt-0.5 text-charcoal/60">
-                            Upgrade ke paket PREMIUM atau CUSTOM untuk membuka tema
-                            eksklusif lainnya seperti Modern Minimalist.
+                        <p className="text-charcoal/60 text-[11px]">
+                            Ingin tema animasi atau kustom warna eksklusif? Upgrade ke paket PREMIUM kapan saja.
                         </p>
                     </div>
                     <Link to="/dashboard/billing">
                         <Button
                             variant="primary"
                             size="sm"
-                            className="flex items-center gap-1"
+                            className="flex items-center gap-1 text-xs"
                         >
-                            <span>Upgrade Sekarang</span>
-                            <ArrowRight size={14} />
+                            <span>Upgrade</span>
+                            <ArrowRight size={12} />
                         </Button>
                     </Link>
                 </div>
             ) : (
-                <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 sm:flex-row sm:items-center">
-                    <div className="text-sm text-charcoal/80">
+                <div className="flex flex-col items-start justify-between gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3.5 sm:flex-row sm:items-center">
+                    <div className="text-xs text-charcoal/80">
                         <p className="font-semibold text-emerald-800">
                             Paket Aktif: {userPkg}
                         </p>
-                        <p className="mt-0.5 text-charcoal/60">
+                        <p className="text-charcoal/60 text-[11px]">
                             Anda memiliki akses penuh ke seluruh tema kategori {userPkg === 'CUSTOM' ? 'Basic, Premium, & Custom' : 'Basic & Premium'}.
                         </p>
                     </div>
@@ -153,7 +239,7 @@ export const Themes: React.FC = () => {
 
             {/* Themes Grid */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {themes.map((theme) => {
+                {filteredThemes.map((theme) => {
                     const isSelected = wedding?.themeId === theme.id;
                     const themeTierRank =
                         TIER_LEVELS[theme.packageLevel?.toUpperCase() || 'BASIC'] || 1;

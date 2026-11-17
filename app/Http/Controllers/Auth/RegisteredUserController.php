@@ -47,6 +47,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Instantly generate active wedding and default theme for new user
+        \App\Http\Controllers\WeddingController::ensureWeddingForUser($user);
+
         return redirect(route('dashboard', absolute: false));
     }
 }

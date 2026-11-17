@@ -216,18 +216,17 @@ export const InvitationPublic: React.FC<InvitationPublicProps> = ({
         ))
     );
 
-    // Handle 404: Not Found or Unpublished/Draft state (allow if owner or in preview mode)
-    if (!wedding || (wedding.status !== 'published' && !isPreview && !isOwner)) {
+    // Handle 404: Not Found
+    if (!wedding) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center bg-[#FAF7F2] p-6 text-center font-sans">
-                <Head title="Undangan Tidak Aktif" />
+                <Head title="Undangan Tidak Ditemukan" />
                 <Heart className="mb-4 animate-pulse text-red-300" size={48} />
                 <h2 className="font-sans text-2xl font-bold text-[#2C2C2C]">
-                    Undangan Tidak Aktif
+                    Undangan Tidak Ditemukan
                 </h2>
                 <p className="mt-2 max-w-sm text-sm text-neutral-500">
-                    Maaf, undangan digital dengan tautan URL ini tidak ditemukan
-                    atau masih dalam status draf.
+                    Maaf, undangan digital dengan tautan URL ini tidak ditemukan. Pastikan alamat tautan yang Anda masukkan sudah benar.
                 </p>
             </div>
         );

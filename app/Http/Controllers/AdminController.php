@@ -419,6 +419,8 @@ class AdminController extends Controller
 
             DB::commit();
 
+            \App\Http\Controllers\WeddingController::ensureWeddingForUser($user);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'User berhasil dibuat dengan tier ' . ($package ? $package->name : 'BASIC') . '.',
@@ -535,6 +537,8 @@ class AdminController extends Controller
             }
 
             DB::commit();
+
+            \App\Http\Controllers\WeddingController::ensureWeddingForUser($user);
 
             $activeOrder = Order::with('package')->where('user_id', $user->id)->where('status', 'PAID')->latest()->first();
 

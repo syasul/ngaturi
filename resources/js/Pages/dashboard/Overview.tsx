@@ -161,8 +161,13 @@ export const Overview = () => {
           )
         : 'Belum diisi';
 
-    const previewUrl = `${window.location.origin}/u/${wedding?.slug}?preview=true`;
-    const publicUrl = `${window.location.origin}/u/${wedding?.slug}`;
+    const safeSlug = wedding?.slug || '';
+    const previewUrl = safeSlug
+        ? `${window.location.origin}/u/${safeSlug}?preview=true`
+        : '#';
+    const publicUrl = safeSlug
+        ? `${window.location.origin}/u/${safeSlug}`
+        : '#';
 
     // Preparation checklist
     const checklist = [
@@ -274,10 +279,16 @@ export const Overview = () => {
                         </h4>
                         <div className="mt-1.5 flex items-center justify-between gap-2 rounded-xl border border-sand/30 bg-cream/15 p-2.5">
                             <span className="truncate text-xs font-semibold text-charcoal">
-                                u/{wedding?.slug}
+                                u/{wedding?.slug || 'undangan'}
                             </span>
                             <button
-                                onClick={() => copyToClipboard(wedding?.status === 'published' ? publicUrl : previewUrl)}
+                                onClick={() => {
+                                    if (publicUrl && publicUrl !== '#') {
+                                        copyToClipboard(wedding?.status === 'published' ? publicUrl : previewUrl);
+                                    } else {
+                                        toast.error('Tautan belum siap.');
+                                    }
+                                }}
                                 className="rounded-lg border border-transparent p-1.5 text-gold-600 transition-colors hover:border-sand hover:bg-white hover:text-gold-700"
                                 title="Salin Link"
                             >
@@ -286,18 +297,18 @@ export const Overview = () => {
                         </div>
                     </div>
                     <div className="mt-6 flex items-center justify-between border-t border-sand/20 pt-4 text-[10px] font-bold uppercase tracking-wider text-charcoal/50">
-                        <span>
-                            Tema:{' '}
-                            <span className="text-gold-600">
+                        <span className="flex items-center gap-1.5">
+                            <span>Tema:</span>
+                            <span className="font-bold text-gold-600">
                                 {getThemeName(wedding?.themeId)}
                             </span>
                         </span>
-                        <span>
-                            Level:{' '}
-                            <span className="text-gold-600">
-                                {wedding?.package?.packageName || 'BASIC'}
-                            </span>
-                        </span>
+                        <Link
+                            to="/dashboard/themes"
+                            className="rounded-lg bg-gold-500/15 px-2.5 py-1 text-[11px] font-bold text-gold-700 hover:bg-gold-500 hover:text-white transition-all shadow-2xs"
+                        >
+                            Pilih Tema &rarr;
+                        </Link>
                     </div>
                 </Card>
 

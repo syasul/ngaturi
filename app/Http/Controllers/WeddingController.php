@@ -10,6 +10,7 @@ use App\Models\Theme;
 use App\Models\Music;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class WeddingController extends Controller
@@ -80,40 +81,150 @@ class WeddingController extends Controller
         }
     }
 
+    /**
+     * Ensure the user has an active, valid, and fully-formed Wedding record.
+     * Auto-heals missing/corrupt slugs, assigns default themes, and sets status to published.
+     */
+    public static function ensureWeddingForUser($user)
+    {
+        if (!$user) {
+            return null;
+        }
+
+        $wedding = Wedding::where('user_id', $user->id)->first();
+
+        // Load latest paid package or default to BASIC
+        $latestPaidOrder = Order::with('package')
+            ->where('user_id', $user->id)
+            ->where('status', 'PAID')
+            ->latest()
+            ->first();
+
+        $durationDays = $latestPaidOrder && $latestPaidOrder->package ? ($latestPaidOrder->package->duration_days ?: 90) : 90;
+
+        if (!$wedding) {
+            $baseName = Str::slug($user->name ?: explode('@', $user->email)[0]);
+            if (empty($baseName)) {
+                $baseName = 'undangan';
+            }
+            $newSlug = $baseName . '-' . rand(100, 999);
+            while (Wedding::where('slug', $newSlug)->exists()) {
+                $newSlug = $baseName . '-' . rand(100, 999);
+            }
+
+            $wedding = Wedding::create([
+                'user_id' => $user->id,
+                'slug' => $newSlug,
+                'theme_id' => 'basic-1',
+                'status' => 'published',
+                'expired_at' => now()->addDays($durationDays),
+                'data' => [
+                    'groom' => [
+                        'name' => 'Mempelai Pria',
+                        'nickname' => 'Pria',
+                        'parents' => 'Bapak & Ibu mempelai pria',
+                        'bio' => '',
+                        'ig' => '',
+                        'photo' => '',
+                    ],
+                    'bride' => [
+                        'name' => 'Mempelai Wanita',
+                        'nickname' => 'Wanita',
+                        'parents' => 'Bapak & Ibu mempelai wanita',
+                        'bio' => '',
+                        'ig' => '',
+                        'photo' => '',
+                    ],
+                    'schedule' => [
+                        'akad' => [
+                            'date' => now()->addMonths(2)->format('Y-m-d'),
+                            'time' => '09:00 - 10:00',
+                            'venue' => 'Gedung Pernikahan',
+                            'address' => 'Jl. Bahagia No. 1',
+                            'maps' => '',
+                        ],
+                        'resepsi' => [
+                            'date' => now()->addMonths(2)->format('Y-m-d'),
+                            'time' => '11:00 - 13:00',
+                            'venue' => 'Gedung Pernikahan',
+                            'address' => 'Jl. Bahagia No. 1',
+                            'maps' => '',
+                        ],
+                    ],
+                    'stories' => [],
+                    'quotes' => 'Maha Suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan...',
+                    'sections' => [
+                        'showStory' => true,
+                        'showGallery' => true,
+                        'showQuotes' => true,
+                        'showGift' => true,
+                        'showRsvp' => true,
+                        'showWishes' => true,
+                        'showDresscode' => true,
+                        'showStreaming' => true,
+                    ],
+                ],
+            ]);
+            return $wedding;
+        }
+
+        $needsSave = false;
+
+        // Auto-heal empty, whitespace, null, or 'undefined' slug
+        if (empty($wedding->slug) || trim($wedding->slug) === '' || str_contains($wedding->slug, 'undefined')) {
+            $baseName = '';
+            $wData = is_array($wedding->data) ? $wedding->data : [];
+            if (!empty($wData['groom']['nickname']) && !empty($wData['bride']['nickname'])) {
+                $baseName = Str::slug($wData['groom']['nickname'] . '-' . $wData['bride']['nickname']);
+            } elseif (!empty($wData['groom']['name']) && !empty($wData['bride']['name'])) {
+                $baseName = Str::slug($wData['groom']['name'] . '-' . $wData['bride']['name']);
+            } elseif (!empty($user->name)) {
+                $baseName = Str::slug($user->name);
+            } else {
+                $baseName = Str::slug(explode('@', $user->email)[0]);
+            }
+            if (empty($baseName)) {
+                $baseName = 'undangan';
+            }
+            $newSlug = $baseName . '-' . rand(100, 999);
+            while (Wedding::where('slug', $newSlug)->where('id', '!=', $wedding->id)->exists()) {
+                $newSlug = $baseName . '-' . rand(100, 999);
+            }
+            $wedding->slug = $newSlug;
+            $needsSave = true;
+        }
+
+        // Auto-heal missing theme
+        if (empty($wedding->theme_id)) {
+            $wedding->theme_id = 'basic-1';
+            $needsSave = true;
+        }
+
+        // Auto-publish so the wedding is immediately live and visible to partner/guests
+        if (empty($wedding->status) || $wedding->status === 'draft') {
+            $wedding->status = 'published';
+            $needsSave = true;
+        }
+
+        // Ensure expiration is valid
+        if (!$wedding->expired_at || \Illuminate\Support\Carbon::parse($wedding->expired_at)->isPast()) {
+            $wedding->expired_at = now()->addDays($durationDays);
+            $needsSave = true;
+        }
+
+        if ($needsSave) {
+            $wedding->save();
+        }
+
+        return $wedding;
+    }
+
     // 3. GET /api/weddings/me - Get user's current wedding
     public function getMe()
     {
         $user = Auth::user();
         try {
-            $wedding = Wedding::where('user_id', $user->id)->first();
-
-            if (!$wedding) {
-                return response()->json(['status' => 'success', 'wedding' => null]);
-            }
-
-            // Auto-heal any slug that contains 'undefined'
-            if (str_contains($wedding->slug, 'undefined')) {
-                $baseName = '';
-                $wData = is_array($wedding->data) ? $wedding->data : [];
-                if (!empty($wData['groom']['nickname']) && !empty($wData['bride']['nickname'])) {
-                    $baseName = Str::slug($wData['groom']['nickname'] . '-' . $wData['bride']['nickname']);
-                } elseif (!empty($wData['groom']['name']) && !empty($wData['bride']['name'])) {
-                    $baseName = Str::slug($wData['groom']['name'] . '-' . $wData['bride']['name']);
-                } elseif (!empty($user->name)) {
-                    $baseName = Str::slug($user->name);
-                } else {
-                    $baseName = Str::slug(explode('@', $user->email)[0]);
-                }
-                if (empty($baseName)) {
-                    $baseName = 'undangan';
-                }
-                $newSlug = $baseName . '-' . rand(100, 999);
-                while (Wedding::where('slug', $newSlug)->where('id', '!=', $wedding->id)->exists()) {
-                    $newSlug = $baseName . '-' . rand(100, 999);
-                }
-                $wedding->slug = $newSlug;
-                $wedding->save();
-            }
+            $wedding = self::ensureWeddingForUser($user);
 
             // Load user package details from latest paid order
             $latestPaidOrder = Order::with('package')
@@ -170,8 +281,18 @@ class WeddingController extends Controller
             }
 
             // Check if user already has a wedding
-            if (Wedding::where('user_id', $user->id)->exists()) {
-                return response()->json(['status' => 'error', 'message' => 'Anda sudah membuat undangan.'], 400);
+            $existing = Wedding::where('user_id', $user->id)->first();
+            if ($existing) {
+                $existing->update([
+                    'slug' => $normalizedSlug,
+                    'theme_id' => $themeId,
+                    'status' => 'published',
+                ]);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Undangan berhasil diperbarui.',
+                    'wedding' => $existing
+                ]);
             }
 
             // Get package expiration duration & validate tier
@@ -203,7 +324,7 @@ class WeddingController extends Controller
                 'user_id' => $user->id,
                 'slug' => $normalizedSlug,
                 'theme_id' => $themeId,
-                'status' => 'draft',
+                'status' => 'published',
                 'expired_at' => $expiredAt,
                 'data' => [],
             ]);
@@ -224,39 +345,12 @@ class WeddingController extends Controller
         $user = Auth::user();
         try {
             $data = $request->input('data');
-
-            $wedding = Wedding::where('user_id', $user->id)->first();
-
-            if (!$wedding) {
-                return response()->json(['status' => 'error', 'message' => 'Undangan tidak ditemukan.'], 404);
-            }
+            $wedding = self::ensureWeddingForUser($user);
 
             $wedding->update([
                 'data' => $data,
+                'status' => 'published',
             ]);
-
-            // Auto-heal slug if it contains 'undefined' when saving wedding data
-            if (str_contains($wedding->slug, 'undefined')) {
-                $baseName = '';
-                if (!empty($data['groom']['nickname']) && !empty($data['bride']['nickname'])) {
-                    $baseName = Str::slug($data['groom']['nickname'] . '-' . $data['bride']['nickname']);
-                } elseif (!empty($data['groom']['name']) && !empty($data['bride']['name'])) {
-                    $baseName = Str::slug($data['groom']['name'] . '-' . $data['bride']['name']);
-                } elseif (!empty($user->name)) {
-                    $baseName = Str::slug($user->name);
-                } else {
-                    $baseName = Str::slug(explode('@', $user->email)[0]);
-                }
-                if (empty($baseName)) {
-                    $baseName = 'undangan';
-                }
-                $newSlug = $baseName . '-' . rand(100, 999);
-                while (Wedding::where('slug', $newSlug)->where('id', '!=', $wedding->id)->exists()) {
-                    $newSlug = $baseName . '-' . rand(100, 999);
-                }
-                $wedding->slug = $newSlug;
-                $wedding->save();
-            }
 
             return response()->json([
                 'status' => 'success',
@@ -287,11 +381,7 @@ class WeddingController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Format URL tidak valid.'], 400);
             }
 
-            $wedding = Wedding::where('user_id', $user->id)->first();
-
-            if (!$wedding) {
-                return response()->json(['status' => 'error', 'message' => 'Undangan tidak ditemukan.'], 404);
-            }
+            $wedding = self::ensureWeddingForUser($user);
 
             // Check uniqueness
             $taken = Wedding::where('slug', $normalizedSlug)
@@ -303,7 +393,8 @@ class WeddingController extends Controller
             }
 
             $wedding->update([
-                'slug' => $normalizedSlug
+                'slug' => $normalizedSlug,
+                'status' => 'published',
             ]);
 
             return response()->json([
@@ -327,11 +418,7 @@ class WeddingController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Tema wajib dipilih.'], 400);
             }
 
-            $wedding = Wedding::where('user_id', $user->id)->first();
-
-            if (!$wedding) {
-                return response()->json(['status' => 'error', 'message' => 'Undangan tidak ditemukan.'], 404);
-            }
+            $wedding = self::ensureWeddingForUser($user);
 
             $theme = Theme::find($themeId);
             if (!$theme) {
@@ -358,7 +445,8 @@ class WeddingController extends Controller
             }
 
             $wedding->update([
-                'theme_id' => $themeId
+                'theme_id' => $themeId,
+                'status' => 'published',
             ]);
 
             return response()->json([
@@ -384,11 +472,7 @@ class WeddingController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Status tidak valid.'], 400);
             }
 
-            $wedding = Wedding::where('user_id', $user->id)->first();
-
-            if (!$wedding) {
-                return response()->json(['status' => 'error', 'message' => 'Undangan tidak ditemukan.'], 404);
-            }
+            $wedding = self::ensureWeddingForUser($user);
 
             $wedding->update([
                 'status' => $status
